@@ -12,11 +12,13 @@ class MyCostSheetsViewController: UIViewController {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var totalAmountLabel: UILabel!
-	
+	@IBOutlet weak var tableView: UITableView!
+
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		tableView.register(UINib(nibName: "CostSheetTableViewCell", bundle: nil), forCellReuseIdentifier: "CostSheetTableViewCell")
     }
 
 }
@@ -25,11 +27,36 @@ class MyCostSheetsViewController: UIViewController {
 extension MyCostSheetsViewController {
 
 	@IBAction func chartViewButtonPressed(_ sender: Any) {
-		print("ChartView")
+		// Finish this
 	}
 
 	@IBAction func generalStatisticsButtonPressed(_ sender: Any) {
-		print("StatsView")
+		// Finish this
+	}
+
+}
+
+// MARK: UITableViewDataSource
+extension MyCostSheetsViewController: UITableViewDataSource {
+
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 2
+	}
+
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "CostSheetTableViewCell", for: indexPath) as! CostSheetTableViewCell
+		
+		// Finish this
+		return cell
+	}
+
+}
+
+// MARK: UITableViewDelegate
+extension MyCostSheetsViewController: UITableViewDelegate {
+
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		return 70
 	}
 
 }

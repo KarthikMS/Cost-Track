@@ -13,6 +13,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyCostSheetsViewController" customModule="Cost_Track" customModuleProvider="target">
             <connections>
+                <outlet property="tableView" destination="f9Z-ur-bCM" id="lf6-w1-f2M"/>
                 <outlet property="totalAmountLabel" destination="8Ww-um-mi6" id="lcD-WJ-dN8"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -72,12 +73,24 @@
                         <constraint firstAttribute="trailing" secondItem="udg-5A-gdJ" secondAttribute="trailing" id="sIH-1G-Icw"/>
                     </constraints>
                 </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f9Z-ur-bCM">
+                    <rect key="frame" x="0.0" y="144" width="375" height="523"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="ULt-Mf-i2C"/>
+                        <outlet property="delegate" destination="-1" id="Kw9-oZ-t6Z"/>
+                    </connections>
+                </tableView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="lV6-EZ-y31" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="6D9-1W-8iP"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="lV6-EZ-y31" secondAttribute="top" id="9hD-BA-jSh"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="f9Z-ur-bCM" secondAttribute="bottom" id="J38-rj-9Tz"/>
+                <constraint firstItem="f9Z-ur-bCM" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="Tjm-eQ-7TO"/>
+                <constraint firstItem="f9Z-ur-bCM" firstAttribute="top" secondItem="lV6-EZ-y31" secondAttribute="bottom" id="bWE-ok-TGV"/>
                 <constraint firstItem="lV6-EZ-y31" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="jrs-jw-LB9"/>
+                <constraint firstItem="f9Z-ur-bCM" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="nMx-j1-Wkb"/>
             </constraints>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
