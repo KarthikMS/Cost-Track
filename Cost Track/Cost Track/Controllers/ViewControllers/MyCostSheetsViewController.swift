@@ -34,6 +34,18 @@ extension MyCostSheetsViewController {
 		// Finish this
 	}
 
+	@IBAction func addNewCostSheetButtonPressed(_ sender: Any) {
+		// Finish this
+	}
+
+	@IBAction func settingsButtonPressed(_ sender: Any) {
+		// Finish this
+	}
+
+	@IBAction func searchButtonPressed(_ sender: Any) {
+		// Finish this
+	}
+
 }
 
 // MARK: UITableViewDataSource
