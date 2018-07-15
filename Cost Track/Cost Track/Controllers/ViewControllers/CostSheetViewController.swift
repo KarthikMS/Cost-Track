@@ -40,12 +40,13 @@ extension CostSheetViewController {
 	@IBAction func classificationSegmentedControlValueChanged(_ sender: UISegmentedControl) {
 		switch sender.selectedSegmentIndex {
 		case 0:
-			print("Date")
+			transactionsTableViewDataSource.mode = .date
 		case 1:
-			print("Category")
+			transactionsTableViewDataSource.mode = .category
 		default:
-			print("Place")
+			transactionsTableViewDataSource.mode = .place
 		}
+		transactionsTableView.reloadData()
 	}
 
 }
