@@ -10,22 +10,19 @@ import UIKit
 
 class CostSheetViewController: UIViewController {
 
+	// MARK: IBOutlets
+	@IBOutlet weak var transactionsTableView: UITableView!
+
+	// MARK: Properties
+	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
+
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
-		
-    }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
+		transactionsTableView.dataSource = transactionsTableViewDataSource
     }
-    */
 
 }
 
@@ -49,6 +46,15 @@ extension CostSheetViewController {
 		default:
 			print("Place")
 		}
+	}
+
+}
+
+// MARK: UITableViewDelegate
+extension CostSheetViewController: UITableViewDelegate {
+
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		return 80
 	}
 
 }
