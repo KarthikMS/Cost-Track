@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		D9032E9020FB1A71009EF5FC /* CostSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */; };
 		D9032E9220FB1A7F009EF5FC /* CostSheetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */; };
+		D9032EB620FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032EB520FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift */; };
+		D9032EBA20FB4F20009EF5FC /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032EB820FB4F20009EF5FC /* TransactionsTableViewCell.swift */; };
+		D9032EBB20FB4F20009EF5FC /* TransactionsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */; };
 		D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F3F120F9BE81003C7C58 /* AppDelegate.swift */; };
 		D962F3F720F9BE81003C7C58 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F520F9BE81003C7C58 /* Main.storyboard */; };
 		D962F3F920F9BE81003C7C58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F820F9BE81003C7C58 /* Assets.xcassets */; };
@@ -41,6 +44,9 @@
 /* Begin PBXFileReference section */
 		D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheetViewController.swift; sourceTree = "<group>"; };
 		D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CostSheetViewController.xib; sourceTree = "<group>"; };
+		D9032EB520FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewDataSource.swift; sourceTree = "<group>"; };
+		D9032EB820FB4F20009EF5FC /* TransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewCell.swift; sourceTree = "<group>"; };
+		D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionsTableViewCell.xib; sourceTree = "<group>"; };
 		D962F3EE20F9BE81003C7C58 /* Cost Track.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cost Track.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D962F3F120F9BE81003C7C58 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D962F3F620F9BE81003C7C58 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -84,6 +90,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D9032EB720FB4EF8009EF5FC /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D962F42C20F9D877003C7C58 /* CostSheetTableViewCell.swift */,
+				D9032EB820FB4F20009EF5FC /* TransactionsTableViewCell.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		D962F3E520F9BE81003C7C58 = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +161,7 @@
 			children = (
 				D962F42320F9C0D3003C7C58 /* XIBs */,
 				D962F42220F9C0C9003C7C58 /* Storyboards */,
+				D9032EB720FB4EF8009EF5FC /* Classes */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -155,6 +171,7 @@
 			children = (
 				D962F42520F9C0FF003C7C58 /* ViewControllers */,
 				D962F3F120F9BE81003C7C58 /* AppDelegate.swift */,
+				D9032EB520FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -171,6 +188,7 @@
 		D962F42320F9C0D3003C7C58 /* XIBs */ = {
 			isa = PBXGroup;
 			children = (
+				D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */,
 				D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */,
 				D962F42D20F9D877003C7C58 /* CostSheetTableViewCell.xib */,
 				D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */,
@@ -190,7 +208,6 @@
 			isa = PBXGroup;
 			children = (
 				D962F42620F9C152003C7C58 /* MyCostSheetsViewController.swift */,
-				D962F42C20F9D877003C7C58 /* CostSheetTableViewCell.swift */,
 				D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */,
 			);
 			path = ViewControllers;
@@ -306,6 +323,7 @@
 				D962F3FC20F9BE81003C7C58 /* LaunchScreen.storyboard in Resources */,
 				D9032E9220FB1A7F009EF5FC /* CostSheetViewController.xib in Resources */,
 				D962F42920F9C152003C7C58 /* MyCostSheetsViewController.xib in Resources */,
+				D9032EBB20FB4F20009EF5FC /* TransactionsTableViewCell.xib in Resources */,
 				D962F3F920F9BE81003C7C58 /* Assets.xcassets in Resources */,
 				D962F42F20F9D877003C7C58 /* CostSheetTableViewCell.xib in Resources */,
 				D962F3F720F9BE81003C7C58 /* Main.storyboard in Resources */,
@@ -333,6 +351,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9032EBA20FB4F20009EF5FC /* TransactionsTableViewCell.swift in Sources */,
+				D9032EB620FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift in Sources */,
 				D962F42820F9C152003C7C58 /* MyCostSheetsViewController.swift in Sources */,
 				D9032E9020FB1A71009EF5FC /* CostSheetViewController.swift in Sources */,
 				D962F42E20F9D877003C7C58 /* CostSheetTableViewCell.swift in Sources */,
