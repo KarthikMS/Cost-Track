@@ -40,4 +40,15 @@ extension CostSheetViewController {
 		// Finish this
 	}
 
+	@IBAction func classificationSegmentedControlValueChanged(_ sender: UISegmentedControl) {
+		switch sender.selectedSegmentIndex {
+		case 0:
+			print("Date")
+		case 1:
+			print("Category")
+		default:
+			print("Place")
+		}
+	}
+
 }
