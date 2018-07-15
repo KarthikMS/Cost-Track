@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D9032E9020FB1A71009EF5FC /* CostSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */; };
+		D9032E9220FB1A7F009EF5FC /* CostSheetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */; };
 		D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F3F120F9BE81003C7C58 /* AppDelegate.swift */; };
 		D962F3F720F9BE81003C7C58 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F520F9BE81003C7C58 /* Main.storyboard */; };
 		D962F3F920F9BE81003C7C58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F820F9BE81003C7C58 /* Assets.xcassets */; };
@@ -37,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheetViewController.swift; sourceTree = "<group>"; };
+		D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CostSheetViewController.xib; sourceTree = "<group>"; };
 		D962F3EE20F9BE81003C7C58 /* Cost Track.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cost Track.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D962F3F120F9BE81003C7C58 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D962F3F620F9BE81003C7C58 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -169,6 +173,7 @@
 			children = (
 				D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */,
 				D962F42D20F9D877003C7C58 /* CostSheetTableViewCell.xib */,
+				D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */,
 			);
 			path = XIBs;
 			sourceTree = "<group>";
@@ -186,6 +191,7 @@
 			children = (
 				D962F42620F9C152003C7C58 /* MyCostSheetsViewController.swift */,
 				D962F42C20F9D877003C7C58 /* CostSheetTableViewCell.swift */,
+				D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -298,6 +304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D962F3FC20F9BE81003C7C58 /* LaunchScreen.storyboard in Resources */,
+				D9032E9220FB1A7F009EF5FC /* CostSheetViewController.xib in Resources */,
 				D962F42920F9C152003C7C58 /* MyCostSheetsViewController.xib in Resources */,
 				D962F3F920F9BE81003C7C58 /* Assets.xcassets in Resources */,
 				D962F42F20F9D877003C7C58 /* CostSheetTableViewCell.xib in Resources */,
@@ -327,6 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D962F42820F9C152003C7C58 /* MyCostSheetsViewController.swift in Sources */,
+				D9032E9020FB1A71009EF5FC /* CostSheetViewController.swift in Sources */,
 				D962F42E20F9D877003C7C58 /* CostSheetTableViewCell.swift in Sources */,
 				D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */,
 			);

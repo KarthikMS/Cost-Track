@@ -15,6 +15,7 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MyCostSheetsViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="My Cost Sheets" id="25B-TP-Vt6">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="x3A-nC-Xcx"/>
                         <barButtonItem key="leftBarButtonItem" title="Add" id="99u-Dh-FRo">
                             <connections>
                                 <action selector="addNewCostSheetButtonPressed:" destination="BYZ-38-t0r" id="Zaq-8d-bWS"/>
@@ -33,10 +34,21 @@
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <segue destination="egc-Yf-OgO" kind="show" identifier="CostSheetSegue" id="uG9-oT-zJz"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="514" y="110"/>
+        </scene>
+        <!--Cost Sheet View Controller-->
+        <scene sceneID="aTx-MN-Tcw">
+            <objects>
+                <viewController id="egc-Yf-OgO" customClass="CostSheetViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pIF-24-eZY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1238" y="110"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="12t-Y0-4G4">
