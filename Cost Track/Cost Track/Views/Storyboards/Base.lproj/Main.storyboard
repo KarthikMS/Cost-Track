@@ -45,10 +45,22 @@
         <!--Cost Sheet View Controller-->
         <scene sceneID="aTx-MN-Tcw">
             <objects>
-                <viewController id="egc-Yf-OgO" customClass="CostSheetViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController"/>
+                <viewController id="egc-Yf-OgO" customClass="CostSheetViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="VJY-cq-tDL" kind="show" identifier="CostSheetEntrySegue" id="pWF-n5-Vqd"/>
+                    </connections>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pIF-24-eZY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1238" y="110"/>
+        </scene>
+        <!--Cost Sheet Entry View Controller-->
+        <scene sceneID="qeq-tN-ib6">
+            <objects>
+                <viewController id="VJY-cq-tDL" customClass="CostSheetEntryViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dag-9M-Wkn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1991" y="110"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="12t-Y0-4G4">
