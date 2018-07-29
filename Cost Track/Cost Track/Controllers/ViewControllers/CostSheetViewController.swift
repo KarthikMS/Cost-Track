@@ -11,6 +11,7 @@ import UIKit
 class CostSheetViewController: UIViewController {
 
 	// MARK: IBOutlets
+	@IBOutlet weak var amountLabel: UILabel!
 	@IBOutlet weak var transactionsTableView: UITableView!
 
 	// MARK: Properties
@@ -20,6 +21,16 @@ class CostSheetViewController: UIViewController {
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
+
+		// Amount label
+		var balance = costSheet.balance
+		if balance < 0 {
+			amountLabel.textColor = ExpenseColor
+			balance *= -1
+		} else {
+			amountLabel.textColor = IncomeColor
+		}
+		amountLabel.text = String(balance)
 
 		transactionsTableViewDataSource.costSheet = costSheet
 		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
