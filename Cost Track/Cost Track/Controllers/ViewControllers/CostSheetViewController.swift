@@ -21,8 +21,10 @@ class CostSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		transactionsTableViewDataSource.costSheet = costSheet
 		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
 		transactionsTableView.dataSource = transactionsTableViewDataSource
+
     }
 
 }

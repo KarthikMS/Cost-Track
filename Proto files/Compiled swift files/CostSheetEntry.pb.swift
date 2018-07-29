@@ -70,6 +70,15 @@ struct CostSheetEntry {
   /// Clears the value of `date`. Subsequent reads from it will return its default value.
   mutating func clearDate() {self._date = nil}
 
+  var description_p: String {
+    get {return _description_p ?? String()}
+    set {_description_p = newValue}
+  }
+  /// Returns true if `description_p` has been explicitly set.
+  var hasDescription_p: Bool {return self._description_p != nil}
+  /// Clears the value of `description_p`. Subsequent reads from it will return its default value.
+  mutating func clearDescription_p() {self._description_p = nil}
+
   var id: String {
     get {return _id ?? String()}
     set {_id = newValue}
@@ -143,6 +152,7 @@ struct CostSheetEntry {
   fileprivate var _category: CostSheetEntry.Categoty? = nil
   fileprivate var _palce: String? = nil
   fileprivate var _date: String? = nil
+  fileprivate var _description_p: String? = nil
   fileprivate var _id: String? = nil
 }
 
@@ -156,7 +166,8 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     3: .same(proto: "category"),
     4: .same(proto: "palce"),
     5: .same(proto: "date"),
-    6: .same(proto: "id"),
+    6: .same(proto: "description"),
+    7: .same(proto: "id"),
   ]
 
   public var isInitialized: Bool {
@@ -176,7 +187,8 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       case 3: try decoder.decodeSingularEnumField(value: &self._category)
       case 4: try decoder.decodeSingularStringField(value: &self._palce)
       case 5: try decoder.decodeSingularStringField(value: &self._date)
-      case 6: try decoder.decodeSingularStringField(value: &self._id)
+      case 6: try decoder.decodeSingularStringField(value: &self._description_p)
+      case 7: try decoder.decodeSingularStringField(value: &self._id)
       default: break
       }
     }
@@ -198,8 +210,11 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if let v = self._date {
       try visitor.visitSingularStringField(value: v, fieldNumber: 5)
     }
-    if let v = self._id {
+    if let v = self._description_p {
       try visitor.visitSingularStringField(value: v, fieldNumber: 6)
+    }
+    if let v = self._id {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 7)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -210,6 +225,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if self._category != other._category {return false}
     if self._palce != other._palce {return false}
     if self._date != other._date {return false}
+    if self._description_p != other._description_p {return false}
     if self._id != other._id {return false}
     if unknownFields != other.unknownFields {return false}
     return true

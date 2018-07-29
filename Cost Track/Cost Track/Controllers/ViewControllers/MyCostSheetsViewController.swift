@@ -21,6 +21,11 @@ class MyCostSheetsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		// Test
+		let costSheet = CostSheet()
+		account.costSheets.append(costSheet)
+		// Test
+
 		tableView.register(UINib(nibName: "CostSheetTableViewCell", bundle: nil), forCellReuseIdentifier: "CostSheetTableViewCell")
     }
 
@@ -76,17 +81,38 @@ extension MyCostSheetsViewController {
 extension MyCostSheetsViewController: UITableViewDataSource {
 
 	func numberOfSections(in tableView: UITableView) -> Int {
+		// Finish this
 		return 1
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 2
+		// Finish this
+		return account.costSheets.count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "CostSheetTableViewCell", for: indexPath) as! CostSheetTableViewCell
-		
-		// Finish this
+		let costSheet = costSheetAtIndexPath(indexPath)
+
+		cell.costSheetNameLabel.text = costSheet.name
+		cell.dateLabel.text = costSheet.lastModifiedDate
+
+		// Balance label
+		var balance = costSheet.balance
+		if balance < 0 {
+			cell.balanceAmountLabel.textColor = ExpenseColor
+			balance *= -1
+		} else {
+			cell.balanceAmountLabel.textColor = IncomeColor
+		}
+		cell.balanceAmountLabel.text = String(balance)
+
+		let incomeExpenseInfo = costSheet.incomeExpenseInfo
+		cell.incomeCountLabel.text = String(incomeExpenseInfo.incomeCount)
+		cell.expenseCountLabel.text = String(incomeExpenseInfo.expenseCount)
+		cell.incomeAmountLabel.text = String(incomeExpenseInfo.incomeAmount)
+		cell.expenseAmountLabel.text = String(incomeExpenseInfo.expenseAmount)
+
 		return cell
 	}
 

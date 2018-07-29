@@ -20,6 +20,7 @@ message CostSheetEntry {
   required Categoty category = 3;
   optional string palce = 4;
   required string date = 5; // in dd/mm/yyyy
-  required string id = 6;
+  optional string description = 6;
+  required string id = 7;
 
 }
