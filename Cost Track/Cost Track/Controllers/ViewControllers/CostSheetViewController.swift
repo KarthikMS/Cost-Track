@@ -58,4 +58,8 @@ extension CostSheetViewController: UITableViewDelegate {
 		return 80
 	}
 
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		performSegue(withIdentifier: "CostSheetEntrySegue", sender: nil)
+	}
+
 }

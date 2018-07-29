@@ -22,6 +22,8 @@
 		D962F42920F9C152003C7C58 /* MyCostSheetsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */; };
 		D962F42E20F9D877003C7C58 /* CostSheetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F42C20F9D877003C7C58 /* CostSheetTableViewCell.swift */; };
 		D962F42F20F9D877003C7C58 /* CostSheetTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D962F42D20F9D877003C7C58 /* CostSheetTableViewCell.xib */; };
+		D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */; };
+		D9F5E5F520FEF77300454FA9 /* CostSheetEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,8 @@
 		D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyCostSheetsViewController.xib; sourceTree = "<group>"; };
 		D962F42C20F9D877003C7C58 /* CostSheetTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetTableViewCell.swift; sourceTree = "<group>"; };
 		D962F42D20F9D877003C7C58 /* CostSheetTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSheetTableViewCell.xib; sourceTree = "<group>"; };
+		D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetEntryViewController.swift; sourceTree = "<group>"; };
+		D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSheetEntryViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +192,7 @@
 		D962F42320F9C0D3003C7C58 /* XIBs */ = {
 			isa = PBXGroup;
 			children = (
+				D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */,
 				D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */,
 				D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */,
 				D962F42D20F9D877003C7C58 /* CostSheetTableViewCell.xib */,
@@ -209,6 +214,7 @@
 			children = (
 				D962F42620F9C152003C7C58 /* MyCostSheetsViewController.swift */,
 				D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */,
+				D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -320,6 +326,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9F5E5F520FEF77300454FA9 /* CostSheetEntryViewController.xib in Resources */,
 				D962F3FC20F9BE81003C7C58 /* LaunchScreen.storyboard in Resources */,
 				D9032E9220FB1A7F009EF5FC /* CostSheetViewController.xib in Resources */,
 				D962F42920F9C152003C7C58 /* MyCostSheetsViewController.xib in Resources */,
@@ -354,6 +361,7 @@
 				D9032EBA20FB4F20009EF5FC /* TransactionsTableViewCell.swift in Sources */,
 				D9032EB620FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift in Sources */,
 				D962F42820F9C152003C7C58 /* MyCostSheetsViewController.swift in Sources */,
+				D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */,
 				D9032E9020FB1A71009EF5FC /* CostSheetViewController.swift in Sources */,
 				D962F42E20F9D877003C7C58 /* CostSheetTableViewCell.swift in Sources */,
 				D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */,
