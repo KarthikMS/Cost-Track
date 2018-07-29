@@ -70,6 +70,15 @@ struct CostSheetEntry {
   /// Clears the value of `date`. Subsequent reads from it will return its default value.
   mutating func clearDate() {self._date = nil}
 
+  var id: String {
+    get {return _id ?? String()}
+    set {_id = newValue}
+  }
+  /// Returns true if `id` has been explicitly set.
+  var hasID: Bool {return self._id != nil}
+  /// Clears the value of `id`. Subsequent reads from it will return its default value.
+  mutating func clearID() {self._id = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum EntryType: SwiftProtobuf.Enum {
@@ -134,20 +143,20 @@ struct CostSheetEntry {
   fileprivate var _category: CostSheetEntry.Categoty? = nil
   fileprivate var _palce: String? = nil
   fileprivate var _date: String? = nil
+  fileprivate var _id: String? = nil
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "com.zoho.startwith.build"
-
 extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".CostSheetEntry"
+  static let protoMessageName: String = "CostSheetEntry"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "type"),
     2: .same(proto: "amount"),
     3: .same(proto: "category"),
     4: .same(proto: "palce"),
     5: .same(proto: "date"),
+    6: .same(proto: "id"),
   ]
 
   public var isInitialized: Bool {
@@ -155,6 +164,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if self._amount == nil {return false}
     if self._category == nil {return false}
     if self._date == nil {return false}
+    if self._id == nil {return false}
     return true
   }
 
@@ -166,6 +176,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       case 3: try decoder.decodeSingularEnumField(value: &self._category)
       case 4: try decoder.decodeSingularStringField(value: &self._palce)
       case 5: try decoder.decodeSingularStringField(value: &self._date)
+      case 6: try decoder.decodeSingularStringField(value: &self._id)
       default: break
       }
     }
@@ -187,6 +198,9 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if let v = self._date {
       try visitor.visitSingularStringField(value: v, fieldNumber: 5)
     }
+    if let v = self._id {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -196,6 +210,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if self._category != other._category {return false}
     if self._palce != other._palce {return false}
     if self._date != other._date {return false}
+    if self._id != other._id {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }

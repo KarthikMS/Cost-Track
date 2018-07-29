@@ -23,7 +23,11 @@
 		D962F42920F9C152003C7C58 /* MyCostSheetsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */; };
 		D962F42E20F9D877003C7C58 /* CostSheetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F42C20F9D877003C7C58 /* CostSheetTableViewCell.swift */; };
 		D962F42F20F9D877003C7C58 /* CostSheetTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D962F42D20F9D877003C7C58 /* CostSheetTableViewCell.xib */; };
-		D98973A0210D6D3E0051F809 /* CostSheetEntry.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D989739F210D6D3E0051F809 /* CostSheetEntry.pb.swift */; };
+		D98973CA210E147D0051F809 /* Account+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973C9210E147D0051F809 /* Account+Util.swift */; };
+		D98973D7210E16120051F809 /* Account.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973D3210E16110051F809 /* Account.pb.swift */; };
+		D98973D8210E16120051F809 /* CostSheet.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973D4210E16110051F809 /* CostSheet.pb.swift */; };
+		D98973D9210E16120051F809 /* CostSheetEntry.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973D5210E16120051F809 /* CostSheetEntry.pb.swift */; };
+		D98973DA210E16120051F809 /* CostSheetGroup.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973D6210E16120051F809 /* CostSheetGroup.pb.swift */; };
 		D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */; };
 		D9F5E5F520FEF77300454FA9 /* CostSheetEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */; };
 		E29127181D6F0C94E5F0F179 /* Pods_Cost_Track.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF1107E34BB8B9B1C3F35C81 /* Pods_Cost_Track.framework */; };
@@ -75,7 +79,11 @@
 		D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyCostSheetsViewController.xib; sourceTree = "<group>"; };
 		D962F42C20F9D877003C7C58 /* CostSheetTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetTableViewCell.swift; sourceTree = "<group>"; };
 		D962F42D20F9D877003C7C58 /* CostSheetTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSheetTableViewCell.xib; sourceTree = "<group>"; };
-		D989739F210D6D3E0051F809 /* CostSheetEntry.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheetEntry.pb.swift; sourceTree = "<group>"; };
+		D98973C9210E147D0051F809 /* Account+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+Util.swift"; sourceTree = "<group>"; };
+		D98973D3210E16110051F809 /* Account.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.pb.swift; sourceTree = "<group>"; };
+		D98973D4210E16110051F809 /* CostSheet.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheet.pb.swift; sourceTree = "<group>"; };
+		D98973D5210E16120051F809 /* CostSheetEntry.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheetEntry.pb.swift; sourceTree = "<group>"; };
+		D98973D6210E16120051F809 /* CostSheetGroup.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheetGroup.pb.swift; sourceTree = "<group>"; };
 		D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetEntryViewController.swift; sourceTree = "<group>"; };
 		D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSheetEntryViewController.xib; sourceTree = "<group>"; };
 		DDC2EE39C215E79DA1FB862D /* Pods_Cost_TrackUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cost_TrackUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -171,6 +179,7 @@
 				D962F41F20F9C09D003C7C58 /* Models */,
 				D962F42020F9C0B1003C7C58 /* Views */,
 				D962F42120F9C0BA003C7C58 /* Controllers */,
+				D98973C7210E144D0051F809 /* Util */,
 				D962F42420F9C0E9003C7C58 /* Resources */,
 				D962F3FD20F9BE81003C7C58 /* Info.plist */,
 			);
@@ -265,9 +274,28 @@
 		D989739C210D6C7C0051F809 /* Proto */ = {
 			isa = PBXGroup;
 			children = (
-				D989739F210D6D3E0051F809 /* CostSheetEntry.pb.swift */,
+				D98973D3210E16110051F809 /* Account.pb.swift */,
+				D98973D4210E16110051F809 /* CostSheet.pb.swift */,
+				D98973D5210E16120051F809 /* CostSheetEntry.pb.swift */,
+				D98973D6210E16120051F809 /* CostSheetGroup.pb.swift */,
 			);
 			path = Proto;
+			sourceTree = "<group>";
+		};
+		D98973C7210E144D0051F809 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				D98973C8210E14600051F809 /* Extensions */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		D98973C8210E14600051F809 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D98973C9210E147D0051F809 /* Account+Util.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -488,13 +516,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D98973D7210E16120051F809 /* Account.pb.swift in Sources */,
 				D9032EBA20FB4F20009EF5FC /* TransactionsTableViewCell.swift in Sources */,
 				D9032EB620FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift in Sources */,
 				D962F42820F9C152003C7C58 /* MyCostSheetsViewController.swift in Sources */,
 				D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */,
+				D98973D8210E16120051F809 /* CostSheet.pb.swift in Sources */,
 				D9032E9020FB1A71009EF5FC /* CostSheetViewController.swift in Sources */,
+				D98973D9210E16120051F809 /* CostSheetEntry.pb.swift in Sources */,
+				D98973CA210E147D0051F809 /* Account+Util.swift in Sources */,
+				D98973DA210E16120051F809 /* CostSheetGroup.pb.swift in Sources */,
 				D962F42E20F9D877003C7C58 /* CostSheetTableViewCell.swift in Sources */,
-				D98973A0210D6D3E0051F809 /* CostSheetEntry.pb.swift in Sources */,
 				D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -14,6 +14,9 @@ class MyCostSheetsViewController: UIViewController {
 	@IBOutlet weak var totalAmountLabel: UILabel!
 	@IBOutlet weak var tableView: UITableView!
 
+	// MARK: Properties
+	var account = Account()
+
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +24,27 @@ class MyCostSheetsViewController: UIViewController {
 		tableView.register(UINib(nibName: "CostSheetTableViewCell", bundle: nil), forCellReuseIdentifier: "CostSheetTableViewCell")
     }
 
+	// MARK: Navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		// Get the new view controller using segue.destinationViewController.
+		// Pass the selected object to the new view controller.
+		if let identifier = segue.identifier,
+			identifier == "CostSheetSegue",
+			let sender = sender as? [String: CostSheet],
+			let costSheet = sender["costSheet"] {
+			let costSheetViewController = segue.destination as! CostSheetViewController
+			costSheetViewController.costSheet = costSheet
+		}
+	}
+
+	// MARK: Misc. functions
+	private func costSheetAtIndexPath(_ indexPath: IndexPath) -> CostSheet {
+		var index = indexPath.row
+		for i in 0..<indexPath.section {
+			index += account.numberOfCostSheetsInGroup(account.groups[i])
+		}
+		return account.costSheets[index]
+	}
 }
 
 // MARK: IBActions
@@ -51,6 +75,10 @@ extension MyCostSheetsViewController {
 // MARK: UITableViewDataSource
 extension MyCostSheetsViewController: UITableViewDataSource {
 
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return 1
+	}
+
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 2
 	}
@@ -72,7 +100,8 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		performSegue(withIdentifier: "CostSheetSegue", sender: nil)
+		let costSheet = costSheetAtIndexPath(indexPath)
+		performSegue(withIdentifier: "CostSheetSegue", sender: ["costSheet": costSheet])
 	}
 
 }

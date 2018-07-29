@@ -15,6 +15,7 @@ class CostSheetViewController: UIViewController {
 
 	// MARK: Properties
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
+	var costSheet = CostSheet()
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
