@@ -57,7 +57,15 @@
         <!--Cost Sheet Entry View Controller-->
         <scene sceneID="qeq-tN-ib6">
             <objects>
-                <viewController id="VJY-cq-tDL" customClass="CostSheetEntryViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController"/>
+                <viewController id="VJY-cq-tDL" customClass="CostSheetEntryViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Wee-sd-if9">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="rzO-bc-wll">
+                            <connections>
+                                <action selector="saveButtonPressed:" destination="VJY-cq-tDL" id="UaA-CW-963"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dag-9M-Wkn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1991" y="110"/>

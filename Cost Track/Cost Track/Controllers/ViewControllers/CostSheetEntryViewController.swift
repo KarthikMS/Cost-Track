@@ -53,4 +53,9 @@ extension CostSheetEntryViewController {
 	@IBAction func repeatButtonPressed(_ sender: Any) {
 	}
 
+	@IBAction func saveButtonPressed(_ sender: Any) {
+		var newEntry = CostSheetEntry()
+		newEntry.amount = Float(amountTextView.text)!
+	}
+
 }
