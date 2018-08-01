@@ -18,12 +18,17 @@ class CostSheetSettingsTableView: UITableView {
 	// Properties
 	private var mode = CostSheetSettingsTableViewMode.newCostSheet
 
+	// Views
+	var costSheetNameTextView = UITextView()
+	var initalBalanceTextView = UITextView()
+
 	func setMode(_ mode: CostSheetSettingsTableViewMode) {
 		self.mode = mode
 
 		separatorInset.left = 0
 		register(UITableViewCell.self, forCellReuseIdentifier: "CostSheetSettingsTableViewCell")
 		dataSource = self
+		delegate = self
 	}
 
 }
@@ -50,10 +55,13 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 		case 0:
 			cell.textLabel?.text = "Cost sheet"
 			cell.addAccessoryTextView(withText: "Cost Sheet")
+			costSheetNameTextView = cell.accessoryView as! UITextView
 		case 1:
 			cell.textLabel?.text = "Currency"
 		case 2:
 			cell.textLabel?.text = "Initial balance"
+			cell.addAccessoryTextView(withText: "0.00", keyboardType: .decimalPad)
+			initalBalanceTextView = cell.accessoryView as! UITextView
 		case 3:
 			cell.textLabel?.text = "Overall Total"
 		case 4:
@@ -67,9 +75,20 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 
 }
 
+// MARK: UITableViewDelegate
+extension CostSheetSettingsTableView: UITableViewDelegate {
+
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		// To dismiss the keyboard
+		endEditing(true)
+
+	}
+
+}
+
 private extension UITableViewCell {
 
-	func addAccessoryTextView(withText: String) {
+	func addAccessoryTextView(withText: String, keyboardType: UIKeyboardType = .default) {
 		let contentViewFrame = contentView.frame
 		var frame = CGRect()
 		frame.size.width = 0.6 * contentViewFrame.size.width
@@ -78,6 +97,7 @@ private extension UITableViewCell {
 		frame.origin.y = 0
 
 		let textView = UITextView(frame: frame)
+		textView.keyboardType = keyboardType
 		textView.backgroundColor = .red
 
 		accessoryView = textView

@@ -21,3 +21,18 @@ class NewCostSheetViewController: UIViewController {
     }
 
 }
+
+// MARK: IBActions
+extension NewCostSheetViewController {
+
+	@IBAction func saveButtonPressed(_ sender: Any) {
+		let costSheetName = settingsTableView.costSheetNameTextView.text
+		if costSheetName == "" {
+			// Show dialog to enter costSheet name
+		}
+
+		// Creating new costSheet
+		
+	}
+
+}
