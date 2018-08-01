@@ -18,6 +18,7 @@ class TransactionsTableViewDataSource: NSObject {
 
 	// MARK: Properties
 	var mode = TransactionClassification.date
+	var costSheet = CostSheet()
 
 }
 
@@ -30,6 +31,17 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionsTableViewCell", for: indexPath) as! TransactionsTableViewCell
 
+		// This is just to check
+		let costSheetEntry = costSheet.entries[indexPath.row]
+		let categoryStringTest = String(describing: costSheetEntry.category)
+		cell.setAmount(costSheetEntry.amount,
+					   date: costSheetEntry.date,
+					   time: "NIP",
+					   category: categoryStringTest,
+					   place: costSheetEntry.palce,
+					   description: costSheetEntry.description_p,
+					   forMode: .date
+		)
 		return cell
 	}
 

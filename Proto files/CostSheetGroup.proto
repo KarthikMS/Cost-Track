@@ -1,0 +1,10 @@
+syntax = "proto2";
+
+option swift_prefix = "";
+
+message CostSheetGroup {
+
+  required string name = 1;
+  required string id = 2;
+
+}

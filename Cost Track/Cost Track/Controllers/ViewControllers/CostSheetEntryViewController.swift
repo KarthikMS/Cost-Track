@@ -15,10 +15,6 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var amountTextView: UITextView!
 	@IBOutlet weak var descriptionTextView: UITextView!
 
-	// MARK: Properties
-	let SalaryColor = UIColor(red: 102/255.0, green: 255/255.0, blue: 102/255.0, alpha: 1)
-	let ExpenseColor = UIColor(red: 255/255.0, green: 102/255.0, blue: 102/255.0, alpha: 1)
-
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +47,11 @@ extension CostSheetEntryViewController {
 	}
 
 	@IBAction func repeatButtonPressed(_ sender: Any) {
+	}
+
+	@IBAction func saveButtonPressed(_ sender: Any) {
+		var newEntry = CostSheetEntry()
+		newEntry.amount = Float(amountTextView.text)!
 	}
 
 }
