@@ -24,6 +24,7 @@ message CostSheetEntry {
     INSURANCE = 11;
     FOOD_AND_DRINKS = 12;
     MISC = 13;
+    TRANSFER = 14;
   }
 
   required EntryType type = 1;

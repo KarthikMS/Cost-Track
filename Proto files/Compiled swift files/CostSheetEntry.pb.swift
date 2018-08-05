@@ -131,6 +131,7 @@ struct CostSheetEntry {
     case insurance // = 11
     case foodAndDrinks // = 12
     case misc // = 13
+    case transfer // = 14
 
     init() {
       self = .salary
@@ -152,6 +153,7 @@ struct CostSheetEntry {
       case 11: self = .insurance
       case 12: self = .foodAndDrinks
       case 13: self = .misc
+      case 14: self = .transfer
       default: return nil
       }
     }
@@ -172,6 +174,7 @@ struct CostSheetEntry {
       case .insurance: return 11
       case .foodAndDrinks: return 12
       case .misc: return 13
+      case .transfer: return 14
       }
     }
 
@@ -287,5 +290,6 @@ extension CostSheetEntry.Category: SwiftProtobuf._ProtoNameProviding {
     11: .same(proto: "INSURANCE"),
     12: .same(proto: "FOOD_AND_DRINKS"),
     13: .same(proto: "MISC"),
+    14: .same(proto: "TRANSFER"),
   ]
 }
