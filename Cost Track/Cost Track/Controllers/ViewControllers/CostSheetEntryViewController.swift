@@ -34,7 +34,7 @@ class CostSheetEntryViewController: UIViewController {
 	// MARK: View functions
 	private func updateDateView(date: Date) {
 		if Calendar.current.isDateInToday(date) {
-			dateLabel.text = date.string(format: "Today")
+			dateLabel.text = "Today"
 		} else {
 			dateLabel.text = date.string(format: "dd-MMM-yyyy")
 		}
@@ -46,25 +46,38 @@ class CostSheetEntryViewController: UIViewController {
 extension CostSheetEntryViewController {
 
 	@IBAction func currencyButtonPressed(_ sender: Any) {
+		amountTextView.resignFirstResponder()
+		descriptionTextView.resignFirstResponder()
 	}
 
 	@IBAction func categoryButtonPressed(_ sender: Any) {
+		amountTextView.resignFirstResponder()
+		descriptionTextView.resignFirstResponder()
 	}
 
 	@IBAction func locationButtonPressed(_ sender: Any) {
+		amountTextView.resignFirstResponder()
+		descriptionTextView.resignFirstResponder()
 	}
 
 	@IBAction func imageButtonPressed(_ sender: Any) {
+		amountTextView.resignFirstResponder()
+		descriptionTextView.resignFirstResponder()
 	}
 
 	@IBAction func voiceNoteButtonPressed(_ sender: Any) {
+		amountTextView.resignFirstResponder()
+		descriptionTextView.resignFirstResponder()
 	}
 
 	@IBAction func dateViewTapped(_ sender: Any) {
-
+		amountTextView.resignFirstResponder()
+		descriptionTextView.resignFirstResponder()
 	}
 
 	@IBAction func repeatButtonPressed(_ sender: Any) {
+		amountTextView.resignFirstResponder()
+		descriptionTextView.resignFirstResponder()
 	}
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
