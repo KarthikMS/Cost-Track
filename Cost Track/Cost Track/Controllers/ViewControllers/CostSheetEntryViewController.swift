@@ -27,11 +27,19 @@ class CostSheetEntryViewController: UIViewController {
 
 		// Set amountBar text color
 
-		let date = entryDatePicker.datePicker.date
-		dateLabel.text = date.string(format: "dd-MMM-yyyy")
-		timeLabel.text = date.string(format: "hh:mm a")
+		entryDatePicker.delegate = self
+		updateDateView(date: entryDatePicker.datePicker.date)
     }
 
+	// MARK: View functions
+	private func updateDateView(date: Date) {
+		if Calendar.current.isDateInToday(date) {
+			dateLabel.text = date.string(format: "Today")
+		} else {
+			dateLabel.text = date.string(format: "dd-MMM-yyyy")
+		}
+		timeLabel.text = date.string(format: "hh:mm a")
+	}
 }
 
 // MARK: IBActions
@@ -41,7 +49,6 @@ extension CostSheetEntryViewController {
 	}
 
 	@IBAction func categoryButtonPressed(_ sender: Any) {
-		print("Cat")
 	}
 
 	@IBAction func locationButtonPressed(_ sender: Any) {
@@ -65,25 +72,18 @@ extension CostSheetEntryViewController {
 		newEntry.amount = Float(amountTextView.text)!
 		newEntry.category = category
 
-		let acutalDate = entryDatePicker.datePicker.date
-		if Calendar.current.isDateInToday(acutalDate) {
-			print("Today")
-		}
-		print(acutalDate.string(format: "EEE hh:mm:ss"))
-
-		let currentDate = Date()
-		let dateData = NSKeyedArchiver.archivedData(withRootObject: currentDate)
+		let entryDate = entryDatePicker.datePicker.date
+		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDate)
 		newEntry.date = dateData
+	}
 
+}
 
-		print("Entry created")
-		if let date = NSKeyedUnarchiver.unarchiveObject(with: newEntry.date) as? Date {
-			let dateFormatter = DateFormatter()
-			dateFormatter.locale = Locale.current
-			dateFormatter.dateFormat = "EEE dd, MMM yyyy   HH:mm:ss"
-			print(dateFormatter.string(from: date))
-		}
+// MARK: EntryDatePickerDelegate
+extension CostSheetEntryViewController: EntryDatePickerDelegate {
 
+	func dateChanged(to date: Date) {
+		updateDateView(date: date)
 	}
 
 }

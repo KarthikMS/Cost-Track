@@ -8,11 +8,18 @@
 
 import UIKit
 
+protocol EntryDatePickerDelegate: class {
+	func dateChanged(to date: Date)
+}
+
 class EntryDatePicker: UIView {
 
 	// MARK: IBOutlets
 	@IBOutlet var contentView: UIView!
 	@IBOutlet weak var datePicker: UIDatePicker!
+
+	// MARL: Properties
+	weak var delegate: EntryDatePickerDelegate?
 
 	// MARK: Initializers
 	override init(frame: CGRect) {
@@ -31,9 +38,6 @@ class EntryDatePicker: UIView {
 		contentView.frame = self.bounds
 	}
 
-	@IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
-		print(sender.date.string(format: "EEE hh:mm:ss"))
-	}
 }
 
 // MARK: IBActions
@@ -48,6 +52,10 @@ extension EntryDatePicker {
 		default:
 			datePicker.datePickerMode = .time
 		}
+	}
+
+	@IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
+		delegate?.dateChanged(to: sender.date)
 	}
 
 }
