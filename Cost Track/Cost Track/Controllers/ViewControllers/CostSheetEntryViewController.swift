@@ -52,6 +52,20 @@ extension CostSheetEntryViewController {
 	@IBAction func saveButtonPressed(_ sender: Any) {
 		var newEntry = CostSheetEntry()
 		newEntry.amount = Float(amountTextView.text)!
+
+		let currentDate = Date()
+		let dateData = NSKeyedArchiver.archivedData(withRootObject: currentDate)
+		newEntry.date = dateData
+
+
+		print("Entry created")
+		if let date = NSKeyedUnarchiver.unarchiveObject(with: newEntry.date) as? Date {
+			let dateFormatter = DateFormatter()
+			dateFormatter.locale = Locale.current
+			dateFormatter.dateFormat = "EEE dd, MMM yyyy   HH:mm:ss"
+			print(dateFormatter.string(from: date))
+		}
+
 	}
 
 }

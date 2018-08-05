@@ -28,7 +28,7 @@ class MyCostSheetsViewController: UIViewController {
 		costSheetEntry1.amount = 500
 		costSheetEntry1.category = .other
 		costSheetEntry1.type = .income
-		costSheetEntry1.date = "27/07/2018"
+//		costSheetEntry1.date = "27/07/2018"
 		costSheetEntry1.id = UUID().uuidString
 		costSheet.entries.append(costSheetEntry1)
 
@@ -36,7 +36,7 @@ class MyCostSheetsViewController: UIViewController {
 		costSheetEntry2.amount = 100
 		costSheetEntry2.category = .fuel
 		costSheetEntry2.type = .expense
-		costSheetEntry2.date = "28/07/2018"
+//		costSheetEntry2.date = "28/07/2018"
 		costSheetEntry2.id = UUID().uuidString
 		costSheet.entries.append(costSheetEntry2)
 

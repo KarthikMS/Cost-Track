@@ -60,11 +60,11 @@ extension CostSheet {
 		)
 	}
 
+	// Fix this
 	var lastModifiedDate: String {
-		// Finish this
 		var lastModifiedDate = ""
 		if let entry = entries.first {
-			lastModifiedDate = entry.date
+			lastModifiedDate = ""//entry.date
 		}
 		return lastModifiedDate
 	}

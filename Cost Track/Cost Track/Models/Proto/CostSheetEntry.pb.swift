@@ -60,9 +60,8 @@ struct CostSheetEntry {
   /// Clears the value of `palce`. Subsequent reads from it will return its default value.
   mutating func clearPalce() {self._palce = nil}
 
-  /// in dd/mm/yyyy
-  var date: String {
-    get {return _date ?? String()}
+  var date: Data {
+    get {return _date ?? SwiftProtobuf.Internal.emptyData}
     set {_date = newValue}
   }
   /// Returns true if `date` has been explicitly set.
@@ -151,7 +150,7 @@ struct CostSheetEntry {
   fileprivate var _amount: Float? = nil
   fileprivate var _category: CostSheetEntry.Categoty? = nil
   fileprivate var _palce: String? = nil
-  fileprivate var _date: String? = nil
+  fileprivate var _date: Data? = nil
   fileprivate var _description_p: String? = nil
   fileprivate var _id: String? = nil
 }
@@ -186,7 +185,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       case 2: try decoder.decodeSingularFloatField(value: &self._amount)
       case 3: try decoder.decodeSingularEnumField(value: &self._category)
       case 4: try decoder.decodeSingularStringField(value: &self._palce)
-      case 5: try decoder.decodeSingularStringField(value: &self._date)
+      case 5: try decoder.decodeSingularBytesField(value: &self._date)
       case 6: try decoder.decodeSingularStringField(value: &self._description_p)
       case 7: try decoder.decodeSingularStringField(value: &self._id)
       default: break
@@ -208,7 +207,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
     }
     if let v = self._date {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 5)
+      try visitor.visitSingularBytesField(value: v, fieldNumber: 5)
     }
     if let v = self._description_p {
       try visitor.visitSingularStringField(value: v, fieldNumber: 6)

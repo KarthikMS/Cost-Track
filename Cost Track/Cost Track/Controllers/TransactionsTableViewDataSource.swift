@@ -34,8 +34,9 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 		// This is just to check
 		let costSheetEntry = costSheet.entries[indexPath.row]
 		let categoryStringTest = String(describing: costSheetEntry.category)
+		// Fix this
 		cell.setAmount(costSheetEntry.amount,
-					   date: costSheetEntry.date,
+					   date: "",//costSheetEntry.date,
 					   time: "NIP",
 					   category: categoryStringTest,
 					   place: costSheetEntry.palce,
