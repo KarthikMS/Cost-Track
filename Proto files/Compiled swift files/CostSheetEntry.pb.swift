@@ -42,8 +42,8 @@ struct CostSheetEntry {
   /// Clears the value of `amount`. Subsequent reads from it will return its default value.
   mutating func clearAmount() {self._amount = nil}
 
-  var category: CostSheetEntry.Categoty {
-    get {return _category ?? .fuel}
+  var category: CostSheetEntry.Category {
+    get {return _category ?? .salary}
     set {_category = newValue}
   }
   /// Returns true if `category` has been explicitly set.
@@ -51,14 +51,14 @@ struct CostSheetEntry {
   /// Clears the value of `category`. Subsequent reads from it will return its default value.
   mutating func clearCategory() {self._category = nil}
 
-  var palce: String {
-    get {return _palce ?? String()}
-    set {_palce = newValue}
+  var place: String {
+    get {return _place ?? String()}
+    set {_place = newValue}
   }
-  /// Returns true if `palce` has been explicitly set.
-  var hasPalce: Bool {return self._palce != nil}
-  /// Clears the value of `palce`. Subsequent reads from it will return its default value.
-  mutating func clearPalce() {self._palce = nil}
+  /// Returns true if `place` has been explicitly set.
+  var hasPlace: Bool {return self._place != nil}
+  /// Clears the value of `place`. Subsequent reads from it will return its default value.
+  mutating func clearPlace() {self._place = nil}
 
   var date: Data {
     get {return _date ?? SwiftProtobuf.Internal.emptyData}
@@ -115,30 +115,63 @@ struct CostSheetEntry {
 
   }
 
-  enum Categoty: SwiftProtobuf.Enum {
+  enum Category: SwiftProtobuf.Enum {
     typealias RawValue = Int
-    case fuel // = 0
-    case food // = 2
-    case other // = 3
+    case salary // = 0
+    case vehicleAndTransport // = 1
+    case household // = 2
+    case home // = 3
+    case shopping // = 4
+    case phone // = 5
+    case entertainment // = 6
+    case medicine // = 7
+    case investment // = 8
+    case investmentReturn // = 9
+    case tax // = 10
+    case insurance // = 11
+    case foodAndDrinks // = 12
+    case misc // = 13
 
     init() {
-      self = .fuel
+      self = .salary
     }
 
     init?(rawValue: Int) {
       switch rawValue {
-      case 0: self = .fuel
-      case 2: self = .food
-      case 3: self = .other
+      case 0: self = .salary
+      case 1: self = .vehicleAndTransport
+      case 2: self = .household
+      case 3: self = .home
+      case 4: self = .shopping
+      case 5: self = .phone
+      case 6: self = .entertainment
+      case 7: self = .medicine
+      case 8: self = .investment
+      case 9: self = .investmentReturn
+      case 10: self = .tax
+      case 11: self = .insurance
+      case 12: self = .foodAndDrinks
+      case 13: self = .misc
       default: return nil
       }
     }
 
     var rawValue: Int {
       switch self {
-      case .fuel: return 0
-      case .food: return 2
-      case .other: return 3
+      case .salary: return 0
+      case .vehicleAndTransport: return 1
+      case .household: return 2
+      case .home: return 3
+      case .shopping: return 4
+      case .phone: return 5
+      case .entertainment: return 6
+      case .medicine: return 7
+      case .investment: return 8
+      case .investmentReturn: return 9
+      case .tax: return 10
+      case .insurance: return 11
+      case .foodAndDrinks: return 12
+      case .misc: return 13
       }
     }
 
@@ -148,8 +181,8 @@ struct CostSheetEntry {
 
   fileprivate var _type: CostSheetEntry.EntryType? = nil
   fileprivate var _amount: Float? = nil
-  fileprivate var _category: CostSheetEntry.Categoty? = nil
-  fileprivate var _palce: String? = nil
+  fileprivate var _category: CostSheetEntry.Category? = nil
+  fileprivate var _place: String? = nil
   fileprivate var _date: Data? = nil
   fileprivate var _description_p: String? = nil
   fileprivate var _id: String? = nil
@@ -163,7 +196,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     1: .same(proto: "type"),
     2: .same(proto: "amount"),
     3: .same(proto: "category"),
-    4: .same(proto: "palce"),
+    4: .same(proto: "place"),
     5: .same(proto: "date"),
     6: .same(proto: "description"),
     7: .same(proto: "id"),
@@ -184,7 +217,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       case 1: try decoder.decodeSingularEnumField(value: &self._type)
       case 2: try decoder.decodeSingularFloatField(value: &self._amount)
       case 3: try decoder.decodeSingularEnumField(value: &self._category)
-      case 4: try decoder.decodeSingularStringField(value: &self._palce)
+      case 4: try decoder.decodeSingularStringField(value: &self._place)
       case 5: try decoder.decodeSingularBytesField(value: &self._date)
       case 6: try decoder.decodeSingularStringField(value: &self._description_p)
       case 7: try decoder.decodeSingularStringField(value: &self._id)
@@ -203,7 +236,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if let v = self._category {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 3)
     }
-    if let v = self._palce {
+    if let v = self._place {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
     }
     if let v = self._date {
@@ -222,7 +255,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if self._type != other._type {return false}
     if self._amount != other._amount {return false}
     if self._category != other._category {return false}
-    if self._palce != other._palce {return false}
+    if self._place != other._place {return false}
     if self._date != other._date {return false}
     if self._description_p != other._description_p {return false}
     if self._id != other._id {return false}
@@ -238,10 +271,21 @@ extension CostSheetEntry.EntryType: SwiftProtobuf._ProtoNameProviding {
   ]
 }
 
-extension CostSheetEntry.Categoty: SwiftProtobuf._ProtoNameProviding {
+extension CostSheetEntry.Category: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "FUEL"),
-    2: .same(proto: "FOOD"),
-    3: .same(proto: "OTHER"),
+    0: .same(proto: "SALARY"),
+    1: .same(proto: "VEHICLE_AND_TRANSPORT"),
+    2: .same(proto: "HOUSEHOLD"),
+    3: .same(proto: "HOME"),
+    4: .same(proto: "SHOPPING"),
+    5: .same(proto: "PHONE"),
+    6: .same(proto: "ENTERTAINMENT"),
+    7: .same(proto: "MEDICINE"),
+    8: .same(proto: "INVESTMENT"),
+    9: .same(proto: "INVESTMENT_RETURN"),
+    10: .same(proto: "TAX"),
+    11: .same(proto: "INSURANCE"),
+    12: .same(proto: "FOOD_AND_DRINKS"),
+    13: .same(proto: "MISC"),
   ]
 }

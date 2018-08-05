@@ -39,7 +39,7 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 					   date: "",//costSheetEntry.date,
 					   time: "NIP",
 					   category: categoryStringTest,
-					   place: costSheetEntry.palce,
+					   place: costSheetEntry.place,
 					   description: costSheetEntry.description_p,
 					   forMode: .date
 		)

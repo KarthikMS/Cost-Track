@@ -19,9 +19,3 @@ extension Account {
 	}
 
 }
-
-extension CostSheetEntry.Categoty {
-
-
-
-}

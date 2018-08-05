@@ -19,7 +19,7 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var entryDatePicker: EntryDatePicker!
 
 	// MARK: Properties
-	var category = CostSheetEntry.Categoty.fuel
+	var category = CostSheetEntry.Category.entertainment
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {

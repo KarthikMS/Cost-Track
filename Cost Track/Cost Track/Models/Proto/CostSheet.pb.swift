@@ -33,14 +33,14 @@ struct CostSheet {
   /// Clears the value of `name`. Subsequent reads from it will return its default value.
   mutating func clearName() {_storage._name = nil}
 
-  var initalBalance: Float {
-    get {return _storage._initalBalance ?? 0}
-    set {_uniqueStorage()._initalBalance = newValue}
+  var initialBalance: Float {
+    get {return _storage._initialBalance ?? 0}
+    set {_uniqueStorage()._initialBalance = newValue}
   }
-  /// Returns true if `initalBalance` has been explicitly set.
-  var hasInitalBalance: Bool {return _storage._initalBalance != nil}
-  /// Clears the value of `initalBalance`. Subsequent reads from it will return its default value.
-  mutating func clearInitalBalance() {_storage._initalBalance = nil}
+  /// Returns true if `initialBalance` has been explicitly set.
+  var hasInitialBalance: Bool {return _storage._initialBalance != nil}
+  /// Clears the value of `initialBalance`. Subsequent reads from it will return its default value.
+  mutating func clearInitialBalance() {_storage._initialBalance = nil}
 
   var includeInOverallTotal: Bool {
     get {return _storage._includeInOverallTotal ?? false}
@@ -87,7 +87,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
   static let protoMessageName: String = "CostSheet"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "name"),
-    2: .same(proto: "initalBalance"),
+    2: .same(proto: "initialBalance"),
     3: .same(proto: "includeInOverallTotal"),
     4: .same(proto: "group"),
     5: .same(proto: "entries"),
@@ -96,7 +96,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
 
   fileprivate class _StorageClass {
     var _name: String? = nil
-    var _initalBalance: Float? = nil
+    var _initialBalance: Float? = nil
     var _includeInOverallTotal: Bool? = nil
     var _group: CostSheetGroup? = nil
     var _entries: [CostSheetEntry] = []
@@ -108,7 +108,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
 
     init(copying source: _StorageClass) {
       _name = source._name
-      _initalBalance = source._initalBalance
+      _initialBalance = source._initialBalance
       _includeInOverallTotal = source._includeInOverallTotal
       _group = source._group
       _entries = source._entries
@@ -126,7 +126,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
   public var isInitialized: Bool {
     return withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       if _storage._name == nil {return false}
-      if _storage._initalBalance == nil {return false}
+      if _storage._initialBalance == nil {return false}
       if _storage._includeInOverallTotal == nil {return false}
       if _storage._id == nil {return false}
       if let v = _storage._group, !v.isInitialized {return false}
@@ -141,7 +141,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularStringField(value: &_storage._name)
-        case 2: try decoder.decodeSingularFloatField(value: &_storage._initalBalance)
+        case 2: try decoder.decodeSingularFloatField(value: &_storage._initialBalance)
         case 3: try decoder.decodeSingularBoolField(value: &_storage._includeInOverallTotal)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._group)
         case 5: try decoder.decodeRepeatedMessageField(value: &_storage._entries)
@@ -157,7 +157,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       if let v = _storage._name {
         try visitor.visitSingularStringField(value: v, fieldNumber: 1)
       }
-      if let v = _storage._initalBalance {
+      if let v = _storage._initialBalance {
         try visitor.visitSingularFloatField(value: v, fieldNumber: 2)
       }
       if let v = _storage._includeInOverallTotal {
@@ -182,7 +182,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
         let _storage = _args.0
         let other_storage = _args.1
         if _storage._name != other_storage._name {return false}
-        if _storage._initalBalance != other_storage._initalBalance {return false}
+        if _storage._initialBalance != other_storage._initialBalance {return false}
         if _storage._includeInOverallTotal != other_storage._includeInOverallTotal {return false}
         if _storage._group != other_storage._group {return false}
         if _storage._entries != other_storage._entries {return false}
