@@ -11,6 +11,7 @@ import UIKit
 class CostSheetEntryViewController: UIViewController {
 
 	// MARK: IBOutlets
+	// Views
 	@IBOutlet weak var amountBarView: UIView!
 	@IBOutlet weak var amountTextView: UITextView!
 	@IBOutlet weak var categoryLabel: UILabel!
@@ -19,6 +20,15 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var descriptionTextView: UITextView!
 	@IBOutlet weak var entryDatePicker: EntryDatePicker!
 	@IBOutlet weak var entryCategoryPicker: EntryCategoryPicker!
+
+	// Constraints
+	@IBOutlet weak var categoryPickerHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var categoryPickerHideTopConstraint: NSLayoutConstraint!
+	@IBOutlet weak var categoryPickerShowTopConstraint: NSLayoutConstraint!
+
+	@IBOutlet weak var datePickerHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var datePickerHideTopConstraint: NSLayoutConstraint!
+	@IBOutlet weak var datePickerShowTopConstraint: NSLayoutConstraint!
 
 	// MARK: Properties
 	var category = CostSheetEntry.Category.entertainment
@@ -36,6 +46,13 @@ class CostSheetEntryViewController: UIViewController {
 		updateCategoryView(category: CommonUtil.getAllCategories()[0])
     }
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+
+		categoryPickerHeightConstraint.constant = view.frame.size.height - view.safeAreaInsets.bottom - (descriptionTextView.frame.origin.y + descriptionTextView.frame.size.height)
+		datePickerHeightConstraint.constant = categoryPickerHeightConstraint.constant
+	}
+
 	// MARK: View functions
 	private func updateDateView(date: Date) {
 		if Calendar.current.isDateInToday(date) {
@@ -48,6 +65,54 @@ class CostSheetEntryViewController: UIViewController {
 
 	private func updateCategoryView(category: CostSheetEntry.Category) {
 		categoryLabel.text = category.name
+	}
+
+	private func showCategoryPicker() {
+		if categoryPickerShowTopConstraint.isActive {
+			return
+		}
+
+		view.removeConstraint(categoryPickerHideTopConstraint)
+		view.addConstraint(categoryPickerShowTopConstraint)
+		UIView.animate(withDuration: 0.75) {
+			self.view.layoutIfNeeded()
+		}
+	}
+
+	private func hideCategoryPicker() {
+		if categoryPickerHideTopConstraint.isActive {
+			return
+		}
+
+		view.removeConstraint(categoryPickerShowTopConstraint)
+		view.addConstraint(categoryPickerHideTopConstraint)
+		UIView.animate(withDuration: 0.75) {
+			self.view.layoutIfNeeded()
+		}
+	}
+
+	private func showDatePicker() {
+		if datePickerShowTopConstraint.isActive {
+			return
+		}
+
+		view.removeConstraint(datePickerHideTopConstraint)
+		view.addConstraint(datePickerShowTopConstraint)
+		UIView.animate(withDuration: 0.75) {
+			self.view.layoutIfNeeded()
+		}
+	}
+
+	private func hideDatePicker() {
+		if datePickerHideTopConstraint.isActive {
+			return
+		}
+
+		view.removeConstraint(datePickerShowTopConstraint)
+		view.addConstraint(datePickerHideTopConstraint)
+		UIView.animate(withDuration: 0.75) {
+			self.view.layoutIfNeeded()
+		}
 	}
 
 }
@@ -63,6 +128,9 @@ extension CostSheetEntryViewController {
 	@IBAction func categoryViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
+
+		hideDatePicker()
+		showCategoryPicker()
 	}
 
 	@IBAction func locationButtonPressed(_ sender: Any) {
@@ -83,6 +151,9 @@ extension CostSheetEntryViewController {
 	@IBAction func dateViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
+
+		hideCategoryPicker()
+		showDatePicker()
 	}
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
