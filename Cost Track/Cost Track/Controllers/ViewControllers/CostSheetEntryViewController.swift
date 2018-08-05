@@ -13,6 +13,7 @@ class CostSheetEntryViewController: UIViewController {
 	// MARK: IBOutlets
 	@IBOutlet weak var amountBarView: UIView!
 	@IBOutlet weak var amountTextView: UITextView!
+	@IBOutlet weak var categoryLabel: UILabel!
 	@IBOutlet weak var dateLabel: UILabel!
 	@IBOutlet weak var timeLabel: UILabel!
 	@IBOutlet weak var descriptionTextView: UITextView!
@@ -32,6 +33,7 @@ class CostSheetEntryViewController: UIViewController {
 		updateDateView(date: entryDatePicker.datePicker.date)
 
 		entryCategoryPicker.delegate = self
+		updateCategoryView(category: CommonUtil.getAllCategories()[0])
     }
 
 	// MARK: View functions
@@ -45,8 +47,9 @@ class CostSheetEntryViewController: UIViewController {
 	}
 
 	private func updateCategoryView(category: CostSheetEntry.Category) {
-
+		categoryLabel.text = category.name
 	}
+
 }
 
 // MARK: IBActions
@@ -57,7 +60,7 @@ extension CostSheetEntryViewController {
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction func categoryButtonPressed(_ sender: Any) {
+	@IBAction func categoryViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
@@ -78,11 +81,6 @@ extension CostSheetEntryViewController {
 	}
 
 	@IBAction func dateViewTapped(_ sender: Any) {
-		amountTextView.resignFirstResponder()
-		descriptionTextView.resignFirstResponder()
-	}
-
-	@IBAction func repeatButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
