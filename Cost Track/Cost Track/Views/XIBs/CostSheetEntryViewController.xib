@@ -16,7 +16,10 @@
             <connections>
                 <outlet property="amountBarView" destination="6au-o4-Src" id="gRX-i6-9nF"/>
                 <outlet property="amountTextView" destination="zao-BM-Sjp" id="q80-Nw-yRT"/>
+                <outlet property="dateLabel" destination="tfy-YN-Muo" id="K3W-ad-7P1"/>
                 <outlet property="descriptionTextView" destination="OcW-2E-2Hg" id="EbO-99-0A2"/>
+                <outlet property="entryDatePicker" destination="dVv-Mq-aOk" id="oTH-ZZ-FFt"/>
+                <outlet property="timeLabel" destination="RWa-3S-V8V" id="5ke-E4-t1D"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -93,16 +96,41 @@
                                 <action selector="voiceNoteButtonPressed:" destination="-1" eventType="touchUpInside" id="TtO-qC-5Nl"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lNF-dl-HGJ">
-                            <rect key="frame" x="226" y="0.0" width="84.5" height="80"/>
-                            <state key="normal" title="Date"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SkO-qq-w0O" userLabel="Date View">
+                            <rect key="frame" x="226" y="0.0" width="85" height="80"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Ve7-zM-T7i">
+                                    <rect key="frame" x="-0.5" y="18" width="85" height="44"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="02-Aug-2018" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tfy-YN-Muo">
+                                            <rect key="frame" x="0.0" y="0.0" width="85" height="22"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="11:20 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RWa-3S-V8V">
+                                            <rect key="frame" x="0.0" y="22" width="85" height="22"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstItem="Ve7-zM-T7i" firstAttribute="width" secondItem="SkO-qq-w0O" secondAttribute="width" id="Jih-8Q-dZ6"/>
+                                <constraint firstItem="Ve7-zM-T7i" firstAttribute="centerX" secondItem="SkO-qq-w0O" secondAttribute="centerX" id="YIj-3M-JYc"/>
+                                <constraint firstItem="Ve7-zM-T7i" firstAttribute="height" secondItem="SkO-qq-w0O" secondAttribute="height" multiplier="0.55" id="tFf-fV-H9g"/>
+                                <constraint firstItem="Ve7-zM-T7i" firstAttribute="centerY" secondItem="SkO-qq-w0O" secondAttribute="centerY" id="zU6-Fq-c0u"/>
+                            </constraints>
                             <connections>
-                                <action selector="dateButtonPressed:" destination="-1" eventType="touchUpInside" id="e9Z-hK-WUI"/>
-                                <action selector="voiceNoteButtonPressed:" destination="-1" eventType="touchUpInside" id="rwS-50-ij8"/>
+                                <outletCollection property="gestureRecognizers" destination="Wq4-65-bNT" appends="YES" id="7JG-Cn-MNd"/>
                             </connections>
-                        </button>
+                        </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hOF-Fn-8Ge">
-                            <rect key="frame" x="310.5" y="0.0" width="56.5" height="80"/>
+                            <rect key="frame" x="311" y="0.0" width="56.5" height="80"/>
                             <state key="normal" title="Repeat"/>
                             <connections>
                                 <action selector="repeatButtonPressed:" destination="-1" eventType="touchUpInside" id="foP-ht-f1b"/>
@@ -111,31 +139,31 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="SkO-qq-w0O" firstAttribute="height" secondItem="Geb-fA-wbP" secondAttribute="height" id="0aP-1X-eX7"/>
                         <constraint firstItem="kXx-27-5m3" firstAttribute="centerY" secondItem="Geb-fA-wbP" secondAttribute="centerY" id="0kt-W9-jad"/>
                         <constraint firstItem="Ljh-EY-LR6" firstAttribute="leading" secondItem="kXx-27-5m3" secondAttribute="trailing" id="2YD-BC-WCf"/>
+                        <constraint firstItem="hOF-Fn-8Ge" firstAttribute="leading" secondItem="SkO-qq-w0O" secondAttribute="trailing" id="41E-hI-Nb9"/>
                         <constraint firstItem="p4w-Jl-aTB" firstAttribute="height" secondItem="dcN-rk-Cgy" secondAttribute="height" id="6Km-FB-aI8"/>
                         <constraint firstItem="dcN-rk-Cgy" firstAttribute="centerY" secondItem="kXx-27-5m3" secondAttribute="centerY" id="6gW-io-S1w"/>
-                        <constraint firstItem="lNF-dl-HGJ" firstAttribute="width" secondItem="p4w-Jl-aTB" secondAttribute="width" multiplier="1.5" id="BMb-Nq-F82"/>
                         <constraint firstItem="kXx-27-5m3" firstAttribute="height" secondItem="Geb-fA-wbP" secondAttribute="height" id="E2u-aF-mch"/>
                         <constraint firstItem="p4w-Jl-aTB" firstAttribute="centerY" secondItem="dcN-rk-Cgy" secondAttribute="centerY" id="EHl-hT-mbt"/>
                         <constraint firstItem="Ljh-EY-LR6" firstAttribute="height" secondItem="kXx-27-5m3" secondAttribute="height" id="FbJ-a7-N9D"/>
                         <constraint firstItem="hOF-Fn-8Ge" firstAttribute="height" secondItem="p4w-Jl-aTB" secondAttribute="height" id="ISv-dE-kav"/>
-                        <constraint firstItem="p4w-Jl-aTB" firstAttribute="trailing" secondItem="lNF-dl-HGJ" secondAttribute="leading" id="Ibd-7b-Mnf"/>
                         <constraint firstItem="Ljh-EY-LR6" firstAttribute="centerY" secondItem="kXx-27-5m3" secondAttribute="centerY" id="KdM-cU-9og"/>
-                        <constraint firstItem="lNF-dl-HGJ" firstAttribute="height" secondItem="p4w-Jl-aTB" secondAttribute="height" id="RB2-dX-gOy"/>
+                        <constraint firstItem="SkO-qq-w0O" firstAttribute="centerY" secondItem="kXx-27-5m3" secondAttribute="centerY" id="LFG-C6-8WZ"/>
                         <constraint firstAttribute="height" constant="80" id="TPb-sI-RsJ"/>
-                        <constraint firstItem="lNF-dl-HGJ" firstAttribute="centerY" secondItem="p4w-Jl-aTB" secondAttribute="centerY" id="Xxu-OC-3e0"/>
+                        <constraint firstItem="SkO-qq-w0O" firstAttribute="width" secondItem="p4w-Jl-aTB" secondAttribute="width" multiplier="1.5" id="dPx-f3-XmJ"/>
                         <constraint firstItem="dcN-rk-Cgy" firstAttribute="height" secondItem="kXx-27-5m3" secondAttribute="height" id="eHJ-a4-3dS"/>
-                        <constraint firstItem="hOF-Fn-8Ge" firstAttribute="centerY" secondItem="lNF-dl-HGJ" secondAttribute="centerY" id="fC8-ye-C3F"/>
                         <constraint firstItem="kXx-27-5m3" firstAttribute="leading" secondItem="Geb-fA-wbP" secondAttribute="leading" id="ffm-ph-VXd"/>
                         <constraint firstItem="p4w-Jl-aTB" firstAttribute="leading" secondItem="dcN-rk-Cgy" secondAttribute="trailing" id="gVk-wP-IMR"/>
+                        <constraint firstItem="SkO-qq-w0O" firstAttribute="leading" secondItem="p4w-Jl-aTB" secondAttribute="trailing" id="gYY-yz-idN"/>
                         <constraint firstItem="dcN-rk-Cgy" firstAttribute="leading" secondItem="Ljh-EY-LR6" secondAttribute="trailing" id="gso-lx-sPB"/>
-                        <constraint firstItem="hOF-Fn-8Ge" firstAttribute="leading" secondItem="lNF-dl-HGJ" secondAttribute="trailing" id="hhX-iz-Wh2"/>
                         <constraint firstItem="Ljh-EY-LR6" firstAttribute="width" secondItem="kXx-27-5m3" secondAttribute="width" id="tKO-PS-mrI"/>
                         <constraint firstItem="p4w-Jl-aTB" firstAttribute="width" secondItem="dcN-rk-Cgy" secondAttribute="width" id="ty0-ac-O8a"/>
                         <constraint firstItem="dcN-rk-Cgy" firstAttribute="width" secondItem="kXx-27-5m3" secondAttribute="width" id="u4C-cF-lH6"/>
                         <constraint firstItem="kXx-27-5m3" firstAttribute="width" secondItem="Geb-fA-wbP" secondAttribute="width" multiplier="0.15" id="uEG-Kw-JUZ"/>
                         <constraint firstItem="hOF-Fn-8Ge" firstAttribute="width" secondItem="p4w-Jl-aTB" secondAttribute="width" id="yBM-r1-iux"/>
+                        <constraint firstItem="hOF-Fn-8Ge" firstAttribute="centerY" secondItem="kXx-27-5m3" secondAttribute="centerY" id="yCq-Pc-hJa"/>
                     </constraints>
                 </view>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Enter description" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="OcW-2E-2Hg">
@@ -175,5 +203,10 @@
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
         </view>
+        <tapGestureRecognizer id="Wq4-65-bNT">
+            <connections>
+                <action selector="dateViewTapped:" destination="-1" id="uJE-Do-Yd6"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
 </document>
