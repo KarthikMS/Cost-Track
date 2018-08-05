@@ -15,6 +15,9 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var amountTextView: UITextView!
 	@IBOutlet weak var descriptionTextView: UITextView!
 
+	// MARK: Properties
+	var category = CostSheetEntry.Categoty.fuel
+
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +55,7 @@ extension CostSheetEntryViewController {
 	@IBAction func saveButtonPressed(_ sender: Any) {
 		var newEntry = CostSheetEntry()
 		newEntry.amount = Float(amountTextView.text)!
+		newEntry.category = category
 
 		let currentDate = Date()
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: currentDate)
