@@ -120,18 +120,17 @@ struct CostSheetEntry {
     case salary // = 0
     case vehicleAndTransport // = 1
     case household // = 2
-    case home // = 3
-    case shopping // = 4
-    case phone // = 5
-    case entertainment // = 6
-    case medicine // = 7
-    case investment // = 8
-    case investmentReturn // = 9
-    case tax // = 10
-    case insurance // = 11
-    case foodAndDrinks // = 12
-    case misc // = 13
-    case transfer // = 14
+    case shopping // = 3
+    case phone // = 4
+    case entertainment // = 5
+    case medicine // = 6
+    case investment // = 7
+    case investmentReturn // = 8
+    case tax // = 9
+    case insurance // = 10
+    case foodAndDrinks // = 11
+    case misc // = 12
+    case transfer // = 13
 
     init() {
       self = .salary
@@ -142,18 +141,17 @@ struct CostSheetEntry {
       case 0: self = .salary
       case 1: self = .vehicleAndTransport
       case 2: self = .household
-      case 3: self = .home
-      case 4: self = .shopping
-      case 5: self = .phone
-      case 6: self = .entertainment
-      case 7: self = .medicine
-      case 8: self = .investment
-      case 9: self = .investmentReturn
-      case 10: self = .tax
-      case 11: self = .insurance
-      case 12: self = .foodAndDrinks
-      case 13: self = .misc
-      case 14: self = .transfer
+      case 3: self = .shopping
+      case 4: self = .phone
+      case 5: self = .entertainment
+      case 6: self = .medicine
+      case 7: self = .investment
+      case 8: self = .investmentReturn
+      case 9: self = .tax
+      case 10: self = .insurance
+      case 11: self = .foodAndDrinks
+      case 12: self = .misc
+      case 13: self = .transfer
       default: return nil
       }
     }
@@ -163,18 +161,17 @@ struct CostSheetEntry {
       case .salary: return 0
       case .vehicleAndTransport: return 1
       case .household: return 2
-      case .home: return 3
-      case .shopping: return 4
-      case .phone: return 5
-      case .entertainment: return 6
-      case .medicine: return 7
-      case .investment: return 8
-      case .investmentReturn: return 9
-      case .tax: return 10
-      case .insurance: return 11
-      case .foodAndDrinks: return 12
-      case .misc: return 13
-      case .transfer: return 14
+      case .shopping: return 3
+      case .phone: return 4
+      case .entertainment: return 5
+      case .medicine: return 6
+      case .investment: return 7
+      case .investmentReturn: return 8
+      case .tax: return 9
+      case .insurance: return 10
+      case .foodAndDrinks: return 11
+      case .misc: return 12
+      case .transfer: return 13
       }
     }
 
@@ -279,17 +276,16 @@ extension CostSheetEntry.Category: SwiftProtobuf._ProtoNameProviding {
     0: .same(proto: "SALARY"),
     1: .same(proto: "VEHICLE_AND_TRANSPORT"),
     2: .same(proto: "HOUSEHOLD"),
-    3: .same(proto: "HOME"),
-    4: .same(proto: "SHOPPING"),
-    5: .same(proto: "PHONE"),
-    6: .same(proto: "ENTERTAINMENT"),
-    7: .same(proto: "MEDICINE"),
-    8: .same(proto: "INVESTMENT"),
-    9: .same(proto: "INVESTMENT_RETURN"),
-    10: .same(proto: "TAX"),
-    11: .same(proto: "INSURANCE"),
-    12: .same(proto: "FOOD_AND_DRINKS"),
-    13: .same(proto: "MISC"),
-    14: .same(proto: "TRANSFER"),
+    3: .same(proto: "SHOPPING"),
+    4: .same(proto: "PHONE"),
+    5: .same(proto: "ENTERTAINMENT"),
+    6: .same(proto: "MEDICINE"),
+    7: .same(proto: "INVESTMENT"),
+    8: .same(proto: "INVESTMENT_RETURN"),
+    9: .same(proto: "TAX"),
+    10: .same(proto: "INSURANCE"),
+    11: .same(proto: "FOOD_AND_DRINKS"),
+    12: .same(proto: "MISC"),
+    13: .same(proto: "TRANSFER"),
   ]
 }

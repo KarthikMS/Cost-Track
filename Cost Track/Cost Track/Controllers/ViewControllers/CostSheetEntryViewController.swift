@@ -17,6 +17,7 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var timeLabel: UILabel!
 	@IBOutlet weak var descriptionTextView: UITextView!
 	@IBOutlet weak var entryDatePicker: EntryDatePicker!
+	@IBOutlet weak var entryCategoryPicker: EntryCategoryPicker!
 
 	// MARK: Properties
 	var category = CostSheetEntry.Category.entertainment
@@ -29,6 +30,8 @@ class CostSheetEntryViewController: UIViewController {
 
 		entryDatePicker.delegate = self
 		updateDateView(date: entryDatePicker.datePicker.date)
+
+		entryCategoryPicker.delegate = self
     }
 
 	// MARK: View functions
@@ -39,6 +42,10 @@ class CostSheetEntryViewController: UIViewController {
 			dateLabel.text = date.string(format: "dd-MMM-yyyy")
 		}
 		timeLabel.text = date.string(format: "hh:mm a")
+	}
+
+	private func updateCategoryView(category: CostSheetEntry.Category) {
+
 	}
 }
 
@@ -97,6 +104,15 @@ extension CostSheetEntryViewController: EntryDatePickerDelegate {
 
 	func dateChanged(to date: Date) {
 		updateDateView(date: date)
+	}
+
+}
+
+// MARK: EntryCategoryPickerDelegate
+extension CostSheetEntryViewController: EntryCategoryPickerDelegate {
+
+	func categoryChanged(to category: CostSheetEntry.Category) {
+		updateCategoryView(category: category)
 	}
 
 }

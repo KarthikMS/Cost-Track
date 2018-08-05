@@ -13,18 +13,17 @@ message CostSheetEntry {
     SALARY = 0;
     VEHICLE_AND_TRANSPORT = 1;
     HOUSEHOLD = 2;
-    HOME = 3;
-    SHOPPING = 4;
-    PHONE = 5;
-    ENTERTAINMENT = 6;
-    MEDICINE = 7;
-    INVESTMENT = 8;
-    INVESTMENT_RETURN = 9;
-    TAX = 10;
-    INSURANCE = 11;
-    FOOD_AND_DRINKS = 12;
-    MISC = 13;
-    TRANSFER = 14;
+    SHOPPING = 3;
+    PHONE = 4;
+    ENTERTAINMENT = 5;
+    MEDICINE = 6;
+    INVESTMENT = 7;
+    INVESTMENT_RETURN = 8;
+    TAX = 9;
+    INSURANCE = 10;
+    FOOD_AND_DRINKS = 11;
+    MISC = 12;
+    TRANSFER = 13;
   }
 
   required EntryType type = 1;

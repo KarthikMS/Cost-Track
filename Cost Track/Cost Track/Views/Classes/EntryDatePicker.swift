@@ -18,7 +18,7 @@ class EntryDatePicker: UIView {
 	@IBOutlet var contentView: UIView!
 	@IBOutlet weak var datePicker: UIDatePicker!
 
-	// MARL: Properties
+	// MARK: Properties
 	weak var delegate: EntryDatePickerDelegate?
 
 	// MARK: Initializers
