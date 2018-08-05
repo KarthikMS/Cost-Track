@@ -15,13 +15,14 @@ enum CostSheetSettingsTableViewMode {
 
 class CostSheetSettingsTableView: UITableView {
 
-	// Properties
+	// MARK: Properties
 	private var mode = CostSheetSettingsTableViewMode.newCostSheet
 
 	// Views
 	var costSheetNameTextView = UITextView()
 	var initalBalanceTextView = UITextView()
 
+	// MARK: Functions
 	func setMode(_ mode: CostSheetSettingsTableViewMode) {
 		self.mode = mode
 
@@ -81,7 +82,6 @@ extension CostSheetSettingsTableView: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// To dismiss the keyboard
 		endEditing(true)
-
 	}
 
 }
