@@ -164,6 +164,8 @@ extension CostSheetEntryViewController {
 		let entryDate = entryDatePicker.datePicker.date
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDate)
 		newEntry.date = dateData
+
+		// TODO: Save the entry
 	}
 
 }
