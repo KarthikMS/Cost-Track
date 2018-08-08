@@ -31,13 +31,22 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 		return 1
 	}
 
+	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		guard let dataSource = dataSource,
+		let entries = dataSource.sortedEntries[section] else {
+			assertionFailure("dataSource not set")
+			return nil
+		}
+		return Array(entries)[0].key
+	}
+
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		guard let dataSource = dataSource,
 		let entries = dataSource.sortedEntries[section] else {
 			assertionFailure("dataSource not set")
 			return -1
 		}
-		return Array(entries).count
+		return Array(entries)[0].value.count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -48,15 +57,18 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 			return cell
 		}
 		let costSheetEntry = Array(entries)[0].value[indexPath.row]
-		let categoryStringTest = String(describing: costSheetEntry.category)
+		guard let entryDate = costSheetEntry.date.date else {
+			assertionFailure()
+			return cell
+		}
 		// Fix this
 		cell.setAmount(costSheetEntry.amount,
-					   date: "",//costSheetEntry.date,
+					   date: entryDate,
 					   time: "NIP",
-					   category: categoryStringTest,
+					   category: costSheetEntry.category.name,
 					   place: costSheetEntry.place,
 					   description: costSheetEntry.description_p,
-					   forMode: .date
+					   forMode: dataSource.classificationMode
 		)
 		return cell
 	}

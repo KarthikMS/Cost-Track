@@ -36,8 +36,6 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var datePickerShowTopConstraint: NSLayoutConstraint!
 
 	// MARK: Properties
-	var category = CostSheetEntry.Category.entertainment
-
 	// TODO: Delete once saving protos has been added
 	var delegate: CostSheetEntryDelegate?
 	var costSheet: CostSheet?
@@ -168,7 +166,7 @@ extension CostSheetEntryViewController {
 	@IBAction func saveButtonPressed(_ sender: Any) {
 		var newEntry = CostSheetEntry()
 		newEntry.amount = Float(amountTextView.text)!
-		newEntry.category = category
+		newEntry.category = entryCategoryPicker.selectedCategory
 
 		let entryDate = entryDatePicker.datePicker.date
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDate)

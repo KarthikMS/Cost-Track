@@ -39,6 +39,11 @@ class EntryCategoryPicker: UIView {
 		contentView.frame = self.bounds
 	}
 
+	// MARK: Functions
+	var selectedCategory: CostSheetEntry.Category {
+		return categories[categoryPickerView.selectedRow(inComponent: 0)]
+	}
+
 }
 
 // MARK: UIPickerViewDataSource
