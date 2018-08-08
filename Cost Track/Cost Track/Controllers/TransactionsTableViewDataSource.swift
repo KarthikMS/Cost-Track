@@ -8,31 +8,46 @@
 
 import UIKit
 
-enum TransactionClassification {
-	case date
-	case category
-	case place
-}
-
 class TransactionsTableViewDataSource: NSObject {
 
 	// MARK: Properties
-	var mode = TransactionClassification.date
-	var costSheet = CostSheet()
+	weak var dataSource: CostSheetViewController?
 
 }
 
 extension TransactionsTableViewDataSource: UITableViewDataSource {
 
+	func numberOfSections(in tableView: UITableView) -> Int {
+		guard let dataSource = dataSource else {
+			assertionFailure("dataSource not set")
+			return -1
+		}
+		switch dataSource.classificationMode {
+		case .date:
+			return dataSource.sortedEntries.count
+		default:
+			return 1
+		}
+		return 1
+	}
+
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 2
+		guard let dataSource = dataSource,
+		let entries = dataSource.sortedEntries[section] else {
+			assertionFailure("dataSource not set")
+			return -1
+		}
+		return Array(entries).count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionsTableViewCell", for: indexPath) as! TransactionsTableViewCell
-
-		// This is just to check
-		let costSheetEntry = costSheet.entries[indexPath.row]
+		guard let dataSource = dataSource,
+		let entries = dataSource.sortedEntries[indexPath.section] else {
+			assertionFailure("dataSource not set")
+			return cell
+		}
+		let costSheetEntry = Array(entries)[0].value[indexPath.row]
 		let categoryStringTest = String(describing: costSheetEntry.category)
 		// Fix this
 		cell.setAmount(costSheetEntry.amount,

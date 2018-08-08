@@ -69,4 +69,18 @@ extension CostSheet {
 		return lastModifiedDate
 	}
 
+	func getDateStrings(format: String) -> [String] {
+		var dateStrings = [String]()
+		for entry in entries {
+			guard let date = entry.date.date else {
+				assertionFailure()
+				return []
+			}
+			let dateString = date.string(format: format)
+			if !dateStrings.contains(dateString) {
+				dateStrings.append(dateString)
+			}
+		}
+		return dateStrings
+	}
 }

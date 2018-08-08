@@ -8,6 +8,12 @@
 
 import UIKit
 
+enum TransactionClassificationMode {
+	case date
+	case category
+	case place
+}
+
 class CostSheetViewController: UIViewController {
 
 	// MARK: IBOutlets
@@ -17,6 +23,12 @@ class CostSheetViewController: UIViewController {
 	// MARK: Properties
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
 	var costSheet = CostSheet()
+	var classificationMode = TransactionClassificationMode.date
+	var sortedEntries = [
+		Int: [
+			String: [CostSheetEntry]
+		]
+		]()
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -32,11 +44,67 @@ class CostSheetViewController: UIViewController {
 		}
 		amountLabel.text = String(balance)
 
-		transactionsTableViewDataSource.costSheet = costSheet
+		sortEntries()
+		transactionsTableViewDataSource.dataSource = self
 		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
 		transactionsTableView.dataSource = transactionsTableViewDataSource
-
     }
+
+	// MARK: Navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "CostSheetEntrySegue" {
+			guard let costSheetEntryViewController = segue.destination as? CostSheetEntryViewController else {
+				assertionFailure()
+				return
+			}
+			costSheetEntryViewController.delegate = self
+		}
+	}
+
+	// MARK: Misc.
+	private func sortEntries() {
+		sortedEntries.removeAll()
+		switch classificationMode {
+		case .date:
+			sortEntriesBasedOnDate()
+		default:
+			return
+		}
+	}
+
+	private func sortEntriesBasedOnDate() {
+		let entries = costSheet.entries.sorted(by: { (entry1, entry2) -> Bool in
+			guard let date1 = entry1.date.date,
+				let date2 = entry2.date.date else {
+					assertionFailure()
+					return false
+			}
+			return date1 > date2
+		})
+		for entry in entries {
+			guard let dateString = entry.date.date?.string(format: "dd MMMM yyyy, EEE") else {
+				assertionFailure()
+				return
+			}
+			if sortedEntries.isEmpty {
+				sortedEntries[0] = [dateString: [entry]]
+			} else {
+				let lastSortedEntryIndex = sortedEntries.count - 1
+				guard let lastSortedEntry = sortedEntries[lastSortedEntryIndex],
+					let sortedDateString = lastSortedEntry.keys.first else {
+						assertionFailure()
+						return
+				}
+				if sortedDateString == dateString {
+					var arr = lastSortedEntry[sortedDateString]
+					arr?.append(entry)
+					sortedEntries[lastSortedEntryIndex]![sortedDateString] = arr
+				} else {
+					sortedEntries[lastSortedEntryIndex + 1] = [dateString: [entry]]
+				}
+			}
+		}
+	}
 
 }
 
@@ -54,12 +122,13 @@ extension CostSheetViewController {
 	@IBAction func classificationSegmentedControlValueChanged(_ sender: UISegmentedControl) {
 		switch sender.selectedSegmentIndex {
 		case 0:
-			transactionsTableViewDataSource.mode = .date
+			classificationMode = .date
 		case 1:
-			transactionsTableViewDataSource.mode = .category
+			classificationMode = .category
 		default:
-			transactionsTableViewDataSource.mode = .place
+			classificationMode = .place
 		}
+		sortEntries()
 		transactionsTableView.reloadData()
 	}
 
@@ -74,6 +143,18 @@ extension CostSheetViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		performSegue(withIdentifier: "CostSheetEntrySegue", sender: nil)
+	}
+
+}
+
+// TODO: Delete once saving protos has been added
+// MARK: CostSheetEntryDelegate
+extension CostSheetViewController: CostSheetEntryDelegate {
+
+	func entryAdded(_ entry: CostSheetEntry) {
+		costSheet.entries.append(entry)
+		sortEntries()
+		transactionsTableView.reloadData()
 	}
 
 }

@@ -8,6 +8,11 @@
 
 import UIKit
 
+// TODO: Delete once saving protos has been added
+protocol CostSheetEntryDelegate {
+	func entryAdded(_ entry: CostSheetEntry)
+}
+
 class CostSheetEntryViewController: UIViewController {
 
 	// MARK: IBOutlets
@@ -32,6 +37,10 @@ class CostSheetEntryViewController: UIViewController {
 
 	// MARK: Properties
 	var category = CostSheetEntry.Category.entertainment
+
+	// TODO: Delete once saving protos has been added
+	var delegate: CostSheetEntryDelegate?
+	var costSheet: CostSheet?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -165,7 +174,14 @@ extension CostSheetEntryViewController {
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDate)
 		newEntry.date = dateData
 
+		// TODO: Set entryType
 		// TODO: Save the entry
+
+		// TODO: Delete once saving protos has been added
+		delegate?.entryAdded(newEntry)
+//		costSheet?.entries.append(newEntry)
+
+		navigationController?.popViewController(animated: true)
 	}
 
 }
