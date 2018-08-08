@@ -17,6 +17,7 @@ class CostSheetEntryViewController: UIViewController {
 
 	// MARK: IBOutlets
 	// Views
+	@IBOutlet weak var navigationBarTitleButton: UIButton!
 	@IBOutlet weak var amountBarView: UIView!
 	@IBOutlet weak var amountTextView: UITextView!
 	@IBOutlet weak var categoryLabel: UILabel!
@@ -38,7 +39,8 @@ class CostSheetEntryViewController: UIViewController {
 	// MARK: Properties
 	// TODO: Delete once saving protos has been added
 	var delegate: CostSheetEntryDelegate?
-	var costSheet: CostSheet?
+	var entryType = CostSheetEntry.EntryType.income
+//	var costSheet: CostSheet?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -61,6 +63,17 @@ class CostSheetEntryViewController: UIViewController {
 	}
 
 	// MARK: View functions
+	private func updateNavigationBarButton() {
+		switch entryType {
+		case .expense:
+			navigationBarTitleButton.setTitle("Expense", for: .normal)
+			navigationBarTitleButton.setTitleColor(ExpenseColor, for: .normal)
+		case .income:
+			navigationBarTitleButton.setTitle("Income", for: .normal)
+			navigationBarTitleButton.setTitleColor(IncomeColor, for: .normal)
+		}
+	}
+
 	private func updateDateView(date: Date) {
 		if Calendar.current.isDateInToday(date) {
 			dateLabel.text = "Today"
@@ -127,6 +140,16 @@ class CostSheetEntryViewController: UIViewController {
 // MARK: IBActions
 extension CostSheetEntryViewController {
 
+	@IBAction func navigationBarTitleButtonPressed(_ sender: UIButton) {
+		switch entryType {
+		case .income:
+			entryType = .expense
+		case .expense:
+			entryType = .income
+		}
+		updateNavigationBarButton()
+	}
+
 	@IBAction func currencyButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
@@ -165,6 +188,7 @@ extension CostSheetEntryViewController {
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
 		var newEntry = CostSheetEntry()
+		newEntry.type = entryType
 		newEntry.amount = Float(amountTextView.text)!
 		newEntry.category = entryCategoryPicker.selectedCategory
 
