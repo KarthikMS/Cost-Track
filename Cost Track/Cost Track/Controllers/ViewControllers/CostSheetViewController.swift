@@ -53,11 +53,21 @@ class CostSheetViewController: UIViewController {
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "CostSheetEntrySegue" {
-			guard let costSheetEntryViewController = segue.destination as? CostSheetEntryViewController else {
-				assertionFailure()
-				return
+			guard let costSheetEntryViewController = segue.destination as? CostSheetEntryViewController,
+			let sender = sender as? [String: Any] else {
+					assertionFailure()
+					return
 			}
 			costSheetEntryViewController.delegate = self
+			if let oldEntry = sender["oldEntry"] as? CostSheetEntry {
+				costSheetEntryViewController.oldEntry = oldEntry
+			} else {
+				guard let entryType = sender["entryType"] as? CostSheetEntry.EntryType else {
+					assertionFailure()
+					return
+				}
+				costSheetEntryViewController.entryType = entryType
+			}
 		}
 	}
 
@@ -106,17 +116,25 @@ class CostSheetViewController: UIViewController {
 		}
 	}
 
+	func getSortedEntry(at indexPath: IndexPath) -> CostSheetEntry? {
+		guard let entries = sortedEntries[indexPath.section] else {
+			assertionFailure()
+			return nil
+		}
+		return Array(entries)[0].value[indexPath.row]
+	}
+
 }
 
 // MARK: IBActions
 extension CostSheetViewController {
 
 	@IBAction func expenseButtonPressed(_ sender: Any) {
-		// Finish this
+		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["entryType": CostSheetEntry.EntryType.expense])
 	}
 
 	@IBAction func incomeButtonPressed(_ sender: Any) {
-		// Finish this
+		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["entryType": CostSheetEntry.EntryType.income])
 	}
 
 	@IBAction func classificationSegmentedControlValueChanged(_ sender: UISegmentedControl) {
@@ -142,7 +160,11 @@ extension CostSheetViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		performSegue(withIdentifier: "CostSheetEntrySegue", sender: nil)
+		guard let costSheetEntry = getSortedEntry(at: indexPath) else {
+			assertionFailure()
+			return
+		}
+		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["oldEntry": costSheetEntry])
 	}
 
 }

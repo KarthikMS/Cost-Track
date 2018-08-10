@@ -44,6 +44,17 @@ class EntryCategoryPicker: UIView {
 		return categories[categoryPickerView.selectedRow(inComponent: 0)]
 	}
 
+	func selectCategory(_ categoryToSelect: CostSheetEntry.Category) {
+		for i in 0..<categories.count {
+			let category = categories[i]
+			if category == categoryToSelect {
+				categoryPickerView.selectRow(i, inComponent: 0, animated: false)
+				return
+			}
+		}
+		assertionFailure()
+	}
+
 }
 
 // MARK: UIPickerViewDataSource

@@ -38,6 +38,10 @@ class EntryDatePicker: UIView {
 		contentView.frame = self.bounds
 	}
 
+	func setValueToToday() {
+		datePicker.date = Date()
+	}
+
 }
 
 // MARK: IBActions

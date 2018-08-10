@@ -51,12 +51,17 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionsTableViewCell", for: indexPath) as! TransactionsTableViewCell
+//		guard let dataSource = dataSource,
+//		let entries = dataSource.sortedEntries[indexPath.section] else {
+//			assertionFailure("dataSource not set")
+//			return cell
+//		}
+//		let costSheetEntry = Array(entries)[0].value[indexPath.row]
 		guard let dataSource = dataSource,
-		let entries = dataSource.sortedEntries[indexPath.section] else {
-			assertionFailure("dataSource not set")
-			return cell
+			let costSheetEntry = dataSource.getSortedEntry(at: indexPath) else {
+				assertionFailure()
+				return cell
 		}
-		let costSheetEntry = Array(entries)[0].value[indexPath.row]
 		guard let entryDate = costSheetEntry.date.date else {
 			assertionFailure()
 			return cell
