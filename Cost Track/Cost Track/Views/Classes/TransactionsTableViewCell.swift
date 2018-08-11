@@ -33,7 +33,7 @@ class TransactionsTableViewCell: UITableViewCell {
 	@IBOutlet weak var PCategoryLabel: UILabel!
 
 	// MARK: Functions
-	func setAmount(_ amount: Float, date: Date, time: String, category: String, place: String?, description: String?, forMode mode: TransactionClassificationMode) {
+	func setAmount(_ amount: Float, date: String, time: String, category: String, place: String?, description: String?, forMode mode: TransactionClassificationMode) {
 		setClassificationMode(mode)
 
 		amountLabel.text = String(amount)
@@ -55,13 +55,11 @@ class TransactionsTableViewCell: UITableViewCell {
 			DCategoryLabel.text = category
 		case .category:
 			CPlaceLabel.text = placeName
-			CTimeLabel.text = time
-			// Fix this
-			CDateLabel.text = date.string(format: "")
+			CTimeLabel.text = time + ","
+			CDateLabel.text = date
 		case .place:
-			PTimeLabel.text = time
-			// Fix this
-			PDateLabel.text = date.string(format: "")
+			PTimeLabel.text = time + ","
+			PDateLabel.text = date
 			PCategoryLabel.text = category
 		}
 	}

@@ -22,18 +22,12 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 			assertionFailure("dataSource not set")
 			return -1
 		}
-		switch dataSource.classificationMode {
-		case .date:
-			return dataSource.sortedEntries.count
-		default:
-			return 1
-		}
-		return 1
+		return dataSource.sortedEntriesForTableView.count
 	}
 
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		guard let dataSource = dataSource,
-		let entries = dataSource.sortedEntries[section] else {
+		let entries = dataSource.sortedEntriesForTableView[section] else {
 			assertionFailure("dataSource not set")
 			return nil
 		}
@@ -42,7 +36,7 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		guard let dataSource = dataSource,
-		let entries = dataSource.sortedEntries[section] else {
+		let entries = dataSource.sortedEntriesForTableView[section] else {
 			assertionFailure("dataSource not set")
 			return -1
 		}
@@ -51,12 +45,6 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionsTableViewCell", for: indexPath) as! TransactionsTableViewCell
-//		guard let dataSource = dataSource,
-//		let entries = dataSource.sortedEntries[indexPath.section] else {
-//			assertionFailure("dataSource not set")
-//			return cell
-//		}
-//		let costSheetEntry = Array(entries)[0].value[indexPath.row]
 		guard let dataSource = dataSource,
 			let costSheetEntry = dataSource.getSortedEntry(at: indexPath) else {
 				assertionFailure()
@@ -66,10 +54,10 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 			assertionFailure()
 			return cell
 		}
-		// Fix this
+		
 		cell.setAmount(costSheetEntry.amount,
-					   date: entryDate,
-					   time: "NIP",
+					   date: entryDate.string(format: "dd/MM/yy"),
+					   time: entryDate.string(format: "hh:mm a"),
 					   category: costSheetEntry.category.name,
 					   place: costSheetEntry.place,
 					   description: costSheetEntry.description_p,

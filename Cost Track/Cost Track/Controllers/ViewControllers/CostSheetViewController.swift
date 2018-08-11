@@ -78,13 +78,15 @@ class CostSheetViewController: UIViewController {
 		sortedEntriesForTableView.removeAll()
 		switch classificationMode {
 		case .date:
-			sortEntriesBasedOnDate()
-		default:
-			return
+			sortEntriesByDate()
+		case .category:
+			sortEntriesByCategory()
+		case .place:
+			sortEntriesByPlace()
 		}
 	}
 
-	private func sortEntriesBasedOnDate() {
+	private func sortEntriesByDate() {
 		let entries = costSheet.entries.sorted(by: { (entry1, entry2) -> Bool in
 			guard let date1 = entry1.date.date,
 				let date2 = entry2.date.date else {
@@ -117,14 +119,40 @@ class CostSheetViewController: UIViewController {
 			}
 		}
 
+		// entriesSortedByDate
 		let tempSortedEntries = sortedEntriesForTableView.sorted(by: { $0.key > $1.key })
 		entriesSortedByDate.removeAll()
-		for (key, value) in tempSortedEntries {
-			print(key)
+		for (_, value) in tempSortedEntries {
 			for (_, entries) in value {
 				entriesSortedByDate.append(contentsOf: entries)
 			}
 		}
+	}
+
+	private func sortEntriesByCategory() {
+		var entriesSortedByCategory = [CostSheetEntry.Category: [CostSheetEntry]]()
+		for category in categories {
+			entriesSortedByCategory[category] = [CostSheetEntry]()
+		}
+
+		for entry in entriesSortedByDate {
+			entriesSortedByCategory[entry.category]?.append(entry)
+		}
+
+		var i = 0
+		for (category, entries) in entriesSortedByCategory {
+			if entries.count == 0 {
+				continue
+			}
+
+			let dict = [category.name: entries]
+			sortedEntriesForTableView[i] = dict
+			i += 1
+		}
+	}
+
+	private func sortEntriesByPlace() {
+
 	}
 
 	func getSortedEntry(at indexPath: IndexPath) -> CostSheetEntry? {
@@ -152,6 +180,7 @@ extension CostSheetViewController {
 		switch sender.selectedSegmentIndex {
 		case 0:
 			classificationMode = .date
+
 		case 1:
 			classificationMode = .category
 		default:
@@ -175,6 +204,7 @@ extension CostSheetViewController: UITableViewDelegate {
 			assertionFailure()
 			return
 		}
+		tableView.deselectRow(at: indexPath, animated: true)
 		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["oldEntry": costSheetEntry])
 	}
 
@@ -186,6 +216,9 @@ extension CostSheetViewController: CostSheetEntryDelegate {
 
 	func entryAdded(_ entry: CostSheetEntry) {
 		costSheet.entries.append(entry)
+		if classificationMode != .date {
+			sortEntriesByDate()
+		}
 		sortEntries()
 		transactionsTableView.reloadData()
 		costSheet.entries = entriesSortedByDate
