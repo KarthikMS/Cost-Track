@@ -16,6 +16,7 @@ class MyCostSheetsViewController: UIViewController {
 
 	// MARK: Properties
 	var account = Account()
+	private var shouldReloadTableView = false
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -40,6 +41,15 @@ class MyCostSheetsViewController: UIViewController {
 		tableView.register(UINib(nibName: "CostSheetTableViewCell", bundle: nil), forCellReuseIdentifier: "CostSheetTableViewCell")
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		if shouldReloadTableView {
+			tableView.reloadData()
+			shouldReloadTableView = false
+		}
+	}
+
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		guard let identifier = segue.identifier else {
@@ -52,6 +62,7 @@ class MyCostSheetsViewController: UIViewController {
 					return
 			}
 			costSheetViewController.costSheet = costSheet
+			costSheetViewController.delegate = self
 		} else if identifier == NewCostSheetSegue {
 			guard let newCostSheetViewController = segue.destination as? NewCostSheetViewController else {
 				return
@@ -153,7 +164,7 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 }
 
 // MARK: NewCostSheetDataSource
-extension MyCostSheetsViewController: NewCostSheetDataSource {
+extension MyCostSheetsViewController: NewCostSheetViewControllerDataSource {
 
 	var defaultCostSheetName: String {
 		return account.defaultNewCostSheetName
@@ -162,11 +173,21 @@ extension MyCostSheetsViewController: NewCostSheetDataSource {
 }
 
 // MARK: NewCostSheetDelegate
-extension MyCostSheetsViewController: NewCostSheetDelegate {
+extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
 
 	func didCreateCostSheet(_ costSheet: CostSheet) {
 		account.costSheets.append(costSheet)
 		tableView.reloadData()
+	}
+
+}
+
+// MARK: CostSheetViewControllerProtocol
+extension MyCostSheetsViewController: CostSheetViewControllerProtocol {
+
+	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet) {
+		account.updateCostSheet(withId: id, with: updatedCostSheet)
+		shouldReloadTableView = true
 	}
 
 }

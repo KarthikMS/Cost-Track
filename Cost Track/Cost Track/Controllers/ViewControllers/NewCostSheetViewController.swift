@@ -8,11 +8,11 @@
 
 import UIKit
 
-protocol NewCostSheetDataSource {
+protocol NewCostSheetViewControllerDataSource {
 	var defaultCostSheetName: String { get }
 }
 
-protocol NewCostSheetDelegate {
+protocol NewCostSheetViewControllerDelegate {
 	func didCreateCostSheet(_ costSheet: CostSheet)
 }
 
@@ -22,8 +22,8 @@ class NewCostSheetViewController: UIViewController {
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
 
 	// MARK: Properties
-	var delegate: NewCostSheetDelegate?
-	var dataSource: NewCostSheetDataSource?
+	var delegate: NewCostSheetViewControllerDelegate?
+	var dataSource: NewCostSheetViewControllerDataSource?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {

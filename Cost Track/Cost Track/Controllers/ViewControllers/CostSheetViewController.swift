@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CostSheetViewControllerProtocol {
+	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet)
+}
+
 enum TransactionClassificationMode {
 	case date
 	case category
@@ -22,6 +26,7 @@ class CostSheetViewController: UIViewController {
 
 	// MARK: Properties
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
+	var delegate: CostSheetViewControllerProtocol?
 	var costSheet = CostSheet()
 	var classificationMode = TransactionClassificationMode.date
 	var sortedEntriesForTableView = [
@@ -211,14 +216,14 @@ extension CostSheetViewController: UITableViewDelegate {
 }
 
 // MARK: CostSheetEntryDelegate
-extension CostSheetViewController: CostSheetEntryDelegate {
+extension CostSheetViewController: CostSheetEntryViewControllerDelegate {
 
 	func didAddEntry(_ entry: CostSheetEntry) {
 		costSheet.entries.append(entry)
 		reloadAfterEntryModification()
 	}
 
-	func didUpdateEntryWithId(_ id: String, with updatedEntry: CostSheetEntry) {
+	func didUpdateEntry(withId id: String, with updatedEntry: CostSheetEntry) {
 		costSheet.updateEntry(withId: id, with: updatedEntry)
 		reloadAfterEntryModification()
 	}
@@ -230,6 +235,7 @@ extension CostSheetViewController: CostSheetEntryDelegate {
 		sortEntries()
 		transactionsTableView.reloadData()
 		costSheet.entries = entriesSortedByDate
+		delegate?.didUpdateCostSheet(withId: costSheet.id, with: costSheet)
 	}
 
 }

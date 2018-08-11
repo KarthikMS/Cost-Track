@@ -22,4 +22,25 @@ extension Account {
 		return "Cost Sheet \(costSheets.count + 1)"
 	}
 
+	func indexOfCostSheetWithId(_ id: String) -> Int? {
+		for i in 0..<costSheets.count {
+			if costSheets[i].id == id {
+				return i
+			}
+		}
+		return nil
+	}
+
+	mutating func updateCostSheet(at index: Int, with updatedCostSheet: CostSheet) {
+		costSheets[index] = updatedCostSheet
+	}
+
+	mutating func updateCostSheet(withId id: String, with updatedCostSheet: CostSheet) {
+		guard let index = indexOfCostSheetWithId(id) else {
+			assertionFailure()
+			return
+		}
+		updateCostSheet(at: index, with: updatedCostSheet)
+	}
+
 }

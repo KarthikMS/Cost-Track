@@ -8,9 +8,9 @@
 
 import UIKit
 
-protocol CostSheetEntryDelegate {
+protocol CostSheetEntryViewControllerDelegate {
 	func didAddEntry(_ entry: CostSheetEntry)
-	func didUpdateEntryWithId(_ id: String, with updatedEntry: CostSheetEntry)
+	func didUpdateEntry(withId id: String, with updatedEntry: CostSheetEntry)
 }
 
 class CostSheetEntryViewController: UIViewController {
@@ -38,7 +38,7 @@ class CostSheetEntryViewController: UIViewController {
 
 	// MARK: Properties
 	// TODO: Delete once saving protos has been added
-	var delegate: CostSheetEntryDelegate?
+	var delegate: CostSheetEntryViewControllerDelegate?
 	var entryType = CostSheetEntry.EntryType.income
 	var oldEntry: CostSheetEntry?
 
@@ -242,7 +242,7 @@ extension CostSheetEntryViewController {
 			entry.category = category
 			entry.date = dateData
 			entry.description_p = descriptionText
-			delegate?.didUpdateEntryWithId(entry.id, with: entry)
+			delegate?.didUpdateEntry(withId: entry.id, with: entry)
 		} else {
 			var entry = CostSheetEntry()
 			entry.id = UUID().uuidString
