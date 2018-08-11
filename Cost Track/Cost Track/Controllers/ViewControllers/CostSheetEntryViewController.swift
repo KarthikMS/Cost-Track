@@ -8,7 +8,6 @@
 
 import UIKit
 
-// TODO: Delete once saving protos has been added
 protocol CostSheetEntryDelegate {
 	func didAddEntry(_ entry: CostSheetEntry)
 	func didUpdateEntryWithId(_ id: String, with updatedEntry: CostSheetEntry)

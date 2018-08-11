@@ -54,7 +54,7 @@ class CostSheetViewController: UIViewController {
 
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "CostSheetEntrySegue" {
+		if segue.identifier == CostSheetEntrySegue {
 			guard let costSheetEntryViewController = segue.destination as? CostSheetEntryViewController,
 			let sender = sender as? [String: Any] else {
 					assertionFailure()
@@ -169,11 +169,11 @@ class CostSheetViewController: UIViewController {
 extension CostSheetViewController {
 
 	@IBAction func expenseButtonPressed(_ sender: Any) {
-		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["entryType": CostSheetEntry.EntryType.expense])
+		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.expense])
 	}
 
 	@IBAction func incomeButtonPressed(_ sender: Any) {
-		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["entryType": CostSheetEntry.EntryType.income])
+		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.income])
 	}
 
 	@IBAction func classificationSegmentedControlValueChanged(_ sender: UISegmentedControl) {
@@ -205,7 +205,7 @@ extension CostSheetViewController: UITableViewDelegate {
 			return
 		}
 		tableView.deselectRow(at: indexPath, animated: true)
-		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["oldEntry": costSheetEntry])
+		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["oldEntry": costSheetEntry])
 	}
 
 }

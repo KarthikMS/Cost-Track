@@ -22,40 +22,42 @@ class MyCostSheetsViewController: UIViewController {
         super.viewDidLoad()
 
 		// Test
-		var costSheet = CostSheet()
-
 		var costSheetEntry1 = CostSheetEntry()
 		costSheetEntry1.amount = 500
 		costSheetEntry1.category = .misc
 		costSheetEntry1.type = .income
 		costSheetEntry1.date = NSKeyedArchiver.archivedData(withRootObject: Date())
 		costSheetEntry1.id = UUID().uuidString
+
+		var costSheet = CostSheet()
+		costSheet.id = UUID().uuidString
+		costSheet.initialBalance = 0
+		costSheet.name = "Hardcoded"
 		costSheet.entries.append(costSheetEntry1)
-
-		var costSheetEntry2 = CostSheetEntry()
-		costSheetEntry2.amount = 100
-		costSheetEntry2.category = .vehicleAndTransport
-		costSheetEntry2.type = .expense
-//		costSheetEntry2.date = "28/07/2018"
-		costSheetEntry2.id = UUID().uuidString
-//		costSheet.entries.append(costSheetEntry2)
-
 		account.costSheets.append(costSheet)
 		// Test
 
 		tableView.register(UINib(nibName: "CostSheetTableViewCell", bundle: nil), forCellReuseIdentifier: "CostSheetTableViewCell")
-    }
+	}
 
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		// Get the new view controller using segue.destinationViewController.
-		// Pass the selected object to the new view controller.
-		if let identifier = segue.identifier,
-			identifier == "CostSheetSegue",
-			let sender = sender as? [String: CostSheet],
-			let costSheet = sender["costSheet"] {
-			let costSheetViewController = segue.destination as! CostSheetViewController
+		guard let identifier = segue.identifier else {
+			return
+		}
+		if identifier == CostSheetSegue {
+			guard let sender = sender as? [String: CostSheet],
+				let costSheet = sender["costSheet"],
+				let costSheetViewController = segue.destination as? CostSheetViewController else {
+					return
+			}
 			costSheetViewController.costSheet = costSheet
+		} else if identifier == NewCostSheetSegue {
+			guard let newCostSheetViewController = segue.destination as? NewCostSheetViewController else {
+				return
+			}
+			newCostSheetViewController.dataSource = self
+			newCostSheetViewController.delegate = self
 		}
 	}
 
@@ -144,7 +146,27 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let costSheet = costSheetAtIndexPath(indexPath)
+		tableView.deselectRow(at: indexPath, animated: true)
 		performSegue(withIdentifier: "CostSheetSegue", sender: ["costSheet": costSheet])
+	}
+
+}
+
+// MARK: NewCostSheetDataSource
+extension MyCostSheetsViewController: NewCostSheetDataSource {
+
+	var defaultCostSheetName: String {
+		return account.defaultNewCostSheetName
+	}
+
+}
+
+// MARK: NewCostSheetDelegate
+extension MyCostSheetsViewController: NewCostSheetDelegate {
+
+	func didCreateCostSheet(_ costSheet: CostSheet) {
+		account.costSheets.append(costSheet)
+		tableView.reloadData()
 	}
 
 }

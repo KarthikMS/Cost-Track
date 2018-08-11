@@ -18,4 +18,8 @@ extension Account {
 		return count
 	}
 
+	var defaultNewCostSheetName: String {
+		return "Cost Sheet \(costSheets.count + 1)"
+	}
+
 }
