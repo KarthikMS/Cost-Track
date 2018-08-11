@@ -24,11 +24,13 @@ class CostSheetViewController: UIViewController {
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
 	var costSheet = CostSheet()
 	var classificationMode = TransactionClassificationMode.date
-	var sortedEntries = [
+	var sortedEntriesForTableView = [
 		Int: [
 			String: [CostSheetEntry]
 		]
 		]()
+	private var entriesSortedByDate = [CostSheetEntry]()
+	private let categories = CommonUtil.getAllCategories()
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -73,7 +75,7 @@ class CostSheetViewController: UIViewController {
 
 	// MARK: Misc.
 	private func sortEntries() {
-		sortedEntries.removeAll()
+		sortedEntriesForTableView.removeAll()
 		switch classificationMode {
 		case .date:
 			sortEntriesBasedOnDate()
@@ -96,11 +98,11 @@ class CostSheetViewController: UIViewController {
 				assertionFailure()
 				return
 			}
-			if sortedEntries.isEmpty {
-				sortedEntries[0] = [dateString: [entry]]
+			if sortedEntriesForTableView.isEmpty {
+				sortedEntriesForTableView[0] = [dateString: [entry]]
 			} else {
-				let lastSortedEntryIndex = sortedEntries.count - 1
-				guard let lastSortedEntry = sortedEntries[lastSortedEntryIndex],
+				let lastSortedEntryIndex = sortedEntriesForTableView.count - 1
+				guard let lastSortedEntry = sortedEntriesForTableView[lastSortedEntryIndex],
 					let sortedDateString = lastSortedEntry.keys.first else {
 						assertionFailure()
 						return
@@ -108,16 +110,25 @@ class CostSheetViewController: UIViewController {
 				if sortedDateString == dateString {
 					var arr = lastSortedEntry[sortedDateString]
 					arr?.append(entry)
-					sortedEntries[lastSortedEntryIndex]![sortedDateString] = arr
+					sortedEntriesForTableView[lastSortedEntryIndex]![sortedDateString] = arr
 				} else {
-					sortedEntries[lastSortedEntryIndex + 1] = [dateString: [entry]]
+					sortedEntriesForTableView[lastSortedEntryIndex + 1] = [dateString: [entry]]
 				}
+			}
+		}
+
+		let tempSortedEntries = sortedEntriesForTableView.sorted(by: { $0.key > $1.key })
+		entriesSortedByDate.removeAll()
+		for (key, value) in tempSortedEntries {
+			print(key)
+			for (_, entries) in value {
+				entriesSortedByDate.append(contentsOf: entries)
 			}
 		}
 	}
 
 	func getSortedEntry(at indexPath: IndexPath) -> CostSheetEntry? {
-		guard let entries = sortedEntries[indexPath.section] else {
+		guard let entries = sortedEntriesForTableView[indexPath.section] else {
 			assertionFailure()
 			return nil
 		}
@@ -177,6 +188,7 @@ extension CostSheetViewController: CostSheetEntryDelegate {
 		costSheet.entries.append(entry)
 		sortEntries()
 		transactionsTableView.reloadData()
+		costSheet.entries = entriesSortedByDate
 	}
 
 }
