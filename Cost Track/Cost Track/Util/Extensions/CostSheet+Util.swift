@@ -83,4 +83,26 @@ extension CostSheet {
 		}
 		return dateStrings
 	}
+
+	func indexOfEntryWithId(_ id: String) -> Int? {
+		for i in 0..<entries.count {
+			if entries[i].id == id {
+				return i
+			}
+		}
+		return nil
+	}
+
+	mutating func updateEntry(at index: Int, with updatedEntry: CostSheetEntry) {
+		entries[index] = updatedEntry
+	}
+
+	mutating func updateEntry(withId id: String, with updatedEntry: CostSheetEntry) {
+		guard let index = indexOfEntryWithId(id) else {
+			assertionFailure()
+			return
+		}
+		updateEntry(at: index, with: updatedEntry)
+	}
+
 }

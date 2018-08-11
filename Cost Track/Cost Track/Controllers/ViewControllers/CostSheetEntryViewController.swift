@@ -10,7 +10,8 @@ import UIKit
 
 // TODO: Delete once saving protos has been added
 protocol CostSheetEntryDelegate {
-	func entryAdded(_ entry: CostSheetEntry)
+	func didAddEntry(_ entry: CostSheetEntry)
+	func didUpdateEntryWithId(_ id: String, with updatedEntry: CostSheetEntry)
 }
 
 class CostSheetEntryViewController: UIViewController {
@@ -225,22 +226,34 @@ extension CostSheetEntryViewController {
 	}
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
-		var newEntry = CostSheetEntry()
-		newEntry.type = entryType
-		newEntry.amount = Float(amountTextView.text)!
-		newEntry.category = entryCategoryPicker.selectedCategory
+		let amount = Float(amountTextView.text)!
+		let category = entryCategoryPicker.selectedCategory
+		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDatePicker.datePicker.date)
+		let descriptionText: String
+		if let desctiptionTextViewText = descriptionTextView.text {
+			descriptionText = desctiptionTextViewText
+		} else  {
+			descriptionText = ""
+		}
 
-		let entryDate = entryDatePicker.datePicker.date
-		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDate)
-		newEntry.date = dateData
-
-		newEntry.description_p = descriptionTextView.text
-		newEntry.id = UUID().uuidString
-
-		// TODO: Save the entry
-
-		// TODO: Delete once saving protos has been added
-		delegate?.entryAdded(newEntry)
+		if let oldEntry = oldEntry {
+			var entry = oldEntry
+			entry.type = entryType
+			entry.amount = amount
+			entry.category = category
+			entry.date = dateData
+			entry.description_p = descriptionText
+			delegate?.didUpdateEntryWithId(entry.id, with: entry)
+		} else {
+			var entry = CostSheetEntry()
+			entry.id = UUID().uuidString
+			entry.type = entryType
+			entry.amount = amount
+			entry.category = category
+			entry.date = dateData
+			entry.description_p = descriptionText
+			delegate?.didAddEntry(entry)
+		}
 
 		oldEntry = nil
 		navigationController?.popViewController(animated: true)

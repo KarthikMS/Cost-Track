@@ -210,12 +210,20 @@ extension CostSheetViewController: UITableViewDelegate {
 
 }
 
-// TODO: Delete once saving protos has been added
 // MARK: CostSheetEntryDelegate
 extension CostSheetViewController: CostSheetEntryDelegate {
 
-	func entryAdded(_ entry: CostSheetEntry) {
+	func didAddEntry(_ entry: CostSheetEntry) {
 		costSheet.entries.append(entry)
+		reloadAfterEntryModification()
+	}
+
+	func didUpdateEntryWithId(_ id: String, with updatedEntry: CostSheetEntry) {
+		costSheet.updateEntry(withId: id, with: updatedEntry)
+		reloadAfterEntryModification()
+	}
+
+	private func reloadAfterEntryModification() {
 		if classificationMode != .date {
 			sortEntriesByDate()
 		}
