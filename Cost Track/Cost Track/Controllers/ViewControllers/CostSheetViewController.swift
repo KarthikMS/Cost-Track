@@ -8,6 +8,12 @@
 
 import UIKit
 
+enum TransactionClassificationMode {
+	case date
+	case category
+	case place
+}
+
 class CostSheetViewController: UIViewController {
 
 	// MARK: IBOutlets
@@ -17,6 +23,14 @@ class CostSheetViewController: UIViewController {
 	// MARK: Properties
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
 	var costSheet = CostSheet()
+	var classificationMode = TransactionClassificationMode.date
+	var sortedEntriesForTableView = [
+		Int: [
+			String: [CostSheetEntry]
+		]
+		]()
+	private var entriesSortedByDate = [CostSheetEntry]()
+	private let categories = CommonUtil.getAllCategories()
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -32,11 +46,122 @@ class CostSheetViewController: UIViewController {
 		}
 		amountLabel.text = String(balance)
 
-		transactionsTableViewDataSource.costSheet = costSheet
+		sortEntries()
+		transactionsTableViewDataSource.dataSource = self
 		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
 		transactionsTableView.dataSource = transactionsTableViewDataSource
-
     }
+
+	// MARK: Navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "CostSheetEntrySegue" {
+			guard let costSheetEntryViewController = segue.destination as? CostSheetEntryViewController,
+			let sender = sender as? [String: Any] else {
+					assertionFailure()
+					return
+			}
+			costSheetEntryViewController.delegate = self
+			if let oldEntry = sender["oldEntry"] as? CostSheetEntry {
+				costSheetEntryViewController.oldEntry = oldEntry
+			} else {
+				guard let entryType = sender["entryType"] as? CostSheetEntry.EntryType else {
+					assertionFailure()
+					return
+				}
+				costSheetEntryViewController.entryType = entryType
+			}
+		}
+	}
+
+	// MARK: Misc.
+	private func sortEntries() {
+		sortedEntriesForTableView.removeAll()
+		switch classificationMode {
+		case .date:
+			sortEntriesByDate()
+		case .category:
+			sortEntriesByCategory()
+		case .place:
+			sortEntriesByPlace()
+		}
+	}
+
+	private func sortEntriesByDate() {
+		let entries = costSheet.entries.sorted(by: { (entry1, entry2) -> Bool in
+			guard let date1 = entry1.date.date,
+				let date2 = entry2.date.date else {
+					assertionFailure()
+					return false
+			}
+			return date1 > date2
+		})
+		for entry in entries {
+			guard let dateString = entry.date.date?.string(format: "dd MMMM yyyy, EEE") else {
+				assertionFailure()
+				return
+			}
+			if sortedEntriesForTableView.isEmpty {
+				sortedEntriesForTableView[0] = [dateString: [entry]]
+			} else {
+				let lastSortedEntryIndex = sortedEntriesForTableView.count - 1
+				guard let lastSortedEntry = sortedEntriesForTableView[lastSortedEntryIndex],
+					let sortedDateString = lastSortedEntry.keys.first else {
+						assertionFailure()
+						return
+				}
+				if sortedDateString == dateString {
+					var arr = lastSortedEntry[sortedDateString]
+					arr?.append(entry)
+					sortedEntriesForTableView[lastSortedEntryIndex]![sortedDateString] = arr
+				} else {
+					sortedEntriesForTableView[lastSortedEntryIndex + 1] = [dateString: [entry]]
+				}
+			}
+		}
+
+		// entriesSortedByDate
+		let tempSortedEntries = sortedEntriesForTableView.sorted(by: { $0.key > $1.key })
+		entriesSortedByDate.removeAll()
+		for (_, value) in tempSortedEntries {
+			for (_, entries) in value {
+				entriesSortedByDate.append(contentsOf: entries)
+			}
+		}
+	}
+
+	private func sortEntriesByCategory() {
+		var entriesSortedByCategory = [CostSheetEntry.Category: [CostSheetEntry]]()
+		for category in categories {
+			entriesSortedByCategory[category] = [CostSheetEntry]()
+		}
+
+		for entry in entriesSortedByDate {
+			entriesSortedByCategory[entry.category]?.append(entry)
+		}
+
+		var i = 0
+		for (category, entries) in entriesSortedByCategory {
+			if entries.count == 0 {
+				continue
+			}
+
+			let dict = [category.name: entries]
+			sortedEntriesForTableView[i] = dict
+			i += 1
+		}
+	}
+
+	private func sortEntriesByPlace() {
+
+	}
+
+	func getSortedEntry(at indexPath: IndexPath) -> CostSheetEntry? {
+		guard let entries = sortedEntriesForTableView[indexPath.section] else {
+			assertionFailure()
+			return nil
+		}
+		return Array(entries)[0].value[indexPath.row]
+	}
 
 }
 
@@ -44,22 +169,24 @@ class CostSheetViewController: UIViewController {
 extension CostSheetViewController {
 
 	@IBAction func expenseButtonPressed(_ sender: Any) {
-		// Finish this
+		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["entryType": CostSheetEntry.EntryType.expense])
 	}
 
 	@IBAction func incomeButtonPressed(_ sender: Any) {
-		// Finish this
+		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["entryType": CostSheetEntry.EntryType.income])
 	}
 
 	@IBAction func classificationSegmentedControlValueChanged(_ sender: UISegmentedControl) {
 		switch sender.selectedSegmentIndex {
 		case 0:
-			transactionsTableViewDataSource.mode = .date
+			classificationMode = .date
+
 		case 1:
-			transactionsTableViewDataSource.mode = .category
+			classificationMode = .category
 		default:
-			transactionsTableViewDataSource.mode = .place
+			classificationMode = .place
 		}
+		sortEntries()
 		transactionsTableView.reloadData()
 	}
 
@@ -73,7 +200,36 @@ extension CostSheetViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		performSegue(withIdentifier: "CostSheetEntrySegue", sender: nil)
+		guard let costSheetEntry = getSortedEntry(at: indexPath) else {
+			assertionFailure()
+			return
+		}
+		tableView.deselectRow(at: indexPath, animated: true)
+		performSegue(withIdentifier: "CostSheetEntrySegue", sender: ["oldEntry": costSheetEntry])
+	}
+
+}
+
+// MARK: CostSheetEntryDelegate
+extension CostSheetViewController: CostSheetEntryDelegate {
+
+	func didAddEntry(_ entry: CostSheetEntry) {
+		costSheet.entries.append(entry)
+		reloadAfterEntryModification()
+	}
+
+	func didUpdateEntryWithId(_ id: String, with updatedEntry: CostSheetEntry) {
+		costSheet.updateEntry(withId: id, with: updatedEntry)
+		reloadAfterEntryModification()
+	}
+
+	private func reloadAfterEntryModification() {
+		if classificationMode != .date {
+			sortEntriesByDate()
+		}
+		sortEntries()
+		transactionsTableView.reloadData()
+		costSheet.entries = entriesSortedByDate
 	}
 
 }

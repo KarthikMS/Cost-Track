@@ -98,16 +98,30 @@
             <objects>
                 <viewController id="VJY-cq-tDL" customClass="CostSheetEntryViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="Wee-sd-if9">
+                        <nil key="title"/>
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Otn-81-YjO">
+                            <rect key="frame" x="123.5" y="7" width="128" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="Income">
+                                <color key="titleColor" red="0.40000000000000002" green="1" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="navigationBarTitleButtonPressed:" destination="VJY-cq-tDL" eventType="touchUpInside" id="Frm-71-g8c"/>
+                            </connections>
+                        </button>
                         <barButtonItem key="rightBarButtonItem" title="Save" id="rzO-bc-wll">
                             <connections>
                                 <action selector="saveButtonPressed:" destination="VJY-cq-tDL" id="UaA-CW-963"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="navigationBarTitleButton" destination="Otn-81-YjO" id="H7D-YX-24L"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dag-9M-Wkn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1991" y="110"/>
+            <point key="canvasLocation" x="1989.5999999999999" y="109.29535232383809"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="12t-Y0-4G4">

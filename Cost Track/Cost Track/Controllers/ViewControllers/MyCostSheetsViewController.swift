@@ -28,7 +28,7 @@ class MyCostSheetsViewController: UIViewController {
 		costSheetEntry1.amount = 500
 		costSheetEntry1.category = .misc
 		costSheetEntry1.type = .income
-//		costSheetEntry1.date = "27/07/2018"
+		costSheetEntry1.date = NSKeyedArchiver.archivedData(withRootObject: Date())
 		costSheetEntry1.id = UUID().uuidString
 		costSheet.entries.append(costSheetEntry1)
 
@@ -38,7 +38,7 @@ class MyCostSheetsViewController: UIViewController {
 		costSheetEntry2.type = .expense
 //		costSheetEntry2.date = "28/07/2018"
 		costSheetEntry2.id = UUID().uuidString
-		costSheet.entries.append(costSheetEntry2)
+//		costSheet.entries.append(costSheetEntry2)
 
 		account.costSheets.append(costSheet)
 		// Test

@@ -18,6 +18,8 @@ extension Date {
 		let dateFormatter = DateFormatter()
 		dateFormatter.locale = Locale.current
 		dateFormatter.dateFormat = format
+		dateFormatter.amSymbol = "AM"
+		dateFormatter.pmSymbol = "PM"
 		return dateFormatter.string(from: self)
 	}
 

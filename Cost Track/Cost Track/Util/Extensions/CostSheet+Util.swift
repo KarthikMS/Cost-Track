@@ -69,4 +69,40 @@ extension CostSheet {
 		return lastModifiedDate
 	}
 
+	func getDateStrings(format: String) -> [String] {
+		var dateStrings = [String]()
+		for entry in entries {
+			guard let date = entry.date.date else {
+				assertionFailure()
+				return []
+			}
+			let dateString = date.string(format: format)
+			if !dateStrings.contains(dateString) {
+				dateStrings.append(dateString)
+			}
+		}
+		return dateStrings
+	}
+
+	func indexOfEntryWithId(_ id: String) -> Int? {
+		for i in 0..<entries.count {
+			if entries[i].id == id {
+				return i
+			}
+		}
+		return nil
+	}
+
+	mutating func updateEntry(at index: Int, with updatedEntry: CostSheetEntry) {
+		entries[index] = updatedEntry
+	}
+
+	mutating func updateEntry(withId id: String, with updatedEntry: CostSheetEntry) {
+		guard let index = indexOfEntryWithId(id) else {
+			assertionFailure()
+			return
+		}
+		updateEntry(at: index, with: updatedEntry)
+	}
+
 }
