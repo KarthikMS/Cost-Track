@@ -97,12 +97,12 @@ class CostSheetEntryViewController: UIViewController {
 		switch entryType {
 		case .expense:
 			navigationBarTitleButton.setTitle("Expense", for: .normal)
-			navigationBarTitleButton.setTitleColor(ExpenseColor, for: .normal)
-			amountBarView.backgroundColor = ExpenseColor
+			navigationBarTitleButton.setTitleColor(LightExpenseColor, for: .normal)
+			amountBarView.backgroundColor = LightExpenseColor
 		case .income:
 			navigationBarTitleButton.setTitle("Income", for: .normal)
-			navigationBarTitleButton.setTitleColor(IncomeColor, for: .normal)
-			amountBarView.backgroundColor = IncomeColor
+			navigationBarTitleButton.setTitleColor(LightIncomeColor, for: .normal)
+			amountBarView.backgroundColor = LightIncomeColor
 		}
 	}
 

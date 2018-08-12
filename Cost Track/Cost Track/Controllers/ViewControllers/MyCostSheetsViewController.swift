@@ -122,27 +122,7 @@ extension MyCostSheetsViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "CostSheetTableViewCell", for: indexPath) as! CostSheetTableViewCell
-		let costSheet = costSheetAtIndexPath(indexPath)
-
-		cell.costSheetNameLabel.text = costSheet.name
-		cell.dateLabel.text = costSheet.lastModifiedDate
-
-		// Balance label
-		var balance = costSheet.balance
-		if balance < 0 {
-			cell.balanceAmountLabel.textColor = ExpenseColor
-			balance *= -1
-		} else {
-			cell.balanceAmountLabel.textColor = IncomeColor
-		}
-		cell.balanceAmountLabel.text = String(balance)
-
-		let incomeExpenseInfo = costSheet.incomeExpenseInfo
-		cell.incomeCountLabel.text = String(incomeExpenseInfo.incomeCount)
-		cell.expenseCountLabel.text = String(incomeExpenseInfo.expenseCount)
-		cell.incomeAmountLabel.text = String(incomeExpenseInfo.incomeAmount)
-		cell.expenseAmountLabel.text = String(incomeExpenseInfo.expenseAmount)
-
+		cell.setValuesForCostSheet(costSheetAtIndexPath(indexPath))
 		return cell
 	}
 

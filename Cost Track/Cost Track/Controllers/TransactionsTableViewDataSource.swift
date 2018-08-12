@@ -56,6 +56,7 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 		}
 		
 		cell.setAmount(costSheetEntry.amount,
+					   entryType: costSheetEntry.type,
 					   date: entryDate.string(format: "dd/MM/yy"),
 					   time: entryDate.string(format: "hh:mm a"),
 					   category: costSheetEntry.category.name,

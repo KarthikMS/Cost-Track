@@ -55,12 +55,12 @@
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 INR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cyq-5b-3vG">
                             <rect key="frame" x="80" y="0.5" width="215" height="80"/>
+                            <color key="backgroundColor" red="1" green="0.031076394888888952" blue="0.16038954593055563" alpha="1" colorSpace="calibratedRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="gxE-cg-P8W" secondAttribute="trailing" id="7HS-iB-mYY"/>
                         <constraint firstItem="gxE-cg-P8W" firstAttribute="leading" secondItem="Cyq-5b-3vG" secondAttribute="trailing" id="EKq-aA-9JR"/>

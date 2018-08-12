@@ -41,21 +41,17 @@ class CostSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		// Amount label
-		var balance = costSheet.balance
-		if balance < 0 {
-			amountLabel.textColor = ExpenseColor
-			balance *= -1
-		} else {
-			amountLabel.textColor = IncomeColor
-		}
-		amountLabel.text = String(balance)
-
 		sortEntries()
 		transactionsTableViewDataSource.dataSource = self
 		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
 		transactionsTableView.dataSource = transactionsTableViewDataSource
     }
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		updateAmountLabel()
+	}
 
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -78,7 +74,19 @@ class CostSheetViewController: UIViewController {
 		}
 	}
 
-	// MARK: Misc.
+	// MARK: View functions
+	private func updateAmountLabel() {
+		var balance = costSheet.balance
+		if balance < 0 {
+			amountLabel.backgroundColor = DarkExpenseColor
+			balance *= -1
+		} else {
+			amountLabel.backgroundColor = DarkIncomeColor
+		}
+		amountLabel.text = String(balance)
+	}
+
+	// MARK: Sorting functions
 	private func sortEntries() {
 		sortedEntriesForTableView.removeAll()
 		switch classificationMode {
