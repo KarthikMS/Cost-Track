@@ -11,12 +11,13 @@ import UIKit
 class MyCostSheetsViewController: UIViewController {
 
 	// MARK: IBOutlets
+	@IBOutlet weak var topBar: UIView!
 	@IBOutlet weak var totalAmountLabel: UILabel!
 	@IBOutlet weak var tableView: UITableView!
 
 	// MARK: Properties
 	var account = Account()
-	private var shouldReloadTableView = false
+	private var shouldUpdateViews = false
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -44,9 +45,10 @@ class MyCostSheetsViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		if shouldReloadTableView {
+		if shouldUpdateViews {
+			updateTopBar()
 			tableView.reloadData()
-			shouldReloadTableView = false
+			shouldUpdateViews = false
 		}
 	}
 
@@ -70,6 +72,18 @@ class MyCostSheetsViewController: UIViewController {
 			newCostSheetViewController.dataSource = self
 			newCostSheetViewController.delegate = self
 		}
+	}
+
+	// MARK: View functions
+	private func updateTopBar() {
+		var totalAmount = account.totalAmount
+		if totalAmount < 0 {
+			topBar.backgroundColor = DarkExpenseColor
+			totalAmount *= -1
+		} else {
+			topBar.backgroundColor = DarkIncomeColor
+		}
+		totalAmountLabel.text = String(totalAmount)
 	}
 
 	// MARK: Misc. functions
@@ -167,7 +181,7 @@ extension MyCostSheetsViewController: CostSheetViewControllerProtocol {
 
 	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet) {
 		account.updateCostSheet(withId: id, with: updatedCostSheet)
-		shouldReloadTableView = true
+		shouldUpdateViews = true
 	}
 
 }

@@ -14,6 +14,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyCostSheetsViewController" customModule="Cost_Track" customModuleProvider="target">
             <connections>
                 <outlet property="tableView" destination="f9Z-ur-bCM" id="lf6-w1-f2M"/>
+                <outlet property="topBar" destination="lV6-EZ-y31" id="jky-aI-BWX"/>
                 <outlet property="totalAmountLabel" destination="8Ww-um-mi6" id="lcD-WJ-dN8"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>

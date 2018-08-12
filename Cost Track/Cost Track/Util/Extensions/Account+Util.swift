@@ -18,6 +18,14 @@ extension Account {
 		return count
 	}
 
+	var totalAmount: Float {
+		var totalAmount: Float = 0
+		for costSheet in costSheets {
+			totalAmount += costSheet.balance
+		}
+		return totalAmount
+	}
+
 	var defaultNewCostSheetName: String {
 		return "Cost Sheet \(costSheets.count + 1)"
 	}
