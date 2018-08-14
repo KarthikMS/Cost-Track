@@ -100,23 +100,23 @@ class MyCostSheetsViewController: UIViewController {
 // MARK: IBActions
 extension MyCostSheetsViewController {
 
-	@IBAction func chartViewButtonPressed(_ sender: Any) {
+	@IBAction private func chartViewButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 
-	@IBAction func generalStatisticsButtonPressed(_ sender: Any) {
+	@IBAction private func generalStatisticsButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 
-	@IBAction func addNewCostSheetButtonPressed(_ sender: Any) {
+	@IBAction private func addNewCostSheetButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 
-	@IBAction func settingsButtonPressed(_ sender: Any) {
+	@IBAction private func settingsButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 
-	@IBAction func searchButtonPressed(_ sender: Any) {
+	@IBAction private func searchButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 

@@ -178,7 +178,7 @@ class CostSheetEntryViewController: UIViewController {
 // MARK: IBActions
 extension CostSheetEntryViewController {
 
-	@IBAction func navigationBarTitleButtonPressed(_ sender: UIButton) {
+	@IBAction private func navigationBarTitleButtonPressed(_ sender: UIButton) {
 		switch entryType {
 		case .income:
 			entryType = .expense
@@ -188,12 +188,12 @@ extension CostSheetEntryViewController {
 		updateViewsBasedOnEntryType()
 	}
 
-	@IBAction func currencyButtonPressed(_ sender: Any) {
+	@IBAction private func currencyButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction func categoryViewTapped(_ sender: Any) {
+	@IBAction private func categoryViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 
@@ -201,22 +201,22 @@ extension CostSheetEntryViewController {
 		showCategoryPicker()
 	}
 
-	@IBAction func locationButtonPressed(_ sender: Any) {
+	@IBAction private func locationButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction func imageButtonPressed(_ sender: Any) {
+	@IBAction private func imageButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction func voiceNoteButtonPressed(_ sender: Any) {
+	@IBAction private func voiceNoteButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction func dateViewTapped(_ sender: Any) {
+	@IBAction private func dateViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 
@@ -224,7 +224,7 @@ extension CostSheetEntryViewController {
 		showDatePicker()
 	}
 
-	@IBAction func saveButtonPressed(_ sender: Any) {
+	@IBAction private func saveButtonPressed(_ sender: Any) {
 		let amount = Float(amountTextView.text)!
 		let category = entryCategoryPicker.selectedCategory
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDatePicker.datePicker.date)

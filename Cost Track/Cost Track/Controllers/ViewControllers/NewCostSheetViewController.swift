@@ -48,7 +48,7 @@ class NewCostSheetViewController: UIViewController {
 // MARK: IBActions
 extension NewCostSheetViewController {
 
-	@IBAction func createButtonPressed(_ sender: Any) {
+	@IBAction private func createButtonPressed(_ sender: Any) {
 		guard let costSheetName = settingsTableView.costSheetNameTextView.text,
 			costSheetName != "",
 			let initialBalance = Float(settingsTableView.initalBalanceTextView.text) else {
