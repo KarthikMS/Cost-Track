@@ -40,6 +40,7 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 			assertionFailure("dataSource not set")
 			return -1
 		}
+		print("Rows: \(Array(entries)[0].value.count)")
 		return Array(entries)[0].value.count
 	}
 
@@ -65,6 +66,10 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 					   forMode: dataSource.classificationMode
 		)
 		return cell
+	}
+
+	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		return true
 	}
 
 }

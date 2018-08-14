@@ -113,4 +113,12 @@ extension CostSheet {
 		updateEntry(at: index, with: updatedEntry)
 	}
 
+	mutating func deleteEntry(withId id: String) {
+		guard let index = indexOfEntryWithId(id) else {
+			assertionFailure()
+			return
+		}
+		entries.remove(at: index)
+	}
+
 }

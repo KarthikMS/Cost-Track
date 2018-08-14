@@ -41,6 +41,7 @@ extension Account {
 
 	mutating func updateCostSheet(at index: Int, with updatedCostSheet: CostSheet) {
 		costSheets[index] = updatedCostSheet
+		costSheets[index].lastModifiedDate = Date().data
 	}
 
 	mutating func updateCostSheet(withId id: String, with updatedCostSheet: CostSheet) {
@@ -49,6 +50,16 @@ extension Account {
 			return
 		}
 		updateCostSheet(at: index, with: updatedCostSheet)
+	}
+
+	mutating func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
+		guard let costSheetIndex = indexOfCostSheetWithId(costSheetId),
+		let entryIndex = costSheets[costSheetIndex].indexOfEntryWithId(entryId) else {
+			assertionFailure()
+			return
+		}
+		costSheets[costSheetIndex].entries.remove(at: entryIndex)
+		costSheets[costSheetIndex].lastModifiedDate = Date().data
 	}
 
 }

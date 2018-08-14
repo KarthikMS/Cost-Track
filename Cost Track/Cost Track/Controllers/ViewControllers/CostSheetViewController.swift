@@ -10,6 +10,7 @@ import UIKit
 
 protocol CostSheetViewControllerProtocol {
 	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet)
+	func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String)
 }
 
 enum TransactionClassificationMode {
@@ -230,6 +231,33 @@ extension CostSheetViewController: UITableViewDelegate {
 		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["oldEntry": costSheetEntry])
 	}
 
+	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+			guard let entryToDelete = self.getSortedEntry(at: indexPath) else {
+				assertionFailure()
+				return
+			}
+
+			self.costSheet.deleteEntry(withId: entryToDelete.id)
+			if self.classificationMode != .date {
+				self.sortEntriesByDate()
+			}
+			self.sortEntries()
+			self.costSheet.entries = self.entriesSortedByDate
+			tableView.beginUpdates()
+			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
+				tableView.deleteSections([indexPath.section], with: .bottom)
+			} else {
+				tableView.deleteRows(at: [indexPath], with: .left)
+			}
+			tableView.endUpdates()
+
+			self.updateAmountLabel()
+			self.delegate?.didDeleteCostSheetEntry(withId: entryToDelete.id, inCostSheetWithId: self.costSheet.id)
+		}
+		return [deleteAction]
+	}
+
 }
 
 // MARK: CostSheetEntryDelegate
@@ -254,7 +282,6 @@ extension CostSheetViewController: CostSheetEntryViewControllerDelegate {
 		sortEntries()
 		transactionsTableView.reloadData()
 		costSheet.entries = entriesSortedByDate
-		costSheet.lastModifiedDate = Date().data
 		delegate?.didUpdateCostSheet(withId: costSheet.id, with: costSheet)
 	}
 

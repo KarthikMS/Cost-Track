@@ -193,4 +193,9 @@ extension MyCostSheetsViewController: CostSheetViewControllerProtocol {
 		shouldUpdateViews = true
 	}
 
+	func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
+		account.didDeleteCostSheetEntry(withId: entryId, inCostSheetWithId: costSheetId)
+		shouldUpdateViews = true
+	}
+
 }
