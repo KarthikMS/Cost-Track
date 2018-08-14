@@ -13,7 +13,7 @@ protocol TransferEntryTableViewControllerDataSource: class {
 }
 
 protocol TransferEntryTableViewControllerDelegate: class {
-	func transferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet)
+	func didTransferCostSheetEntryToCostSheet(_ toCostSheet: CostSheet)
 }
 
 class TransferEntryTableViewController: UITableViewController {
@@ -24,6 +24,8 @@ class TransferEntryTableViewController: UITableViewController {
 	// MARK: Properties
 	weak var dataSource: TransferEntryTableViewControllerDataSource?
 	weak var delegate: TransferEntryTableViewControllerDelegate?
+	private var selectedCostSheet: CostSheet?
+	private var selectedIndexPath: IndexPath?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -51,6 +53,9 @@ extension TransferEntryTableViewController {
 			return cell
 		}
 		cell.textLabel?.text = "\(dataSource.filteredCostSheets[indexPath.row].name)"
+		if let selectedIndexPath = selectedIndexPath, selectedIndexPath == indexPath {
+			cell.accessoryType = .checkmark
+		}
 		return cell
 	}
 
@@ -60,7 +65,14 @@ extension TransferEntryTableViewController {
 extension TransferEntryTableViewController {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+		guard let dataSource = dataSource else {
+			assertionFailure()
+			return
+		}
+		selectedCostSheet = dataSource.filteredCostSheets[indexPath.row]
+		selectedIndexPath = indexPath
+		transferButton.isEnabled = true
+		tableView.reloadData()
 	}
 
 }
@@ -69,6 +81,12 @@ extension TransferEntryTableViewController {
 extension TransferEntryTableViewController {
 
 	@IBAction func transferButtonPressed(_ sender: Any) {
+		guard let selectedCostSheet = selectedCostSheet else {
+			assertionFailure()
+			return
+		}
+		delegate?.didTransferCostSheetEntryToCostSheet(selectedCostSheet)
+		dismiss(animated: true, completion: nil)
 	}
 
 	@IBAction func cancelButtonPressed(_ sender: Any) {

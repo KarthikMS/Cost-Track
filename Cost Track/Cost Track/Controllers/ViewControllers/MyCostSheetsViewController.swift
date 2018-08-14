@@ -190,8 +190,8 @@ extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
 
 }
 
-// MARK: CostSheetViewControllerProtocol
-extension MyCostSheetsViewController: CostSheetViewControllerProtocol {
+// MARK: CostSheetViewControllerDelegate
+extension MyCostSheetsViewController: CostSheetViewControllerDelegate {
 
 	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet) {
 		account.updateCostSheet(withId: id, with: updatedCostSheet)
@@ -200,6 +200,31 @@ extension MyCostSheetsViewController: CostSheetViewControllerProtocol {
 
 	func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
 		account.didDeleteCostSheetEntry(withId: entryId, inCostSheetWithId: costSheetId)
+		shouldUpdateViews = true
+	}
+
+	func didTransferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet) {
+		guard let selectedCostSheetId = selectedCostSheetId else {
+			assertionFailure()
+			return
+		}
+		var numberOfTasks = 2
+		for i in 0..<account.costSheets.count {
+			if account.costSheets[i].id == selectedCostSheetId {
+				account.costSheets[i].deleteEntry(withId: costSheetEntry.id)
+				if numberOfTasks == 1 {
+					break
+				}
+				numberOfTasks -= 1
+			} else if account.costSheets[i].id == toCostSheet.id {
+				account.costSheets[i].entries.append(costSheetEntry)
+				if numberOfTasks == 1 {
+					break
+				}
+				numberOfTasks -= 1
+			}
+		}
+
 		shouldUpdateViews = true
 	}
 
@@ -220,15 +245,6 @@ extension MyCostSheetsViewController: TransferEntryTableViewControllerDataSource
 			}
 		}
 		return costSheets
-	}
-
-}
-
-// MARK: TransferEntryTableViewControllerDelegate
-extension MyCostSheetsViewController: TransferEntryTableViewControllerDelegate {
-
-	func transferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet) {
-
 	}
 
 }

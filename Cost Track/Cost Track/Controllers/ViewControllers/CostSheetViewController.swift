@@ -8,9 +8,10 @@
 
 import UIKit
 
-protocol CostSheetViewControllerProtocol {
+protocol CostSheetViewControllerDelegate {
 	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet)
 	func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String)
+	func didTransferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet)
 }
 
 enum TransactionClassificationMode {
@@ -29,7 +30,7 @@ class CostSheetViewController: UIViewController {
 	// MARK: Properties
 	weak var myCostSheetsViewController = MyCostSheetsViewController()
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
-	var delegate: CostSheetViewControllerProtocol?
+	var delegate: CostSheetViewControllerDelegate?
 	var costSheet = CostSheet()
 	var classificationMode = TransactionClassificationMode.date
 	var sortedEntriesForTableView = [
@@ -39,6 +40,7 @@ class CostSheetViewController: UIViewController {
 		]()
 	private var entriesSortedByDate = [CostSheetEntry]()
 	private let categories = CommonUtil.getAllCategories()
+	private var transferIndexPath: IndexPath?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -62,6 +64,7 @@ class CostSheetViewController: UIViewController {
 		super.viewWillAppear(animated)
 
 		updateAmountLabel()
+		transferIndexPath = nil
 	}
 
 	// MARK: Navigation
@@ -88,7 +91,7 @@ class CostSheetViewController: UIViewController {
 				return
 			}
 			transferEntryTableViewController.dataSource = myCostSheetsViewController
-			transferEntryTableViewController.delegate = myCostSheetsViewController
+			transferEntryTableViewController.delegate = self
 		}
 	}
 
@@ -200,11 +203,7 @@ class CostSheetViewController: UIViewController {
 extension CostSheetViewController {
 
 	@IBAction private func expenseButtonPressed(_ sender: Any) {
-		// delete
-		performSegue(withIdentifier: TransferEntrySegue, sender: nil)
-		return
-		// delete
-//		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.expense])
+		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.expense])
 	}
 
 	@IBAction private func incomeButtonPressed(_ sender: Any) {
@@ -244,6 +243,17 @@ extension CostSheetViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		let transferEntryAction = UITableViewRowAction(style: .normal, title: "Transfer") { (action, indexPath) in
+			// Checking cost sheets count
+			if self.myCostSheetsViewController?.account.costSheets.count == 1 {
+				// Show alert
+				return
+			}
+
+			self.transferIndexPath = indexPath
+			self.performSegue(withIdentifier: TransferEntrySegue, sender: nil)
+		}
+		transferEntryAction.backgroundColor = .darkGray
 		let deleteEntryAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
 			guard let entryToDelete = self.getSortedEntry(at: indexPath) else {
 				assertionFailure()
@@ -267,12 +277,12 @@ extension CostSheetViewController: UITableViewDelegate {
 			self.updateAmountLabel()
 			self.delegate?.didDeleteCostSheetEntry(withId: entryToDelete.id, inCostSheetWithId: self.costSheet.id)
 		}
-		return [deleteEntryAction]
+		return [deleteEntryAction, transferEntryAction]
 	}
 
 }
 
-// MARK: CostSheetEntryDelegate
+// MARK: CostSheetEntryViewControllerDelegate
 extension CostSheetViewController: CostSheetEntryViewControllerDelegate {
 
 	func didAddEntry(_ entry: CostSheetEntry) {
@@ -295,6 +305,35 @@ extension CostSheetViewController: CostSheetEntryViewControllerDelegate {
 		transactionsTableView.reloadData()
 		costSheet.entries = entriesSortedByDate
 		delegate?.didUpdateCostSheet(withId: costSheet.id, with: costSheet)
+	}
+
+}
+
+// MARK: TransferEntryTableViewControllerDelegate
+extension CostSheetViewController: TransferEntryTableViewControllerDelegate {
+
+	func didTransferCostSheetEntryToCostSheet(_ toCostSheet: CostSheet) {
+		guard let transferIndexPath = transferIndexPath,
+			let entryToTransfer = getSortedEntry(at: transferIndexPath) else {
+				assertionFailure("transferIndexPath not set")
+				return
+		}
+		costSheet.deleteEntry(withId: entryToTransfer.id)
+		if classificationMode != .date {
+			sortEntriesByDate()
+		}
+		sortEntries()
+		costSheet.entries = entriesSortedByDate
+		transactionsTableView.beginUpdates()
+		if transactionsTableView.numberOfRows(inSection: transferIndexPath.section) == 1 {
+			transactionsTableView.deleteSections([transferIndexPath.section], with: .bottom)
+		} else {
+			transactionsTableView.deleteRows(at: [transferIndexPath], with: .left)
+		}
+		transactionsTableView.endUpdates()
+
+		updateAmountLabel()
+		delegate?.didTransferCostSheetEntry(entryToTransfer, to: toCostSheet)
 	}
 
 }
