@@ -269,13 +269,9 @@
 		D962F42320F9C0D3003C7C58 /* XIBs */ = {
 			isa = PBXGroup;
 			children = (
-				D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */,
-				D98974092116FCE60051F809 /* EntryDatePicker.xib */,
-				D989740D21173EA60051F809 /* EntryCategoryPicker.xib */,
-				D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */,
-				D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */,
-				D962F42D20F9D877003C7C58 /* CostSheetTableViewCell.xib */,
-				D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */,
+				D97AB0F521228FFE00000D6F /* ViewControllers */,
+				D97AB0F62122905400000D6F /* TableView cells */,
+				D97AB0F72122906900000D6F /* Other views */,
 			);
 			path = XIBs;
 			sourceTree = "<group>";
@@ -297,6 +293,34 @@
 				D9032EBC20FB75EC009EF5FC /* NewCostSheetViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		D97AB0F521228FFE00000D6F /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */,
+				D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */,
+				D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		D97AB0F62122905400000D6F /* TableView cells */ = {
+			isa = PBXGroup;
+			children = (
+				D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */,
+				D962F42D20F9D877003C7C58 /* CostSheetTableViewCell.xib */,
+			);
+			path = "TableView cells";
+			sourceTree = "<group>";
+		};
+		D97AB0F72122906900000D6F /* Other views */ = {
+			isa = PBXGroup;
+			children = (
+				D98974092116FCE60051F809 /* EntryDatePicker.xib */,
+				D989740D21173EA60051F809 /* EntryCategoryPicker.xib */,
+			);
+			path = "Other views";
 			sourceTree = "<group>";
 		};
 		D989739C210D6C7C0051F809 /* Proto */ = {
