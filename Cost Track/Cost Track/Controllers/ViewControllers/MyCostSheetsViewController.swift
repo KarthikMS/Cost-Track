@@ -14,6 +14,7 @@ class MyCostSheetsViewController: UIViewController {
 	@IBOutlet weak var topBar: UIView!
 	@IBOutlet weak var totalAmountLabel: UILabel!
 	@IBOutlet weak var tableView: UITableView!
+	@IBOutlet weak var noCostSheetsTextView: UITextView!
 
 	// MARK: Properties
 	var account = Account()
@@ -37,9 +38,14 @@ class MyCostSheetsViewController: UIViewController {
 		costSheet.name = "Hardcoded"
 		costSheet.lastModifiedDate = Date().data
 		costSheet.entries.append(costSheetEntry1)
-		account.costSheets.append(costSheet)
+//		account.costSheets.append(costSheet)
 		// Test
 
+		if account.costSheets.isEmpty {
+			tableView.isHidden = true
+		} else {
+			noCostSheetsTextView.isHidden = true
+		}
 		tableView.register(UINib(nibName: "CostSheetTableViewCell", bundle: nil), forCellReuseIdentifier: "CostSheetTableViewCell")
 	}
 
@@ -172,6 +178,8 @@ extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
 
 	func didCreateCostSheet(_ costSheet: CostSheet) {
 		account.costSheets.append(costSheet)
+		noCostSheetsTextView.isHidden = true
+		tableView.isHidden = false
 		tableView.reloadData()
 	}
 
