@@ -60,6 +60,7 @@ extension NewCostSheetViewController {
 		costSheet.id = UUID().uuidString
 		costSheet.name = costSheetName
 		costSheet.initialBalance = initialBalance
+		costSheet.lastModifiedDate = Date().data
 
 		delegate?.didCreateCostSheet(costSheet)
 		navigationController?.popViewController(animated: true)

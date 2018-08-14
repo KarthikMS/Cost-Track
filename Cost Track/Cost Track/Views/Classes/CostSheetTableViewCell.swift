@@ -22,7 +22,7 @@ class CostSheetTableViewCell: UITableViewCell {
 	// MARK: Functions
 	func setValuesForCostSheet(_ costSheet: CostSheet) {
 		costSheetNameLabel.text = costSheet.name
-		dateLabel.text = costSheet.lastModifiedDate
+		dateLabel.text = costSheet.lastModifiedDateString
 
 		// Balance label
 		var balance = costSheet.balance

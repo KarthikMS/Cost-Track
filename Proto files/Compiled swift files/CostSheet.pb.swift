@@ -65,6 +65,15 @@ struct CostSheet {
     set {_uniqueStorage()._entries = newValue}
   }
 
+  var lastModifiedDate: Data {
+    get {return _storage._lastModifiedDate ?? SwiftProtobuf.Internal.emptyData}
+    set {_uniqueStorage()._lastModifiedDate = newValue}
+  }
+  /// Returns true if `lastModifiedDate` has been explicitly set.
+  var hasLastModifiedDate: Bool {return _storage._lastModifiedDate != nil}
+  /// Clears the value of `lastModifiedDate`. Subsequent reads from it will return its default value.
+  mutating func clearLastModifiedDate() {_storage._lastModifiedDate = nil}
+
   var id: String {
     get {return _storage._id ?? String()}
     set {_uniqueStorage()._id = newValue}
@@ -91,7 +100,8 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     3: .same(proto: "includeInOverallTotal"),
     4: .same(proto: "group"),
     5: .same(proto: "entries"),
-    6: .same(proto: "id"),
+    6: .same(proto: "lastModifiedDate"),
+    7: .same(proto: "id"),
   ]
 
   fileprivate class _StorageClass {
@@ -100,6 +110,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     var _includeInOverallTotal: Bool? = nil
     var _group: CostSheetGroup? = nil
     var _entries: [CostSheetEntry] = []
+    var _lastModifiedDate: Data? = nil
     var _id: String? = nil
 
     static let defaultInstance = _StorageClass()
@@ -112,6 +123,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       _includeInOverallTotal = source._includeInOverallTotal
       _group = source._group
       _entries = source._entries
+      _lastModifiedDate = source._lastModifiedDate
       _id = source._id
     }
   }
@@ -128,6 +140,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       if _storage._name == nil {return false}
       if _storage._initialBalance == nil {return false}
       if _storage._includeInOverallTotal == nil {return false}
+      if _storage._lastModifiedDate == nil {return false}
       if _storage._id == nil {return false}
       if let v = _storage._group, !v.isInitialized {return false}
       if !SwiftProtobuf.Internal.areAllInitialized(_storage._entries) {return false}
@@ -145,7 +158,8 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
         case 3: try decoder.decodeSingularBoolField(value: &_storage._includeInOverallTotal)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._group)
         case 5: try decoder.decodeRepeatedMessageField(value: &_storage._entries)
-        case 6: try decoder.decodeSingularStringField(value: &_storage._id)
+        case 6: try decoder.decodeSingularBytesField(value: &_storage._lastModifiedDate)
+        case 7: try decoder.decodeSingularStringField(value: &_storage._id)
         default: break
         }
       }
@@ -169,8 +183,11 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       if !_storage._entries.isEmpty {
         try visitor.visitRepeatedMessageField(value: _storage._entries, fieldNumber: 5)
       }
+      if let v = _storage._lastModifiedDate {
+        try visitor.visitSingularBytesField(value: v, fieldNumber: 6)
+      }
       if let v = _storage._id {
-        try visitor.visitSingularStringField(value: v, fieldNumber: 6)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 7)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -186,6 +203,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
         if _storage._includeInOverallTotal != other_storage._includeInOverallTotal {return false}
         if _storage._group != other_storage._group {return false}
         if _storage._entries != other_storage._entries {return false}
+        if _storage._lastModifiedDate != other_storage._lastModifiedDate {return false}
         if _storage._id != other_storage._id {return false}
         return true
       }

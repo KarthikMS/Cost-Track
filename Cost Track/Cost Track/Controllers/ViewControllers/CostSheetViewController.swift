@@ -243,6 +243,7 @@ extension CostSheetViewController: CostSheetEntryViewControllerDelegate {
 		sortEntries()
 		transactionsTableView.reloadData()
 		costSheet.entries = entriesSortedByDate
+		costSheet.lastModifiedDate = Date().data
 		delegate?.didUpdateCostSheet(withId: costSheet.id, with: costSheet)
 	}
 

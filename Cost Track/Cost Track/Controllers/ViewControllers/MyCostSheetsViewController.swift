@@ -35,6 +35,7 @@ class MyCostSheetsViewController: UIViewController {
 		costSheet.id = UUID().uuidString
 		costSheet.initialBalance = 0
 		costSheet.name = "Hardcoded"
+		costSheet.lastModifiedDate = Date().data
 		costSheet.entries.append(costSheetEntry1)
 		account.costSheets.append(costSheet)
 		// Test
