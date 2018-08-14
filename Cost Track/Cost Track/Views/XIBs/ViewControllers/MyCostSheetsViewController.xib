@@ -91,7 +91,7 @@ Create a Cost Sheet using + button to start.
 
 And do not forget to check application settings, to customize your categories for income and expenses and adjust other options.
 
-This screen will always show the overall total across all cost sheets and will allow to open the detailed statistics and pie chart for your expenses and incomes.</string>
+This screen will always show the overall total across all cost sheets and can show the detailed statistics and pie chart for your expenses and incomes.</string>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>

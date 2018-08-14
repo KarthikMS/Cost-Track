@@ -23,7 +23,8 @@ class CostSheetViewController: UIViewController {
 	// MARK: IBOutlets
 	@IBOutlet weak var amountLabel: UILabel!
 	@IBOutlet weak var transactionsTableView: UITableView!
-
+	@IBOutlet weak var noEntriesTextView: UITextView!
+	
 	// MARK: Properties
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
 	var delegate: CostSheetViewControllerProtocol?
@@ -42,6 +43,13 @@ class CostSheetViewController: UIViewController {
         super.viewDidLoad()
 
 		sortEntries()
+
+		if costSheet.entries.isEmpty {
+			transactionsTableView.isHidden = true
+		} else {
+			noEntriesTextView.isHidden = true
+		}
+
 		transactionsTableViewDataSource.dataSource = self
 		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
 		transactionsTableView.dataSource = transactionsTableViewDataSource
@@ -228,6 +236,8 @@ extension CostSheetViewController: CostSheetEntryViewControllerDelegate {
 
 	func didAddEntry(_ entry: CostSheetEntry) {
 		costSheet.entries.append(entry)
+		noEntriesTextView.isHidden = true
+		transactionsTableView.isHidden = false
 		reloadAfterEntryModification()
 	}
 
