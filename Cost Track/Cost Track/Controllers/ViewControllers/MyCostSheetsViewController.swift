@@ -18,6 +18,7 @@ class MyCostSheetsViewController: UIViewController {
 
 	// MARK: Properties
 	var account = Account()
+	var selectedCostSheetId: String?
 	private var shouldUpdateViews = false
 
 	// MARK: UIViewController functions
@@ -57,6 +58,8 @@ class MyCostSheetsViewController: UIViewController {
 			tableView.reloadData()
 			shouldUpdateViews = false
 		}
+
+		selectedCostSheetId = nil
 	}
 
 	// MARK: Navigation
@@ -72,6 +75,7 @@ class MyCostSheetsViewController: UIViewController {
 			}
 			costSheetViewController.costSheet = costSheet
 			costSheetViewController.delegate = self
+			costSheetViewController.myCostSheetsViewController = self
 		} else if identifier == NewCostSheetSegue {
 			guard let newCostSheetViewController = segue.destination as? NewCostSheetViewController else {
 				return
@@ -158,6 +162,7 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let costSheet = costSheetAtIndexPath(indexPath)
+		selectedCostSheetId = costSheet.id
 		tableView.deselectRow(at: indexPath, animated: true)
 		performSegue(withIdentifier: "CostSheetSegue", sender: ["costSheet": costSheet])
 	}
@@ -196,6 +201,34 @@ extension MyCostSheetsViewController: CostSheetViewControllerProtocol {
 	func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
 		account.didDeleteCostSheetEntry(withId: entryId, inCostSheetWithId: costSheetId)
 		shouldUpdateViews = true
+	}
+
+}
+
+// MARK: TransferEntryTableViewControllerDataSource
+extension MyCostSheetsViewController: TransferEntryTableViewControllerDataSource {
+
+	var filteredCostSheets: [CostSheet] {
+		guard let selectedCostSheetId = selectedCostSheetId else {
+			assertionFailure()
+			return []
+		}
+		var costSheets = [CostSheet]()
+		for costSheet in account.costSheets {
+			if costSheet.id != selectedCostSheetId {
+				costSheets.append(costSheet)
+			}
+		}
+		return costSheets
+	}
+
+}
+
+// MARK: TransferEntryTableViewControllerDelegate
+extension MyCostSheetsViewController: TransferEntryTableViewControllerDelegate {
+
+	func transferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet) {
+
 	}
 
 }

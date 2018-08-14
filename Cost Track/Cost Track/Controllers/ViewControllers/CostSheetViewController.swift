@@ -27,6 +27,7 @@ class CostSheetViewController: UIViewController {
 	@IBOutlet weak var noEntriesTextView: UITextView!
 	
 	// MARK: Properties
+	weak var myCostSheetsViewController = MyCostSheetsViewController()
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
 	var delegate: CostSheetViewControllerProtocol?
 	var costSheet = CostSheet()
@@ -81,6 +82,13 @@ class CostSheetViewController: UIViewController {
 				}
 				costSheetEntryViewController.entryType = entryType
 			}
+		} else if segue.identifier == TransferEntrySegue {
+			guard let transferEntryTableViewController = (segue.destination as? UINavigationController)?.topViewController as? TransferEntryTableViewController else {
+				assertionFailure()
+				return
+			}
+			transferEntryTableViewController.dataSource = myCostSheetsViewController
+			transferEntryTableViewController.delegate = myCostSheetsViewController
 		}
 	}
 
@@ -192,7 +200,11 @@ class CostSheetViewController: UIViewController {
 extension CostSheetViewController {
 
 	@IBAction private func expenseButtonPressed(_ sender: Any) {
-		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.expense])
+		// delete
+		performSegue(withIdentifier: TransferEntrySegue, sender: nil)
+		return
+		// delete
+//		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.expense])
 	}
 
 	@IBAction private func incomeButtonPressed(_ sender: Any) {
@@ -232,7 +244,7 @@ extension CostSheetViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+		let deleteEntryAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
 			guard let entryToDelete = self.getSortedEntry(at: indexPath) else {
 				assertionFailure()
 				return
@@ -255,7 +267,7 @@ extension CostSheetViewController: UITableViewDelegate {
 			self.updateAmountLabel()
 			self.delegate?.didDeleteCostSheetEntry(withId: entryToDelete.id, inCostSheetWithId: self.costSheet.id)
 		}
-		return [deleteAction]
+		return [deleteEntryAction]
 	}
 
 }

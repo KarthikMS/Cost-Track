@@ -18,3 +18,4 @@ let LightExpenseColor = UIColor(red: 255/255.0, green: 102/255.0, blue: 102/255.
 let	CostSheetSegue = "CostSheetSegue"
 let CostSheetEntrySegue = "CostSheetEntrySegue"
 let NewCostSheetSegue = "NewCostSheetSegue"
+let TransferEntrySegue = "TransferEntrySegue"
