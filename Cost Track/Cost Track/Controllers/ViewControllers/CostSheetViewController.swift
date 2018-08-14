@@ -42,12 +42,13 @@ class CostSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		sortEntries()
+		navigationItem.title = costSheet.name
 
 		if costSheet.entries.isEmpty {
 			transactionsTableView.isHidden = true
 		} else {
 			noEntriesTextView.isHidden = true
+			sortEntries()
 		}
 
 		transactionsTableViewDataSource.dataSource = self
