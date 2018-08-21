@@ -8,6 +8,9 @@
 
 import UIKit
 
+var NotSetGroupName = "Not set"
+var NotSetGroupID = ""
+
 // MARK: Colors
 let DarkIncomeColor = UIColor(red: 0/255.0, green: 128/255.0, blue: 0/255.0, alpha: 1)
 let DarkExpenseColor = UIColor(red: 255/255.0, green: 8/255.0, blue: 41/255.0, alpha: 1)

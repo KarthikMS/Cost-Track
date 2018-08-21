@@ -42,6 +42,16 @@ class MyCostSheetsViewController: UIViewController {
 //		account.costSheets.append(costSheet)
 		// Test
 
+		if account.groups.isEmpty {
+			var notSetGroup = CostSheetGroup()
+			notSetGroup.name = "Not set"
+			notSetGroup.id = UUID().uuidString
+			account.groups.append(notSetGroup)
+
+			NotSetGroupID = notSetGroup.id
+			NotSetGroupName = notSetGroup.name
+		}
+
 		if account.costSheets.isEmpty {
 			tableView.isHidden = true
 		} else {
@@ -105,6 +115,31 @@ class MyCostSheetsViewController: UIViewController {
 		}
 		return account.costSheets[index]
 	}
+
+	private func showAlertForDeletingCostSheet(withId id: String, at indexPath: IndexPath) {
+		let alertController = UIAlertController(title: nil, message: "The specified list is not empty. Are you sure you want to delete it?", preferredStyle: .alert)
+		alertController.addAction(UIAlertAction(
+			title: "Cancel", style: .cancel, handler: { (action) in
+				alertController.dismiss(animated: true)
+		}))
+		alertController.addAction(UIAlertAction(
+			title: "Delete", style: .destructive, handler: { (action) in
+				self.deleteCostSheet(withId: id, at: indexPath)
+				alertController.dismiss(animated: true)
+		}))
+		present(alertController, animated: true)
+	}
+
+	private func deleteCostSheet(withId id: String, at indexPath: IndexPath) {
+		account.deleteCostSheet(withId: id)
+		tableView.beginUpdates()
+		if tableView.numberOfRows(inSection: indexPath.section) == 1 {
+			tableView.deleteSections([indexPath.section], with: .bottom)
+		} else {
+			tableView.deleteRows(at: [indexPath], with: .left)
+		}
+		tableView.endUpdates()
+	}
 }
 
 // MARK: IBActions
@@ -142,9 +177,6 @@ extension MyCostSheetsViewController: UITableViewDataSource {
 				numberOfSections += 1
 			}
 		}
-		for costSheet in account.costSheets where costSheet.hasGroup == false {
-			numberOfSections += 1
-		}
 		return numberOfSections
 	}
 
@@ -179,18 +211,10 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 		let deleteCostSheetAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
 			let costSheet = self.costSheetAtIndexPath(indexPath)
 			guard costSheet.entries.isEmpty else {
-				// Show dialog box
+				self.showAlertForDeletingCostSheet(withId: costSheet.id, at: indexPath)
 				return
 			}
-
-			self.account.deleteCostSheet(withId: costSheet.id)
-			tableView.beginUpdates()
-			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
-				tableView.deleteSections([indexPath.section], with: .bottom)
-			} else {
-				tableView.deleteRows(at: [indexPath], with: .left)
-			}
-			tableView.endUpdates()
+			self.deleteCostSheet(withId: costSheet.id, at: indexPath)
 		}
 		return [deleteCostSheetAction]
 	}

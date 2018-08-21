@@ -61,6 +61,10 @@ extension NewCostSheetViewController {
 		costSheet.name = costSheetName
 		costSheet.initialBalance = initialBalance
 		costSheet.lastModifiedDate = Date().data
+		// TODO: Group
+		costSheet.group = CostSheetGroup()
+		costSheet.group.name = NotSetGroupName
+		costSheet.group.id = NotSetGroupID
 
 		delegate?.didCreateCostSheet(costSheet)
 		navigationController?.popViewController(animated: true)

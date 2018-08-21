@@ -140,6 +140,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       if _storage._name == nil {return false}
       if _storage._initialBalance == nil {return false}
       if _storage._includeInOverallTotal == nil {return false}
+      if _storage._group == nil {return false}
       if _storage._lastModifiedDate == nil {return false}
       if _storage._id == nil {return false}
       if let v = _storage._group, !v.isInitialized {return false}
