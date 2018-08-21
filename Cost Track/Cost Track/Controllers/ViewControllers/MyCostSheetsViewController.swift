@@ -136,8 +136,16 @@ extension MyCostSheetsViewController {
 extension MyCostSheetsViewController: UITableViewDataSource {
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		// Finish this
-		return 1
+		var numberOfSections = 0
+		for group in account.groups {
+			if account.numberOfCostSheetsInGroup(group) > 0 {
+				numberOfSections += 1
+			}
+		}
+		for costSheet in account.costSheets where costSheet.hasGroup == false {
+			numberOfSections += 1
+		}
+		return numberOfSections
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -165,6 +173,26 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 		selectedCostSheetId = costSheet.id
 		tableView.deselectRow(at: indexPath, animated: true)
 		performSegue(withIdentifier: "CostSheetSegue", sender: ["costSheet": costSheet])
+	}
+
+	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		let deleteCostSheetAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+			let costSheet = self.costSheetAtIndexPath(indexPath)
+			guard costSheet.entries.isEmpty else {
+				// Show dialog box
+				return
+			}
+
+			self.account.deleteCostSheet(withId: costSheet.id)
+			tableView.beginUpdates()
+			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
+				tableView.deleteSections([indexPath.section], with: .bottom)
+			} else {
+				tableView.deleteRows(at: [indexPath], with: .left)
+			}
+			tableView.endUpdates()
+		}
+		return [deleteCostSheetAction]
 	}
 
 }
@@ -199,7 +227,7 @@ extension MyCostSheetsViewController: CostSheetViewControllerDelegate {
 	}
 
 	func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
-		account.didDeleteCostSheetEntry(withId: entryId, inCostSheetWithId: costSheetId)
+		account.deleteCostSheetEntry(withId: entryId, inCostSheetWithId: costSheetId)
 		shouldUpdateViews = true
 	}
 

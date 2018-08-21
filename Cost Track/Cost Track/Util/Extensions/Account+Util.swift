@@ -52,7 +52,15 @@ extension Account {
 		updateCostSheet(at: index, with: updatedCostSheet)
 	}
 
-	mutating func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
+	mutating func deleteCostSheet(withId id: String) {
+		guard let index = indexOfCostSheetWithId(id) else {
+			assertionFailure()
+			return
+		}
+		costSheets.remove(at: index)
+	}
+
+	mutating func deleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
 		guard let costSheetIndex = indexOfCostSheetWithId(costSheetId),
 		let entryIndex = costSheets[costSheetIndex].indexOfEntryWithId(entryId) else {
 			assertionFailure()
