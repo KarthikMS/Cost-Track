@@ -64,6 +64,10 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "CostSheetSettingsTableViewCell", for: indexPath)
+		cell.accessoryView = nil
+		for subview in cell.contentView.subviews {
+			subview.removeFromSuperview()
+		}
 		switch indexPath.section {
 		case 0:
 			cell.textLabel?.text = "Cost sheet"
@@ -81,7 +85,7 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 			cell.textLabel?.text = "Overall Total"
 		case 4:
 			cell.textLabel?.text = "Group"
-			// Add accessoryView
+			cell.addAccessoryLabel(text: costSheet.group.name)
 		default:
 			cell.textLabel?.text = "Export Sheet"
 		}
@@ -124,6 +128,22 @@ private extension UITableViewCell {
 		textView.backgroundColor = .red
 
 		accessoryView = textView
+	}
+
+	func addAccessoryLabel(text: String) {
+		let contentViewFrame = contentView.frame
+		var frame = CGRect()
+		frame.size.width = 0.5 * contentViewFrame.size.width
+		frame.size.height = contentViewFrame.size.height
+		frame.origin.x = 0.4 * contentViewFrame.size.width
+		frame.origin.y = 0
+
+		let label = UILabel(frame: frame)
+		label.text = text
+		label.textAlignment = .right
+		contentView.addSubview(label)
+
+		accessoryType = .disclosureIndicator
 	}
 
 }
