@@ -236,6 +236,23 @@ extension MyCostSheetsViewController: NewCostSheetViewControllerDataSource {
 		return account.defaultNewCostSheetName
 	}
 
+	func getGroup(withId id: String) -> CostSheetGroup {
+		guard let group = account.getGroup(withId: id) else {
+			assertionFailure()
+			return CostSheetGroup()
+		}
+		return group
+	}
+
+}
+
+// MARK: GroupSelectTableViewControllerDataSource
+extension MyCostSheetsViewController: GroupSelectTableViewControllerDataSource {
+
+	var groups: [CostSheetGroup] {
+		return account.groups
+	}
+
 }
 
 // MARK: NewCostSheetDelegate

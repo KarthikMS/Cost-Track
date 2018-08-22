@@ -18,6 +18,13 @@ extension Account {
 		return count
 	}
 
+	func getGroup(withId id: String) -> CostSheetGroup? {
+		for group in groups where group.id == id {
+			return group
+		}
+		return nil
+	}
+
 	var groupsWithCostSheets: [CostSheetGroup] {
 		var groupsWithCostSheets = [CostSheetGroup]()
 		for group in groups {

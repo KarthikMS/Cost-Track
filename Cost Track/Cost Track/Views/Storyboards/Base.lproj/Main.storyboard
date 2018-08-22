@@ -75,11 +75,47 @@
                     </navigationItem>
                     <connections>
                         <outlet property="settingsTableView" destination="Iep-sL-mZo" id="prL-qa-hql"/>
+                        <segue destination="tmf-Ip-4VO" kind="show" identifier="GroupSelectSegue" id="rdO-o3-w9a"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aO0-zr-rmZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="513" y="842"/>
+        </scene>
+        <!--Group-->
+        <scene sceneID="sXO-xA-BOW">
+            <objects>
+                <tableViewController id="tmf-Ip-4VO" customClass="GroupSelectTableViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="cNe-hs-22I">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectGroupCell" id="shD-pT-EiJ">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="shD-pT-EiJ" id="hxx-fQ-9Fd">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="tmf-Ip-4VO" id="9tU-X3-crJ"/>
+                            <outlet property="delegate" destination="tmf-Ip-4VO" id="aCD-Mv-Hfg"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Group" id="mwG-0b-AjJ">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="egq-rO-o1Y">
+                            <connections>
+                                <action selector="addGroupButtonPressed:" destination="tmf-Ip-4VO" id="T65-9k-oyF"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kCN-Ju-O65" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="513" y="1581"/>
         </scene>
         <!--Cost Sheet View Controller-->
         <scene sceneID="aTx-MN-Tcw">

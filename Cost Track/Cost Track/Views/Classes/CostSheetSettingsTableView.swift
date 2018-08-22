@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CostSheetSettingsTableViewDelegate: class {
+	func didSelectGroupCell()
+}
+
 enum CostSheetSettingsTableViewMode {
 	case newCostSheet
 	case costSheetSettings
@@ -17,10 +21,12 @@ class CostSheetSettingsTableView: UITableView {
 
 	// MARK: Properties
 	private var mode = CostSheetSettingsTableViewMode.newCostSheet
+	weak var costSheetSettingsTableViewDelegate: CostSheetSettingsTableViewDelegate?
+	var costSheet = CostSheet()
 
 	// Views
-	var costSheetNameTextView = UITextView()
-	var initalBalanceTextView = UITextView()
+	private var costSheetNameTextView = UITextView()
+	private var initalBalanceTextView = UITextView()
 
 	// MARK: Functions
 	func setMode(_ mode: CostSheetSettingsTableViewMode) {
@@ -30,6 +36,12 @@ class CostSheetSettingsTableView: UITableView {
 		register(UITableViewCell.self, forCellReuseIdentifier: "CostSheetSettingsTableViewCell")
 		dataSource = self
 		delegate = self
+	}
+
+	// MARK: Misc. functions
+	func updateCostSheet() {
+		costSheet.name = costSheetNameTextView.text
+		costSheet.initialBalance = Float(initalBalanceTextView.text)!
 	}
 
 }
@@ -56,17 +68,20 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 		case 0:
 			cell.textLabel?.text = "Cost sheet"
 			cell.addAccessoryTextView(costSheetNameTextView)
-			costSheetNameTextView = cell.accessoryView as! UITextView
+			cell.selectionStyle = .none
+			costSheetNameTextView.text = costSheet.name
 		case 1:
 			cell.textLabel?.text = "Currency"
 		case 2:
 			cell.textLabel?.text = "Initial balance"
 			cell.addAccessoryTextView(initalBalanceTextView, keyboardType: .decimalPad)
-			initalBalanceTextView = cell.accessoryView as! UITextView
+			cell.selectionStyle = .none
+			initalBalanceTextView.text = String(costSheet.initialBalance)
 		case 3:
 			cell.textLabel?.text = "Overall Total"
 		case 4:
 			cell.textLabel?.text = "Group"
+			// Add accessoryView
 		default:
 			cell.textLabel?.text = "Export Sheet"
 		}
@@ -82,6 +97,14 @@ extension CostSheetSettingsTableView: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// To dismiss the keyboard
 		endEditing(true)
+
+		switch indexPath.section {
+		case 4:
+			costSheetSettingsTableViewDelegate?.didSelectGroupCell()
+		default:
+			break
+		}
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 
 }
