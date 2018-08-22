@@ -20,13 +20,24 @@ class CostSheetTableViewCell: UITableViewCell {
 	@IBOutlet weak var expenseCountLabel: UILabel!
 
 	// MARK: Functions
-	func setCostSheetName(_ costSheetName: String, balanceAmount: Float, date: String, income: Float, expense: Float, incomeCount: Int, expenseCount: Int) {
-		costSheetNameLabel.text = costSheetName
-		balanceAmountLabel.text = String(balanceAmount)
-		dateLabel.text = date
-		incomeAmountLabel.text = String(income)
-		expenseAmountLabel.text = String(expense)
-		incomeCountLabel.text = String(incomeCount)
-		expenseCountLabel.text = String(expenseCount)
+	func setValuesForCostSheet(_ costSheet: CostSheet) {
+		costSheetNameLabel.text = costSheet.name
+		dateLabel.text = costSheet.lastModifiedDateString
+
+		// Balance label
+		var balance = costSheet.balance
+		if balance < 0 {
+			balanceAmountLabel.textColor = DarkExpenseColor
+			balance *= -1
+		} else {
+			balanceAmountLabel.textColor = DarkIncomeColor
+		}
+		balanceAmountLabel.text = String(balance)
+
+		let incomeExpenseInfo = costSheet.incomeExpenseInfo
+		incomeCountLabel.text = String(incomeExpenseInfo.incomeCount)
+		expenseCountLabel.text = String(incomeExpenseInfo.expenseCount)
+		incomeAmountLabel.text = String(incomeExpenseInfo.incomeAmount)
+		expenseAmountLabel.text = String(incomeExpenseInfo.expenseAmount)
 	}
 }

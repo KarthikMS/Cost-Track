@@ -10,8 +10,9 @@ message CostSheet {
   required string name = 1;
   required float initialBalance = 2;
   required bool includeInOverallTotal = 3;
-  optional CostSheetGroup group = 4;
+  required CostSheetGroup group = 4;
   repeated CostSheetEntry entries = 5;
-  required string id = 6;
+  required bytes lastModifiedDate = 6;
+  required string id = 7;
 
 }

@@ -13,7 +13,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyCostSheetsViewController" customModule="Cost_Track" customModuleProvider="target">
             <connections>
+                <outlet property="noCostSheetsTextView" destination="Bu8-8y-Ll5" id="qyQ-vf-Te0"/>
                 <outlet property="tableView" destination="f9Z-ur-bCM" id="lf6-w1-f2M"/>
+                <outlet property="topBar" destination="lV6-EZ-y31" id="jky-aI-BWX"/>
                 <outlet property="totalAmountLabel" destination="8Ww-um-mi6" id="lcD-WJ-dN8"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -81,16 +83,33 @@
                         <outlet property="delegate" destination="-1" id="Kw9-oZ-t6Z"/>
                     </connections>
                 </tableView>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bu8-8y-Ll5">
+                    <rect key="frame" x="-0.5" y="144" width="375" height="523"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <string key="text">
+Create a Cost Sheet using + button to start.
+
+And do not forget to check application settings, to customize your categories for income and expenses and adjust other options.
+
+This screen will always show the overall total across all cost sheets and can show the detailed statistics and pie chart for your expenses and incomes.</string>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="Bu8-8y-Ll5" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="0oi-R0-iY7"/>
                 <constraint firstItem="lV6-EZ-y31" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="6D9-1W-8iP"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="lV6-EZ-y31" secondAttribute="top" id="9hD-BA-jSh"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="f9Z-ur-bCM" secondAttribute="bottom" id="J38-rj-9Tz"/>
                 <constraint firstItem="f9Z-ur-bCM" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="Tjm-eQ-7TO"/>
                 <constraint firstItem="f9Z-ur-bCM" firstAttribute="top" secondItem="lV6-EZ-y31" secondAttribute="bottom" id="bWE-ok-TGV"/>
+                <constraint firstItem="Bu8-8y-Ll5" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="iba-77-yVg"/>
                 <constraint firstItem="lV6-EZ-y31" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="jrs-jw-LB9"/>
                 <constraint firstItem="f9Z-ur-bCM" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="nMx-j1-Wkb"/>
+                <constraint firstItem="Bu8-8y-Ll5" firstAttribute="top" secondItem="lV6-EZ-y31" secondAttribute="bottom" id="pfK-z6-eNd"/>
+                <constraint firstItem="Bu8-8y-Ll5" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="rc0-BK-gth"/>
             </constraints>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>

@@ -8,10 +8,9 @@
 
 import UIKit
 
-// TODO: Delete once saving protos has been added
-protocol CostSheetEntryDelegate {
+protocol CostSheetEntryViewControllerDelegate {
 	func didAddEntry(_ entry: CostSheetEntry)
-	func didUpdateEntryWithId(_ id: String, with updatedEntry: CostSheetEntry)
+	func didUpdateEntry(withId id: String, with updatedEntry: CostSheetEntry)
 }
 
 class CostSheetEntryViewController: UIViewController {
@@ -39,7 +38,7 @@ class CostSheetEntryViewController: UIViewController {
 
 	// MARK: Properties
 	// TODO: Delete once saving protos has been added
-	var delegate: CostSheetEntryDelegate?
+	var delegate: CostSheetEntryViewControllerDelegate?
 	var entryType = CostSheetEntry.EntryType.income
 	var oldEntry: CostSheetEntry?
 
@@ -98,12 +97,12 @@ class CostSheetEntryViewController: UIViewController {
 		switch entryType {
 		case .expense:
 			navigationBarTitleButton.setTitle("Expense", for: .normal)
-			navigationBarTitleButton.setTitleColor(ExpenseColor, for: .normal)
-			amountBarView.backgroundColor = ExpenseColor
+			navigationBarTitleButton.setTitleColor(LightExpenseColor, for: .normal)
+			amountBarView.backgroundColor = LightExpenseColor
 		case .income:
 			navigationBarTitleButton.setTitle("Income", for: .normal)
-			navigationBarTitleButton.setTitleColor(IncomeColor, for: .normal)
-			amountBarView.backgroundColor = IncomeColor
+			navigationBarTitleButton.setTitleColor(LightIncomeColor, for: .normal)
+			amountBarView.backgroundColor = LightIncomeColor
 		}
 	}
 
@@ -179,7 +178,7 @@ class CostSheetEntryViewController: UIViewController {
 // MARK: IBActions
 extension CostSheetEntryViewController {
 
-	@IBAction func navigationBarTitleButtonPressed(_ sender: UIButton) {
+	@IBAction private func navigationBarTitleButtonPressed(_ sender: UIButton) {
 		switch entryType {
 		case .income:
 			entryType = .expense
@@ -189,12 +188,12 @@ extension CostSheetEntryViewController {
 		updateViewsBasedOnEntryType()
 	}
 
-	@IBAction func currencyButtonPressed(_ sender: Any) {
+	@IBAction private func currencyButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction func categoryViewTapped(_ sender: Any) {
+	@IBAction private func categoryViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 
@@ -202,22 +201,22 @@ extension CostSheetEntryViewController {
 		showCategoryPicker()
 	}
 
-	@IBAction func locationButtonPressed(_ sender: Any) {
+	@IBAction private func locationButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction func imageButtonPressed(_ sender: Any) {
+	@IBAction private func imageButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction func voiceNoteButtonPressed(_ sender: Any) {
+	@IBAction private func voiceNoteButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction func dateViewTapped(_ sender: Any) {
+	@IBAction private func dateViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 
@@ -225,7 +224,7 @@ extension CostSheetEntryViewController {
 		showDatePicker()
 	}
 
-	@IBAction func saveButtonPressed(_ sender: Any) {
+	@IBAction private func saveButtonPressed(_ sender: Any) {
 		let amount = Float(amountTextView.text)!
 		let category = entryCategoryPicker.selectedCategory
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDatePicker.datePicker.date)
@@ -243,7 +242,7 @@ extension CostSheetEntryViewController {
 			entry.category = category
 			entry.date = dateData
 			entry.description_p = descriptionText
-			delegate?.didUpdateEntryWithId(entry.id, with: entry)
+			delegate?.didUpdateEntry(withId: entry.id, with: entry)
 		} else {
 			var entry = CostSheetEntry()
 			entry.id = UUID().uuidString

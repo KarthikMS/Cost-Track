@@ -60,13 +60,21 @@ extension CostSheet {
 		)
 	}
 
-	// Fix this
-	var lastModifiedDate: String {
-		var lastModifiedDate = ""
-		if let entry = entries.first {
-			lastModifiedDate = ""//entry.date
+	var lastModifiedDateString: String {
+		guard let date = lastModifiedDate.date else {
+			assertionFailure()
+			return ""
 		}
-		return lastModifiedDate
+		let calendar = Calendar.current
+		if calendar.isDateInToday(date) {
+			return "Today " + date.string(format: "hh:mm a")
+		} else if calendar.isDateInYesterday(date) {
+			return "Yesterday"
+		} else if calendar.isDateInTomorrow(date) {
+			return "Tomorrow"
+		} else {
+			return date.string(format: "dd-MMM-yyyy")
+		}
 	}
 
 	func getDateStrings(format: String) -> [String] {
@@ -103,6 +111,14 @@ extension CostSheet {
 			return
 		}
 		updateEntry(at: index, with: updatedEntry)
+	}
+
+	mutating func deleteEntry(withId id: String) {
+		guard let index = indexOfEntryWithId(id) else {
+			assertionFailure()
+			return
+		}
+		entries.remove(at: index)
 	}
 
 }

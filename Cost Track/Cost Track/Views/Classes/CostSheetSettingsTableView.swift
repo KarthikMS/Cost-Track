@@ -55,13 +55,13 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 		switch indexPath.section {
 		case 0:
 			cell.textLabel?.text = "Cost sheet"
-			cell.addAccessoryTextView(withText: "Cost Sheet")
+			cell.addAccessoryTextView(costSheetNameTextView)
 			costSheetNameTextView = cell.accessoryView as! UITextView
 		case 1:
 			cell.textLabel?.text = "Currency"
 		case 2:
 			cell.textLabel?.text = "Initial balance"
-			cell.addAccessoryTextView(withText: "0.00", keyboardType: .decimalPad)
+			cell.addAccessoryTextView(initalBalanceTextView, keyboardType: .decimalPad)
 			initalBalanceTextView = cell.accessoryView as! UITextView
 		case 3:
 			cell.textLabel?.text = "Overall Total"
@@ -88,7 +88,7 @@ extension CostSheetSettingsTableView: UITableViewDelegate {
 
 private extension UITableViewCell {
 
-	func addAccessoryTextView(withText: String, keyboardType: UIKeyboardType = .default) {
+	func addAccessoryTextView(_ textView: UITextView, keyboardType: UIKeyboardType = .default) {
 		let contentViewFrame = contentView.frame
 		var frame = CGRect()
 		frame.size.width = 0.6 * contentViewFrame.size.width
@@ -96,7 +96,7 @@ private extension UITableViewCell {
 		frame.origin.x = contentViewFrame.size.width - frame.size.width
 		frame.origin.y = 0
 
-		let textView = UITextView(frame: frame)
+		textView.frame = frame
 		textView.keyboardType = keyboardType
 		textView.backgroundColor = .red
 

@@ -8,10 +8,22 @@
 
 import UIKit
 
+protocol NewCostSheetViewControllerDataSource {
+	var defaultCostSheetName: String { get }
+}
+
+protocol NewCostSheetViewControllerDelegate {
+	func didCreateCostSheet(_ costSheet: CostSheet)
+}
+
 class NewCostSheetViewController: UIViewController {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
+
+	// MARK: Properties
+	var delegate: NewCostSheetViewControllerDelegate?
+	var dataSource: NewCostSheetViewControllerDataSource?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -20,19 +32,42 @@ class NewCostSheetViewController: UIViewController {
 		settingsTableView.setMode(.newCostSheet)
     }
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		guard let dataSource = dataSource else {
+			assertionFailure()
+			return
+		}
+
+		settingsTableView.costSheetNameTextView.text = dataSource.defaultCostSheetName
+		settingsTableView.initalBalanceTextView.text = "0.00"
+	}
+	
 }
 
 // MARK: IBActions
 extension NewCostSheetViewController {
 
-	@IBAction func saveButtonPressed(_ sender: Any) {
-		let costSheetName = settingsTableView.costSheetNameTextView.text
-		if costSheetName == "" {
-			// Show dialog to enter costSheet name
-		}
+	@IBAction private func createButtonPressed(_ sender: Any) {
+		guard let costSheetName = settingsTableView.costSheetNameTextView.text,
+			costSheetName != "",
+			let initialBalance = Float(settingsTableView.initalBalanceTextView.text) else {
+				// Show dialog to enter costSheet name
 
-		// Creating new costSheet
-		
+				return
+		}
+		var costSheet = CostSheet()
+		costSheet.id = UUID().uuidString
+		costSheet.name = costSheetName
+		costSheet.initialBalance = initialBalance
+		costSheet.lastModifiedDate = Date().data
+		// TODO: Group
+		costSheet.group = CostSheetGroup()
+		costSheet.group.name = NotSetGroupName
+		costSheet.group.id = NotSetGroupID
+
+		delegate?.didCreateCostSheet(costSheet)
+		navigationController?.popViewController(animated: true)
 	}
 
 }

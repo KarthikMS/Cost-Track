@@ -15,6 +15,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CostSheetViewController" customModule="Cost_Track" customModuleProvider="target">
             <connections>
                 <outlet property="amountLabel" destination="Cyq-5b-3vG" id="aje-pN-fL8"/>
+                <outlet property="noEntriesTextView" destination="hMl-IW-r2K" id="bhi-z4-pKI"/>
                 <outlet property="transactionsTableView" destination="WW2-0P-2xE" id="kGc-cb-Pps"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -55,12 +56,12 @@
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 INR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cyq-5b-3vG">
                             <rect key="frame" x="80" y="0.5" width="215" height="80"/>
+                            <color key="backgroundColor" red="1" green="0.031076394888888952" blue="0.16038954593055563" alpha="1" colorSpace="calibratedRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="gxE-cg-P8W" secondAttribute="trailing" id="7HS-iB-mYY"/>
                         <constraint firstItem="gxE-cg-P8W" firstAttribute="leading" secondItem="Cyq-5b-3vG" secondAttribute="trailing" id="EKq-aA-9JR"/>
@@ -97,6 +98,19 @@
                         <outlet property="delegate" destination="-1" id="c6C-CJ-Yas"/>
                     </connections>
                 </tableView>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hMl-IW-r2K">
+                    <rect key="frame" x="0.0" y="144" width="375" height="523"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <string key="text">
+Add new income(+) or expense(-) and select it's category.
+
+If you wish, you can also change the date and time for your entry, add a comment, specify a location, attach a photo (receipt, goods or something else), and audio recording to always know exactly where, when and on what you've spent your money.
+
+On this screen, you can always see a list of your entries and brief statistics by weeks and months, and will able to group them by date, category or location.</string>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -107,7 +121,11 @@
                 <constraint firstItem="yZT-RX-V9n" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="0.7" id="EN4-jC-oqB"/>
                 <constraint firstItem="WW2-0P-2xE" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="QJc-co-dU4"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="fYt-cV-xoQ" secondAttribute="top" id="Rpp-vw-rD3"/>
+                <constraint firstItem="hMl-IW-r2K" firstAttribute="top" secondItem="fYt-cV-xoQ" secondAttribute="bottom" id="XRf-hw-a5B"/>
                 <constraint firstItem="fYt-cV-xoQ" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="aDK-OC-RBF"/>
+                <constraint firstItem="hMl-IW-r2K" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="gmz-vB-6XJ"/>
+                <constraint firstItem="hMl-IW-r2K" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="pj7-rA-yiG"/>
+                <constraint firstItem="hMl-IW-r2K" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="qOw-eW-6lG"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="WW2-0P-2xE" secondAttribute="bottom" id="reK-8j-5iz"/>
                 <constraint firstItem="fYt-cV-xoQ" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="wd7-lo-R3m"/>
             </constraints>

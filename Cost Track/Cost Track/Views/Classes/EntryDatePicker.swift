@@ -47,7 +47,7 @@ class EntryDatePicker: UIView {
 // MARK: IBActions
 extension EntryDatePicker {
 
-	@IBAction func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+	@IBAction private func segmentedControlValueChanged(_ sender: UISegmentedControl) {
 		switch sender.selectedSegmentIndex {
 		case 0:
 			datePicker.datePickerMode = .dateAndTime
@@ -58,7 +58,7 @@ extension EntryDatePicker {
 		}
 	}
 
-	@IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
+	@IBAction private func datePickerValueChanged(_ sender: UIDatePicker) {
 		delegate?.dateChanged(to: sender.date)
 	}
 

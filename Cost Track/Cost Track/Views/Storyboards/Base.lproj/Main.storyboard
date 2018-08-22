@@ -20,7 +20,7 @@
                         <barButtonItem key="leftBarButtonItem" title="Add" id="99u-Dh-FRo">
                             <connections>
                                 <action selector="addNewCostSheetButtonPressed:" destination="BYZ-38-t0r" id="Zaq-8d-bWS"/>
-                                <segue destination="Zj1-Q9-6XZ" kind="show" id="ZPf-NA-428"/>
+                                <segue destination="Zj1-Q9-6XZ" kind="show" identifier="NewCostSheetSegue" id="ZPf-NA-428"/>
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
@@ -67,9 +67,9 @@
                         <viewLayoutGuide key="safeArea" id="KXR-Pp-7Gc"/>
                     </view>
                     <navigationItem key="navigationItem" title="New Cost Sheet" id="rvQ-IU-oDn">
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="6vx-l0-fPT">
+                        <barButtonItem key="rightBarButtonItem" title="Create" id="6vx-l0-fPT">
                             <connections>
-                                <action selector="saveButtonPressed:" destination="Zj1-Q9-6XZ" id="WpD-ad-Dh5"/>
+                                <action selector="createButtonPressed:" destination="Zj1-Q9-6XZ" id="1BF-Yy-q5W"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -79,7 +79,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aO0-zr-rmZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="513" y="843"/>
+            <point key="canvasLocation" x="513" y="842"/>
         </scene>
         <!--Cost Sheet View Controller-->
         <scene sceneID="aTx-MN-Tcw">
@@ -87,6 +87,7 @@
                 <viewController id="egc-Yf-OgO" customClass="CostSheetViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
                         <segue destination="VJY-cq-tDL" kind="show" identifier="CostSheetEntrySegue" id="pWF-n5-Vqd"/>
+                        <segue destination="e0M-uA-qqC" kind="presentation" identifier="TransferEntrySegue" id="UfP-jf-kuQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pIF-24-eZY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -140,6 +141,67 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rbc-Pg-FXs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-235.19999999999999" y="110.64467766116942"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="VtK-CS-ylV">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="e0M-uA-qqC" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="KhL-bM-l3t">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="oBY-Sh-5Ol" kind="relationship" relationship="rootViewController" id="rVZ-TE-HMN"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QFI-2z-2m7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1238" y="842"/>
+        </scene>
+        <!--Select Cost Sheet-->
+        <scene sceneID="nJC-K9-cId">
+            <objects>
+                <tableViewController id="oBY-Sh-5Ol" customClass="TransferEntryTableViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="LHv-YZ-hmC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TransferEntryCell" id="tJm-pK-VA4">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tJm-pK-VA4" id="Pmv-PE-sA6">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="oBY-Sh-5Ol" id="TsU-9h-beP"/>
+                            <outlet property="delegate" destination="oBY-Sh-5Ol" id="zYl-lv-7bt"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Select Cost Sheet" id="sin-jI-ORS">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="EWB-bN-A9a">
+                            <connections>
+                                <action selector="cancelButtonPressed:" destination="oBY-Sh-5Ol" id="cCH-AP-ZQR"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Transfer" id="uR5-p2-GOg">
+                            <connections>
+                                <action selector="transferButtonPressed:" destination="oBY-Sh-5Ol" id="z8R-FS-fJs"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="transferButton" destination="uR5-p2-GOg" id="gSw-kE-nrF"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CH9-eF-6wn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1990" y="842"/>
         </scene>
     </scenes>
 </document>
