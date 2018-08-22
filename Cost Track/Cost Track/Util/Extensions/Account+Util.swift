@@ -18,6 +18,23 @@ extension Account {
 		return count
 	}
 
+	var groupsWithCostSheets: [CostSheetGroup] {
+		var groupsWithCostSheets = [CostSheetGroup]()
+		for group in groups {
+			if numberOfCostSheetsInGroup(group) > 0 {
+				groupsWithCostSheets.append(group)
+			}
+		}
+		return groupsWithCostSheets
+	}
+
+	var hasCostSheetsInOtherGroups: Bool {
+		for costSheet in costSheets where costSheet.group.id != NotSetGroupID {
+			return true
+		}
+		return false
+	}
+
 	var totalAmount: Float {
 		var totalAmount: Float = 0
 		for costSheet in costSheets {

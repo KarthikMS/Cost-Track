@@ -25,23 +25,6 @@ class MyCostSheetsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		// Test
-		var costSheetEntry1 = CostSheetEntry()
-		costSheetEntry1.amount = 500
-		costSheetEntry1.category = .misc
-		costSheetEntry1.type = .income
-		costSheetEntry1.date = NSKeyedArchiver.archivedData(withRootObject: Date())
-		costSheetEntry1.id = UUID().uuidString
-
-		var costSheet = CostSheet()
-		costSheet.id = UUID().uuidString
-		costSheet.initialBalance = 0
-		costSheet.name = "Hardcoded"
-		costSheet.lastModifiedDate = Date().data
-		costSheet.entries.append(costSheetEntry1)
-//		account.costSheets.append(costSheet)
-		// Test
-
 		if account.groups.isEmpty {
 			var notSetGroup = CostSheetGroup()
 			notSetGroup.name = "Not set"
@@ -51,6 +34,22 @@ class MyCostSheetsViewController: UIViewController {
 			NotSetGroupID = notSetGroup.id
 			NotSetGroupName = notSetGroup.name
 		}
+
+		// Test
+		var group = CostSheetGroup()
+		group.name = "Group 1"
+		group.id = UUID().uuidString
+
+		var costSheet = CostSheet()
+		costSheet.entries = []
+		costSheet.name = "Example cost sheet"
+		costSheet.id = UUID().uuidString
+		costSheet.lastModifiedDate = Date().data
+		costSheet.group = group
+
+		account.costSheets.append(costSheet)
+		account.groups.append(group)
+		// Test
 
 		if account.costSheets.isEmpty {
 			tableView.isHidden = true
@@ -109,9 +108,10 @@ class MyCostSheetsViewController: UIViewController {
 
 	// MARK: Misc. functions
 	private func costSheetAtIndexPath(_ indexPath: IndexPath) -> CostSheet {
+		let groupsWithCostSheets = account.groupsWithCostSheets
 		var index = indexPath.row
 		for i in 0..<indexPath.section {
-			index += account.numberOfCostSheetsInGroup(account.groups[i])
+			index += account.numberOfCostSheetsInGroup(groupsWithCostSheets[i])
 		}
 		return account.costSheets[index]
 	}
@@ -180,9 +180,17 @@ extension MyCostSheetsViewController: UITableViewDataSource {
 		return numberOfSections
 	}
 
+	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		if !account.hasCostSheetsInOtherGroups {
+			return nil
+		}
+		let groupsWithCostSheets = account.groupsWithCostSheets
+		return groupsWithCostSheets[section].name
+	}
+
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		// Finish this
-		return account.costSheets.count
+		let groupsWithCostSheets = account.groupsWithCostSheets
+		return account.numberOfCostSheetsInGroup(groupsWithCostSheets[section])
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
