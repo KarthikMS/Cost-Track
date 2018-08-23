@@ -10,12 +10,12 @@ import Foundation
 
 extension Account {
 
-	func numberOfCostSheetsInGroup(_ group: CostSheetGroup) -> Int {
-		var count = 0
+	func costSheetsInGroup(_ group: CostSheetGroup) -> [CostSheet] {
+		var costSheetsInGroup = [CostSheet]()
 		for costSheet in costSheets where costSheet.group.id == group.id {
-			count += 1
+			costSheetsInGroup.append(costSheet)
 		}
-		return count
+		return costSheetsInGroup
 	}
 
 	func getGroup(withId id: String) -> CostSheetGroup? {
@@ -28,7 +28,7 @@ extension Account {
 	var groupsWithCostSheets: [CostSheetGroup] {
 		var groupsWithCostSheets = [CostSheetGroup]()
 		for group in groups {
-			if numberOfCostSheetsInGroup(group) > 0 {
+			if costSheetsInGroup(group).count > 0 {
 				groupsWithCostSheets.append(group)
 			}
 		}
