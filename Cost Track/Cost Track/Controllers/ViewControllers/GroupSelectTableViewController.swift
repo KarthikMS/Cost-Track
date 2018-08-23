@@ -15,6 +15,7 @@ protocol GroupSelectTableViewControllerDataSource: class {
 protocol GroupSelectTableViewControllerDelegate: class {
 	func didSelectGroup(id: String)
 	func didCreateGroup(withName name: String)
+	func didDeleteGroup(at index: Int)
 }
 
 class GroupSelectTableViewController: UITableViewController {
@@ -58,6 +59,32 @@ extension GroupSelectTableViewController {
 			cell.accessoryType = .none
 		}
 		return cell
+	}
+
+	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		guard groupSelectTableViewControllerDataSource?.groups[indexPath.row].id != NotSetGroupID else {
+				return false
+		}
+		return true
+	}
+
+	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		guard let groupSelectTableViewControllerDataSource = groupSelectTableViewControllerDataSource,
+			let groupSelectTableViewControllerDelegate = groupSelectTableViewControllerDelegate else {
+				assertionFailure()
+				return nil
+		}
+
+		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (deleteAction, indexPath) in
+			groupSelectTableViewControllerDelegate.didDeleteGroup(at: indexPath.row)
+			if indexPath.row > 0 {
+				self.selectedGroupID = groupSelectTableViewControllerDataSource.groups[indexPath.row - 1].id
+			} else {
+				self.selectedGroupID = groupSelectTableViewControllerDataSource.groups[indexPath.row + 1].id
+			}
+			self.tableView.reloadData()
+		}
+		return [deleteAction]
 	}
 
 }

@@ -262,6 +262,10 @@ extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
 		account.groups.append(newGroup)
 	}
 
+	func didDeleteGroup(at index: Int) {
+		account.groups.remove(at: index)
+	}
+
 }
 
 // MARK: CostSheetViewControllerDelegate
