@@ -22,6 +22,7 @@ class GroupSelectTableViewController: UITableViewController {
 	var selectedGroupID = ""
 	weak var groupSelectTableViewControllerDataSource: GroupSelectTableViewControllerDataSource?
 	weak var groupSelectTableViewControllerDelegate: GroupSelectTableViewControllerDelegate?
+	private var alertOkAction: UIAlertAction?
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -77,6 +78,33 @@ extension GroupSelectTableViewController {
 extension GroupSelectTableViewController {
 
 	@IBAction func addGroupButtonPressed(_ sender: Any) {
+		let alertController = UIAlertController(title: "New Group", message: "Please enter a group name.", preferredStyle: .alert)
+		alertController.addTextField { (textField) in
+			textField.placeholder = "Group Name"
+			textField.addTarget(self, action: #selector(self.alertTextFieldTextDidChange(textField:)), for: .editingChanged)
+		}
+		let cancelAction = UIAlertAction( title: "Cancel", style: .cancel, handler: { (cancelAction) in
+				alertController.dismiss(animated: true)
+		})
+		alertOkAction = UIAlertAction(title: "Ok", style: .default, handler: { (okAction) in
+				alertController.dismiss(animated: true)
+		})
+		alertOkAction?.isEnabled = false
+		alertController.addAction(cancelAction)
+		alertController.addAction(alertOkAction!)
+		present(alertController, animated: true)
 	}
 
+	@objc
+	private func alertTextFieldTextDidChange(textField: UITextField) {
+		guard let alertOkAction = alertOkAction else {
+			assertionFailure()
+			return
+		}
+		if textField.text == "" {
+			alertOkAction.isEnabled = false
+		} else {
+			alertOkAction.isEnabled = true
+		}
+	}
 }
