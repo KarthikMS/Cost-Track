@@ -25,31 +25,15 @@ class MyCostSheetsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		// Setting NotSetGroup. Should happen only once in app's life time.
 		if account.groups.isEmpty {
 			var notSetGroup = CostSheetGroup()
 			notSetGroup.name = "Not set"
 			notSetGroup.id = UUID().uuidString
 			account.groups.append(notSetGroup)
 
-			NotSetGroupID = notSetGroup.id
-			NotSetGroupName = notSetGroup.name
+			NotSetGroup = notSetGroup
 		}
-
-		// Test
-		var group = CostSheetGroup()
-		group.name = "Group 1"
-		group.id = UUID().uuidString
-
-		var costSheet = CostSheet()
-		costSheet.entries = []
-		costSheet.name = "Example cost sheet"
-		costSheet.id = UUID().uuidString
-		costSheet.lastModifiedDate = Date().data
-		costSheet.group = group
-
-		account.costSheets.append(costSheet)
-		account.groups.append(group)
-		// Test
 
 		if account.costSheets.isEmpty {
 			tableView.isHidden = true
@@ -243,6 +227,10 @@ extension MyCostSheetsViewController: GroupSelectTableViewControllerDataSource {
 		return account.groups
 	}
 
+	func numberOfCostSheets(in group: CostSheetGroup) -> Int {
+		return account.costSheetsInGroup(group).count
+	}
+
 }
 
 // MARK: NewCostSheetDelegate
@@ -263,7 +251,9 @@ extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
 	}
 
 	func didDeleteGroup(at index: Int) {
+		account.moveCostSheets(from: account.groups[index], to: NotSetGroup)
 		account.groups.remove(at: index)
+		shouldUpdateViews = true
 	}
 
 }

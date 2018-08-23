@@ -27,7 +27,7 @@ class NewCostSheetViewController: UIViewController {
 	// MARK: Properties
 	var delegate: NewCostSheetViewControllerDelegate?
 	var dataSource: NewCostSheetViewControllerDataSource?
-	var selectedGroupId = NotSetGroupID
+	var selectedGroupId = NotSetGroup.id
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -45,7 +45,7 @@ class NewCostSheetViewController: UIViewController {
 		newCostSheet.initialBalance = 0
 		newCostSheet.id = UUID().uuidString
 		newCostSheet.group = CostSheetGroup()
-		newCostSheet.group.name = NotSetGroupName
+		newCostSheet.group.name = NotSetGroup.name
 		newCostSheet.group.id = selectedGroupId
 		settingsTableView.costSheet = newCostSheet
     }

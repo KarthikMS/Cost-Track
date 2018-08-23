@@ -36,10 +36,20 @@ extension Account {
 	}
 
 	var hasCostSheetsInOtherGroups: Bool {
-		for costSheet in costSheets where costSheet.group.id != NotSetGroupID {
+		for costSheet in costSheets where costSheet.group.id != NotSetGroup.id {
 			return true
 		}
 		return false
+	}
+
+	mutating func moveCostSheets(from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup) {
+		for costSheet in costSheetsInGroup(fromGroup) {
+			guard let index = indexOfCostSheetWithId(costSheet.id) else {
+				assertionFailure()
+				return
+			}
+			costSheets[index].group = toGroup
+		}
 	}
 
 	var totalAmount: Float {

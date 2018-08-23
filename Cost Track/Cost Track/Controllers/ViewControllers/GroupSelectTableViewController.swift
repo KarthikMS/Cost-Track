@@ -10,6 +10,7 @@ import UIKit
 
 protocol GroupSelectTableViewControllerDataSource: class {
 	var groups: [CostSheetGroup] { get }
+	func numberOfCostSheets(in group: CostSheetGroup) -> Int
 }
 
 protocol GroupSelectTableViewControllerDelegate: class {
@@ -31,6 +32,44 @@ class GroupSelectTableViewController: UITableViewController {
 		super.viewWillDisappear(animated)
 
 		groupSelectTableViewControllerDelegate?.didSelectGroup(id: selectedGroupID)
+	}
+
+	// MARK: Misc. functions
+	private func deleteGroup(at indexPath: IndexPath) {
+		guard let groupSelectTableViewControllerDataSource = groupSelectTableViewControllerDataSource,
+			let groupSelectTableViewControllerDelegate = groupSelectTableViewControllerDelegate else {
+				assertionFailure()
+				return
+		}
+
+		groupSelectTableViewControllerDelegate.didDeleteGroup(at: indexPath.row)
+		if indexPath.row > 0 {
+			selectedGroupID = groupSelectTableViewControllerDataSource.groups[indexPath.row - 1].id
+		} else {
+			selectedGroupID = groupSelectTableViewControllerDataSource.groups[indexPath.row + 1].id
+		}
+		self.tableView.reloadData()
+	}
+
+	private func showAlertForGroupDeletionConfirmation(deletionIndexPath: IndexPath) {
+		guard let groupSelectTableViewControllerDataSource = groupSelectTableViewControllerDataSource else {
+			assertionFailure()
+			return
+		}
+		let deletionGroup = groupSelectTableViewControllerDataSource.groups[deletionIndexPath.row]
+		let numberOfCostSheets = groupSelectTableViewControllerDataSource.numberOfCostSheets(in: deletionGroup)
+
+		let alertController = UIAlertController(
+			title: "Delete Group",
+			message: "There are \(numberOfCostSheets) cost sheet(s) in \(deletionGroup.name). They will NOT be deleted. They will not belong to any group.", preferredStyle: .alert)
+		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (cancelAction) in
+			alertController.dismiss(animated: true)
+		}))
+		alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (deleteAction) in
+			self.deleteGroup(at: deletionIndexPath)
+			alertController.dismiss(animated: true)
+		}))
+		present(alertController, animated: true)
 	}
 
 }
@@ -62,7 +101,7 @@ extension GroupSelectTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		guard groupSelectTableViewControllerDataSource?.groups[indexPath.row].id != NotSetGroupID else {
+		guard groupSelectTableViewControllerDataSource?.groups[indexPath.row].id != NotSetGroup.id else {
 				return false
 		}
 		return true
@@ -76,13 +115,11 @@ extension GroupSelectTableViewController {
 		}
 
 		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (deleteAction, indexPath) in
-			groupSelectTableViewControllerDelegate.didDeleteGroup(at: indexPath.row)
-			if indexPath.row > 0 {
-				self.selectedGroupID = groupSelectTableViewControllerDataSource.groups[indexPath.row - 1].id
+			if groupSelectTableViewControllerDataSource.numberOfCostSheets(in: groupSelectTableViewControllerDataSource.groups[indexPath.row]) == 0 {
+				self.deleteGroup(at: indexPath)
 			} else {
-				self.selectedGroupID = groupSelectTableViewControllerDataSource.groups[indexPath.row + 1].id
+				self.showAlertForGroupDeletionConfirmation(deletionIndexPath: indexPath)
 			}
-			self.tableView.reloadData()
 		}
 		return [deleteAction]
 	}
