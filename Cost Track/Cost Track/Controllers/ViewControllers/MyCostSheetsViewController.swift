@@ -255,6 +255,13 @@ extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
 		tableView.reloadData()
 	}
 
+	func didCreateGroup(withName name: String) {
+		var newGroup = CostSheetGroup()
+		newGroup.name = name
+		newGroup.id = UUID().uuidString
+		account.groups.append(newGroup)
+	}
+
 }
 
 // MARK: CostSheetViewControllerDelegate

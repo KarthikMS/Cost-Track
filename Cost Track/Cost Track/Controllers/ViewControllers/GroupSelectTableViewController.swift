@@ -14,6 +14,7 @@ protocol GroupSelectTableViewControllerDataSource: class {
 
 protocol GroupSelectTableViewControllerDelegate: class {
 	func didSelectGroup(id: String)
+	func didCreateGroup(withName name: String)
 }
 
 class GroupSelectTableViewController: UITableViewController {
@@ -24,6 +25,7 @@ class GroupSelectTableViewController: UITableViewController {
 	weak var groupSelectTableViewControllerDelegate: GroupSelectTableViewControllerDelegate?
 	private var alertOkAction: UIAlertAction?
 
+	// MARK: UIViewController functions
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
@@ -77,17 +79,26 @@ extension GroupSelectTableViewController {
 // MARK: IBActions
 extension GroupSelectTableViewController {
 
-	@IBAction func addGroupButtonPressed(_ sender: Any) {
+	@IBAction func createGroupButtonPressed(_ sender: Any) {
 		let alertController = UIAlertController(title: "New Group", message: "Please enter a group name.", preferredStyle: .alert)
 		alertController.addTextField { (textField) in
 			textField.placeholder = "Group Name"
 			textField.addTarget(self, action: #selector(self.alertTextFieldTextDidChange(textField:)), for: .editingChanged)
 		}
 		let cancelAction = UIAlertAction( title: "Cancel", style: .cancel, handler: { (cancelAction) in
-				alertController.dismiss(animated: true)
+			alertController.dismiss(animated: true)
 		})
 		alertOkAction = UIAlertAction(title: "Ok", style: .default, handler: { (okAction) in
-				alertController.dismiss(animated: true)
+			guard let groupSelectTableViewControllerDataSource = self.groupSelectTableViewControllerDataSource,
+				let groupSelectTableViewControllerDelegate = self.groupSelectTableViewControllerDelegate,
+				let textField = alertController.textFields?.first else {
+					assertionFailure()
+					return
+			}
+			groupSelectTableViewControllerDelegate.didCreateGroup(withName: textField.text!)
+			self.selectedGroupID = groupSelectTableViewControllerDataSource.groups.last!.id
+			self.tableView.reloadData()
+			alertController.dismiss(animated: true)
 		})
 		alertOkAction?.isEnabled = false
 		alertController.addAction(cancelAction)
@@ -107,4 +118,5 @@ extension GroupSelectTableViewController {
 			alertOkAction.isEnabled = true
 		}
 	}
+
 }

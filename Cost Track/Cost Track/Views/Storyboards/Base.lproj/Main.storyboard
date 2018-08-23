@@ -108,7 +108,7 @@
                     <navigationItem key="navigationItem" title="Group" id="mwG-0b-AjJ">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="egq-rO-o1Y">
                             <connections>
-                                <action selector="addGroupButtonPressed:" destination="tmf-Ip-4VO" id="T65-9k-oyF"/>
+                                <action selector="createGroupButtonPressed:" destination="tmf-Ip-4VO" id="T65-9k-oyF"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

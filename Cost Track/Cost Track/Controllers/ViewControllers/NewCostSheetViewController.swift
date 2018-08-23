@@ -15,6 +15,7 @@ protocol NewCostSheetViewControllerDataSource: GroupSelectTableViewControllerDat
 
 protocol NewCostSheetViewControllerDelegate {
 	func didCreateCostSheet(_ costSheet: CostSheet)
+	func didCreateGroup(withName name: String)
 }
 
 class NewCostSheetViewController: UIViewController {
@@ -103,6 +104,14 @@ extension NewCostSheetViewController: GroupSelectTableViewControllerDelegate {
 		settingsTableView.costSheet.group = dataSource.getGroup(withId: id)
 		settingsTableView.updateCostSheet()
 		settingsTableView.reloadData()
+	}
+
+	func didCreateGroup(withName name: String) {
+		guard let delegate = delegate else {
+			assertionFailure()
+			return
+		}
+		delegate.didCreateGroup(withName: name)
 	}
 
 }
