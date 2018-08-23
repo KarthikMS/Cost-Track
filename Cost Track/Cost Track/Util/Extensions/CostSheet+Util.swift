@@ -25,7 +25,7 @@ struct IncomeExpenseInfo {
 extension CostSheet {
 
 	var balance: Float {
-		var balance: Float = 0
+		var balance = initialBalance
 		for entry in entries {
 			switch entry.type {
 			case .income:

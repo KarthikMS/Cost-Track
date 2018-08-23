@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CostSheetSettingsTableViewDelegate: class {
+	func didSelectGroupCell()
+}
+
 enum CostSheetSettingsTableViewMode {
 	case newCostSheet
 	case costSheetSettings
@@ -17,10 +21,12 @@ class CostSheetSettingsTableView: UITableView {
 
 	// MARK: Properties
 	private var mode = CostSheetSettingsTableViewMode.newCostSheet
+	weak var costSheetSettingsTableViewDelegate: CostSheetSettingsTableViewDelegate?
+	var costSheet = CostSheet()
 
 	// Views
-	var costSheetNameTextView = UITextView()
-	var initalBalanceTextView = UITextView()
+	private var costSheetNameTextView = UITextView()
+	private var initalBalanceTextView = UITextView()
 
 	// MARK: Functions
 	func setMode(_ mode: CostSheetSettingsTableViewMode) {
@@ -30,6 +36,12 @@ class CostSheetSettingsTableView: UITableView {
 		register(UITableViewCell.self, forCellReuseIdentifier: "CostSheetSettingsTableViewCell")
 		dataSource = self
 		delegate = self
+	}
+
+	// MARK: Misc. functions
+	func updateCostSheet() {
+		costSheet.name = costSheetNameTextView.text
+		costSheet.initialBalance = Float(initalBalanceTextView.text)!
 	}
 
 }
@@ -52,21 +64,28 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "CostSheetSettingsTableViewCell", for: indexPath)
+		cell.accessoryView = nil
+		for subview in cell.contentView.subviews {
+			subview.removeFromSuperview()
+		}
 		switch indexPath.section {
 		case 0:
 			cell.textLabel?.text = "Cost sheet"
 			cell.addAccessoryTextView(costSheetNameTextView)
-			costSheetNameTextView = cell.accessoryView as! UITextView
+			cell.selectionStyle = .none
+			costSheetNameTextView.text = costSheet.name
 		case 1:
 			cell.textLabel?.text = "Currency"
 		case 2:
 			cell.textLabel?.text = "Initial balance"
 			cell.addAccessoryTextView(initalBalanceTextView, keyboardType: .decimalPad)
-			initalBalanceTextView = cell.accessoryView as! UITextView
+			cell.selectionStyle = .none
+			initalBalanceTextView.text = String(costSheet.initialBalance)
 		case 3:
 			cell.textLabel?.text = "Overall Total"
 		case 4:
 			cell.textLabel?.text = "Group"
+			cell.addAccessoryLabel(text: costSheet.group.name)
 		default:
 			cell.textLabel?.text = "Export Sheet"
 		}
@@ -82,6 +101,14 @@ extension CostSheetSettingsTableView: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// To dismiss the keyboard
 		endEditing(true)
+
+		switch indexPath.section {
+		case 4:
+			costSheetSettingsTableViewDelegate?.didSelectGroupCell()
+		default:
+			break
+		}
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 
 }
@@ -101,6 +128,22 @@ private extension UITableViewCell {
 		textView.backgroundColor = .red
 
 		accessoryView = textView
+	}
+
+	func addAccessoryLabel(text: String) {
+		let contentViewFrame = contentView.frame
+		var frame = CGRect()
+		frame.size.width = 0.5 * contentViewFrame.size.width
+		frame.size.height = contentViewFrame.size.height
+		frame.origin.x = 0.4 * contentViewFrame.size.width
+		frame.origin.y = 0
+
+		let label = UILabel(frame: frame)
+		label.text = text
+		label.textAlignment = .right
+		contentView.addSubview(label)
+
+		accessoryType = .disclosureIndicator
 	}
 
 }
