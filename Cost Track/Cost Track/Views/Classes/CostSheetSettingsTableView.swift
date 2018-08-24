@@ -23,7 +23,7 @@ class CostSheetSettingsTableView: UITableView {
 	private var mode = CostSheetSettingsTableViewMode.newCostSheet
 	weak var costSheetSettingsTableViewDelegate: CostSheetSettingsTableViewDelegate?
 	var costSheet = CostSheet()
-
+	private var footerTextsAndHeights = [(text: String, height: CGFloat)]()
 	// Views
 	private var costSheetNameTextView = UITextView()
 	private var initalBalanceTextView = UITextView()
@@ -31,7 +31,8 @@ class CostSheetSettingsTableView: UITableView {
 	// MARK: Functions
 	func setMode(_ mode: CostSheetSettingsTableViewMode) {
 		self.mode = mode
-
+		
+		footerTextsAndHeights = getTextAndHeightsForFooterViews()
 		separatorInset.left = 0
 		register(UITableViewCell.self, forCellReuseIdentifier: "CostSheetSettingsTableViewCell")
 		dataSource = self
@@ -44,6 +45,30 @@ class CostSheetSettingsTableView: UITableView {
 		costSheet.initialBalance = Float(initalBalanceTextView.text)!
 	}
 
+	private func getTextAndHeightsForFooterViews() -> [(text: String, height: CGFloat)] {
+		var textsAndHeights = [(text: String, height: CGFloat)]()
+		let texts = [
+			"Enter a cost sheet name for your account (Cash, Debit Card, Bank Account, etc.) or event(Wedding, Summer Holidays, Apartment Renovation, etc.) for which you will track your incomes and expenses.",
+			"Select a currency for the cost sheet. Please note that you can convert currencies when entering incomes or expenses.",
+			"Initial balance can be positive or negative. It is used for the current sheet balance calculation only.",
+			"Define whether you want to include this cost sheet in overall total or not.",
+			"Select a group for the cost sheet.",
+			"Export the cost sheet in a CSV format."
+		]
+
+		let textView = UITextView(frame: CGRect(x: 0, y: 0, width: self.frame.size.width, height: 150))
+		addSubview(textView)
+
+		for text in texts {
+			textView.text = text
+			textView.sizeToFit()
+
+			textsAndHeights.append((text: text, height: textView.frame.size.height))
+		}
+
+		textView.removeFromSuperview()
+		return textsAndHeights
+	}
 }
 
 // MARK: UITableViewDataSource
@@ -97,6 +122,30 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 
 // MARK: UITableViewDelegate
 extension CostSheetSettingsTableView: UITableViewDelegate {
+
+	func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		let textAndHeight = footerTextsAndHeights[section]
+
+		var frame = CGRect()
+		frame.origin.x = 0
+		frame.origin.y = 0
+		frame.size.width = tableView.frame.size.width
+		frame.size.height = textAndHeight.height
+
+		let textView = UITextView(frame: frame)
+		textView.backgroundColor = UIColor(red: 247/255.0, green: 247/255.0, blue: 247/255.0, alpha: 1.0)
+		textView.text = textAndHeight.text
+
+		return textView
+	}
+
+	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		return footerTextsAndHeights[section].height
+	}
+
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return 20
+	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// To dismiss the keyboard
