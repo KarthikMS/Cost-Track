@@ -41,6 +41,7 @@ class CostSheetViewController: UIViewController {
 	private var entriesSortedByDate = [CostSheetEntry]()
 	private let categories = CommonUtil.getAllCategories()
 	private var transferIndexPath: IndexPath?
+	var sectionsToHide = Set<Int>()
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -221,6 +222,7 @@ extension CostSheetViewController {
 			classificationMode = .place
 		}
 		sortEntries()
+		sectionsToHide.removeAll()
 		transactionsTableView.reloadData()
 	}
 
@@ -278,6 +280,37 @@ extension CostSheetViewController: UITableViewDelegate {
 			self.delegate?.didDeleteCostSheetEntry(withId: entryToDelete.id, inCostSheetWithId: self.costSheet.id)
 		}
 		return [deleteEntryAction, transferEntryAction]
+	}
+
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return 40
+	}
+
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		guard let entries = sortedEntriesForTableView[section] else {
+			assertionFailure("dataSource not set")
+			return nil
+		}
+		var frame = tableView.frame
+		frame.origin.y = 0
+		frame.size.height = 40
+		let title = Array(entries)[0].key
+		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, delegate: self)
+		return headerView
+	}
+
+}
+
+// MARK: TableViewSectionHeaderViewDelegate
+extension CostSheetViewController: TableViewSectionHeaderViewDelegate {
+
+	func sectionHeaderViewTapped(section: Int) {
+		if sectionsToHide.contains(section) {
+			sectionsToHide.remove(section)
+		} else {
+			sectionsToHide.insert(section)
+		}
+		transactionsTableView.reloadData()
 	}
 
 }

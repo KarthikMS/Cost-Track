@@ -25,22 +25,19 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 		return dataSource.sortedEntriesForTableView.count
 	}
 
-	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		guard let dataSource = dataSource,
-		let entries = dataSource.sortedEntriesForTableView[section] else {
-			assertionFailure("dataSource not set")
-			return nil
-		}
-		return Array(entries)[0].key
-	}
-
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		guard let dataSource = dataSource,
-		let entries = dataSource.sortedEntriesForTableView[section] else {
+		guard let dataSource = dataSource else {
+			assertionFailure()
+			return 0
+		}
+		if dataSource.sectionsToHide.contains(section) {
+			return 0
+		}
+
+		guard let entries = dataSource.sortedEntriesForTableView[section] else {
 			assertionFailure("dataSource not set")
 			return -1
 		}
-		print("Rows: \(Array(entries)[0].value.count)")
 		return Array(entries)[0].value.count
 	}
 
