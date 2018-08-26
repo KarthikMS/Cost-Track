@@ -20,6 +20,7 @@ class MyCostSheetsViewController: UIViewController {
 	var account = Account()
 	var selectedCostSheetId: String?
 	private var shouldUpdateViews = false
+	private var sectionsToHide = Set<Int>()
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -47,6 +48,7 @@ class MyCostSheetsViewController: UIViewController {
 		super.viewWillAppear(animated)
 
 		if shouldUpdateViews {
+			sectionsToHide.removeAll()
 			updateTopBar()
 			tableView.reloadData()
 			shouldUpdateViews = false
@@ -112,13 +114,18 @@ class MyCostSheetsViewController: UIViewController {
 
 	private func deleteCostSheet(withId id: String, at indexPath: IndexPath) {
 		account.deleteCostSheet(withId: id)
-		tableView.beginUpdates()
-		if tableView.numberOfRows(inSection: indexPath.section) == 1 {
-			tableView.deleteSections([indexPath.section], with: .bottom)
+		if !account.hasCostSheetsInOtherGroups {
+			sectionsToHide.removeAll()
+			tableView.reloadData()
 		} else {
-			tableView.deleteRows(at: [indexPath], with: .left)
+			tableView.beginUpdates()
+			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
+				tableView.deleteSections([indexPath.section], with: .bottom)
+			} else {
+				tableView.deleteRows(at: [indexPath], with: .left)
+			}
+			tableView.endUpdates()
 		}
-		tableView.endUpdates()
 	}
 }
 
@@ -154,15 +161,10 @@ extension MyCostSheetsViewController: UITableViewDataSource {
 		return account.groupsWithCostSheets.count
 	}
 
-	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		if !account.hasCostSheetsInOtherGroups {
-			return nil
-		}
-		let groupsWithCostSheets = account.groupsWithCostSheets
-		return groupsWithCostSheets[section].name
-	}
-
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if sectionsToHide.contains(section) {
+			return 0
+		}
 		let groupsWithCostSheets = account.groupsWithCostSheets
 		return account.costSheetsInGroup(groupsWithCostSheets[section]).count
 	}
@@ -192,13 +194,47 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let deleteCostSheetAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
 			let costSheet = self.costSheetAtIndexPath(indexPath)
-			guard costSheet.entries.isEmpty else {
+			if costSheet.entries.isEmpty {
+				self.deleteCostSheet(withId: costSheet.id, at: indexPath)
+			} else {
 				self.showAlertForDeletingCostSheet(withId: costSheet.id, at: indexPath)
-				return
 			}
-			self.deleteCostSheet(withId: costSheet.id, at: indexPath)
 		}
 		return [deleteCostSheetAction]
+	}
+
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		if !account.hasCostSheetsInOtherGroups {
+			return 0
+		}
+		return 40
+	}
+
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		if !account.hasCostSheetsInOtherGroups {
+			return nil
+		}
+
+		var frame = tableView.frame
+		frame.origin.y = 0
+		frame.size.height = 40
+		let title = account.groupsWithCostSheets[section].name
+		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, delegate: self)
+		return headerView
+	}
+
+}
+
+// MARK: TableViewSectionHeaderViewDelegate
+extension MyCostSheetsViewController: TableViewSectionHeaderViewDelegate {
+
+	func sectionHeaderViewTapped(section: Int) {
+		if sectionsToHide.contains(section) {
+			sectionsToHide.remove(section)
+		} else {
+			sectionsToHide.insert(section)
+		}
+		tableView.reloadData()
 	}
 
 }
