@@ -44,13 +44,10 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionsTableViewCell", for: indexPath) as! TransactionsTableViewCell
 		guard let dataSource = dataSource,
-			let costSheetEntry = dataSource.getSortedEntry(at: indexPath) else {
+			let costSheetEntry = dataSource.getSortedEntry(at: indexPath),
+			let entryDate = costSheetEntry.date.date else {
 				assertionFailure()
 				return cell
-		}
-		guard let entryDate = costSheetEntry.date.date else {
-			assertionFailure()
-			return cell
 		}
 		
 		cell.setAmount(costSheetEntry.amount,
