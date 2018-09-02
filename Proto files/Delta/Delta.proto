@@ -1,0 +1,87 @@
+syntax = "proto2";
+
+option swift_prefix = "";
+
+message DocumentDeltas {
+	repeated DocumentDelta delta = 1;
+	optional int32 lastSavedVersion = 2;
+}
+
+message DocumentDelta {
+
+	// Presentation version that the delta is intended to be applied to.
+	required int32 version = 1;
+
+	// Operations included in this delta
+	repeated DocumentOperation docOp = 2;
+}
+
+message DocumentOperation {
+
+	// Mutates a document.
+	message MutateDocument {
+		// this should not be confused with the presenation id. this mutateDocumentId can be a slide Id / master Id / presentation Id
+		required string mDocId = 1;
+
+		required DocumentContentOperation contentOp = 2;
+	}
+
+	optional MutateDocument mutateDocument = 1;
+}
+
+message DocumentContentOperation {
+	message Component {
+		enum OperationType {
+			INSERT = 1;
+			UPDATE = 2;
+			DELETE = 3;
+			CUSTOM = 4;
+			REORDER = 5;
+		}
+
+		required OperationType opType = 1;
+
+		// The first position in the fields will hold the root element.
+		required string fields = 2;
+
+		optional Value value = 3;
+
+		message Value {
+			// In case of Insert, new_value will hold the value
+			// In case of Update, if the field is absent, the attribute should be removed/should be set to null.
+			optional string value = 1;
+
+			// Absent field means that the attribute is absent and/or null.
+			optional string oldValue = 2;
+
+			// maintains the fields that needs to be deleted from the message mentioned in "fields" variable
+			optional string deleteData = 3;
+
+			// if true, this will replace the current data present in the message with the
+			// json string present in "value" field.
+			optional bool replace = 4;
+
+			// unique id, can be used for insert operation
+			repeated string ids = 5;
+
+			message InBytes {
+
+				optional bytes value = 1;
+				optional bytes oldValue = 2;
+				optional bytes deleteData = 3;
+			}
+			optional InBytes inBytes = 6;
+
+		}
+
+		optional Custom custom = 4;
+		message Custom {
+
+		}
+
+		// in case of REORDER operation, this will hold the new index position
+		optional int32 ni = 5;
+	}
+
+	repeated Component component = 1;
+}

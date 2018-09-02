@@ -62,7 +62,7 @@ extension Enum {
   /// to distinguish them.
   ///
   /// - Parameter name: The name of the enum case.
-  internal init?(name: String) {
+  public init?(name: String) {
     guard let nameProviding = Self.self as? _ProtoNameProviding.Type,
       let number = nameProviding._protobuf_nameMap.number(forJSONName: name) else {
       return nil
