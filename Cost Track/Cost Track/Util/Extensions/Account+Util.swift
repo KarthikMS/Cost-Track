@@ -18,6 +18,10 @@ extension Account {
 		return costSheetsInGroup
 	}
 
+	func numberOfCostSheets(in group: CostSheetGroup) -> Int {
+		return costSheetsInGroup(group).count
+	}
+
 	func getGroup(withId id: String) -> CostSheetGroup? {
 		for group in groups where group.id == id {
 			return group

@@ -15,3 +15,11 @@ func fieldStringForCostSheet(id: String, account: Account) -> String {
 	assertionFailure("Cost sheet not found")
 	return ""
 }
+
+func fieldStringForGroup(id: String, account: Account) -> String {
+	for i in 0..<account.groups.count where account.groups[i].id == id {
+		return "2,arr:\(i)"
+	}
+	assertionFailure("Group not found")
+	return ""
+}
