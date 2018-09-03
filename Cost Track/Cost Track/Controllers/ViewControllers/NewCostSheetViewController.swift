@@ -8,18 +8,13 @@
 
 import UIKit
 
-protocol NewCostSheetViewControllerDataSource: GroupSelectTableViewControllerDataSource {
+protocol NewCostSheetViewControllerDataSource {
 	var defaultCostSheetName: String { get }
 	func getGroup(withId id: String) -> CostSheetGroup
 }
 
 protocol NewCostSheetViewControllerDelegate {
 	func didCreateCostSheet(_ costSheet: CostSheet)
-	func didCreateGroup(withName name: String)
-	func didDeleteGroup(at index: Int)
-	// try
-	func sendDeltaComponent(_ component: DocumentContentOperation.Component)
-	// try
 }
 
 class NewCostSheetViewController: UIViewController {
@@ -28,6 +23,7 @@ class NewCostSheetViewController: UIViewController {
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
 
 	// MARK: Properties
+	weak var myCostSheetsViewController: MyCostSheetsViewController?
 	var delegate: NewCostSheetViewControllerDelegate?
 	var dataSource: NewCostSheetViewControllerDataSource?
 	var selectedGroupId = NotSetGroup.id
@@ -56,13 +52,15 @@ class NewCostSheetViewController: UIViewController {
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == GroupSelectSegue {
-			guard let groupSelectTableViewController = segue.destination as? GroupSelectTableViewController else {
-				assertionFailure()
-				return
+			guard let groupSelectTableViewController = segue.destination as? GroupSelectTableViewController,
+				let myCostSheetsViewController = myCostSheetsViewController else {
+					assertionFailure()
+					return
 			}
 			groupSelectTableViewController.selectedGroupID = selectedGroupId
-			groupSelectTableViewController.groupSelectTableViewControllerDataSource = self.dataSource
+			groupSelectTableViewController.groupSelectTableViewControllerDataSource = myCostSheetsViewController
 			groupSelectTableViewController.groupSelectTableViewControllerDelegate = self
+			groupSelectTableViewController.deltaDelegate = myCostSheetsViewController
 		}
 	}
 
@@ -82,15 +80,15 @@ extension NewCostSheetViewController {
 		costSheet.lastModifiedDate = Date().data
 
 		// try
-		costSheet.includeInOverallTotal = true
-		var insertCostSheetComp = DocumentContentOperation.Component()
-		insertCostSheetComp.fields = "1,arr:0"
-		insertCostSheetComp.value.inBytes.value = costSheet.safeSerializedData
-		insertCostSheetComp.opType = .insert
-		delegate?.sendDeltaComponent(insertCostSheetComp)
+//		costSheet.includeInOverallTotal = true
+//		var insertCostSheetComp = DocumentContentOperation.Component()
+//		insertCostSheetComp.fields = "1,arr:0"
+//		insertCostSheetComp.value.inBytes.value = costSheet.safeSerializedData
+//		insertCostSheetComp.opType = .insert
+//		delegate?.sendDeltaComponent(insertCostSheetComp)
 		// try
 
-//		delegate?.didCreateCostSheet(costSheet)
+		delegate?.didCreateCostSheet(costSheet)
 		navigationController?.popViewController(animated: true)
 	}
 
@@ -117,22 +115,6 @@ extension NewCostSheetViewController: GroupSelectTableViewControllerDelegate {
 		settingsTableView.costSheet.group = dataSource.getGroup(withId: id)
 		settingsTableView.updateCostSheet()
 		settingsTableView.reloadData()
-	}
-
-	func didCreateGroup(withName name: String) {
-		guard let delegate = delegate else {
-			assertionFailure()
-			return
-		}
-		delegate.didCreateGroup(withName: name)
-	}
-
-	func didDeleteGroup(at index: Int) {
-		guard let delegate = delegate else {
-			assertionFailure()
-			return
-		}
-		delegate.didDeleteGroup(at: index)
 	}
 
 }

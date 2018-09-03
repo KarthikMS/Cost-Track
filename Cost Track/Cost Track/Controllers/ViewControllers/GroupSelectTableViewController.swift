@@ -9,14 +9,11 @@
 import UIKit
 
 protocol GroupSelectTableViewControllerDataSource: class {
-	var groups: [CostSheetGroup] { get }
-	func numberOfCostSheets(in group: CostSheetGroup) -> Int
+	var account: Account { get }
 }
 
 protocol GroupSelectTableViewControllerDelegate: class {
 	func didSelectGroup(id: String)
-	func didCreateGroup(withName name: String)
-	func didDeleteGroup(at index: Int)
 }
 
 class GroupSelectTableViewController: UITableViewController {
@@ -25,6 +22,7 @@ class GroupSelectTableViewController: UITableViewController {
 	var selectedGroupID = ""
 	weak var groupSelectTableViewControllerDataSource: GroupSelectTableViewControllerDataSource?
 	weak var groupSelectTableViewControllerDelegate: GroupSelectTableViewControllerDelegate?
+	weak var deltaDelegate: DeltaDelegate?
 	private var alertOkAction: UIAlertAction?
 
 	// MARK: UIViewController functions
@@ -37,16 +35,24 @@ class GroupSelectTableViewController: UITableViewController {
 	// MARK: Misc. functions
 	private func deleteGroup(at indexPath: IndexPath) {
 		guard let groupSelectTableViewControllerDataSource = groupSelectTableViewControllerDataSource,
-			let groupSelectTableViewControllerDelegate = groupSelectTableViewControllerDelegate else {
+			let groupSelectTableViewControllerDelegate = groupSelectTableViewControllerDelegate,
+			let deltaDelegate = deltaDelegate else {
 				assertionFailure()
 				return
 		}
 
-		groupSelectTableViewControllerDelegate.didDeleteGroup(at: indexPath.row)
+		// Delta Component
+		let deleteGroupComponent = DeltaUtil.getComponent(
+			opType: .delete,
+			fieldString: "2,arr:\(indexPath.row)",
+			oldValue: groupSelectTableViewControllerDataSource.account.groups[indexPath.row].safeSerializedData
+		)
+		deltaDelegate.sendDeltaComponents([deleteGroupComponent])
+
 		if indexPath.row > 0 {
-			selectedGroupID = groupSelectTableViewControllerDataSource.groups[indexPath.row - 1].id
+			selectedGroupID = groupSelectTableViewControllerDataSource.account.groups[indexPath.row - 1].id
 		} else {
-			selectedGroupID = groupSelectTableViewControllerDataSource.groups[indexPath.row + 1].id
+			selectedGroupID = groupSelectTableViewControllerDataSource.account.groups[0].id
 		}
 		self.tableView.reloadData()
 	}
@@ -56,8 +62,8 @@ class GroupSelectTableViewController: UITableViewController {
 			assertionFailure()
 			return
 		}
-		let deletionGroup = groupSelectTableViewControllerDataSource.groups[deletionIndexPath.row]
-		let numberOfCostSheets = groupSelectTableViewControllerDataSource.numberOfCostSheets(in: deletionGroup)
+		let deletionGroup = groupSelectTableViewControllerDataSource.account.groups[deletionIndexPath.row]
+		let numberOfCostSheets = groupSelectTableViewControllerDataSource.account.numberOfCostSheets(in: deletionGroup)
 
 		let alertController = UIAlertController(
 			title: "Delete Group",
@@ -78,7 +84,7 @@ class GroupSelectTableViewController: UITableViewController {
 extension GroupSelectTableViewController {
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		guard let groups = groupSelectTableViewControllerDataSource?.groups else {
+		guard let groups = groupSelectTableViewControllerDataSource?.account.groups else {
 			assertionFailure()
 			return 0
 		}
@@ -87,7 +93,7 @@ extension GroupSelectTableViewController {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "SelectGroupCell", for: indexPath)
-		guard let group = groupSelectTableViewControllerDataSource?.groups[indexPath.row] else {
+		guard let group = groupSelectTableViewControllerDataSource?.account.groups[indexPath.row] else {
 			assertionFailure()
 			return cell
 		}
@@ -101,7 +107,7 @@ extension GroupSelectTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		guard groupSelectTableViewControllerDataSource?.groups[indexPath.row].id != NotSetGroup.id else {
+		guard groupSelectTableViewControllerDataSource?.account.groups[indexPath.row].id != NotSetGroup.id else {
 				return false
 		}
 		return true
@@ -115,7 +121,7 @@ extension GroupSelectTableViewController {
 		}
 
 		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (deleteAction, indexPath) in
-			if groupSelectTableViewControllerDataSource.numberOfCostSheets(in: groupSelectTableViewControllerDataSource.groups[indexPath.row]) == 0 {
+			if groupSelectTableViewControllerDataSource.account.numberOfCostSheets(in: groupSelectTableViewControllerDataSource.account.groups[indexPath.row]) == 0 {
 				self.deleteGroup(at: indexPath)
 			} else {
 				self.showAlertForGroupDeletionConfirmation(deletionIndexPath: indexPath)
@@ -130,7 +136,7 @@ extension GroupSelectTableViewController {
 extension GroupSelectTableViewController {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		guard let group = groupSelectTableViewControllerDataSource?.groups[indexPath.row] else {
+		guard let group = groupSelectTableViewControllerDataSource?.account.groups[indexPath.row] else {
 			assertionFailure()
 			return
 		}
@@ -155,12 +161,28 @@ extension GroupSelectTableViewController {
 		alertOkAction = UIAlertAction(title: "Ok", style: .default, handler: { (okAction) in
 			guard let groupSelectTableViewControllerDataSource = self.groupSelectTableViewControllerDataSource,
 				let groupSelectTableViewControllerDelegate = self.groupSelectTableViewControllerDelegate,
-				let textField = alertController.textFields?.first else {
+				let textField = alertController.textFields?.first,
+				let deltaDelegate = self.deltaDelegate,
+				let groupName = textField.text else {
 					assertionFailure()
 					return
 			}
-			groupSelectTableViewControllerDelegate.didCreateGroup(withName: textField.text!)
-			self.selectedGroupID = groupSelectTableViewControllerDataSource.groups.last!.id
+
+			// New group
+			var newGroup = CostSheetGroup()
+			newGroup.name = groupName
+			newGroup.id = UUID().uuidString
+
+			// Delta Component
+			let fieldString = "2,arr:\(groupSelectTableViewControllerDataSource.account.groups.count - 1)"
+			let insertGroupComponent = DeltaUtil.getComponent(
+				opType: .insert,
+				fieldString: fieldString,
+				newValue: newGroup.safeSerializedData
+			)
+			deltaDelegate.sendDeltaComponents([insertGroupComponent])
+
+			self.selectedGroupID = newGroup.id
 			self.tableView.reloadData()
 			alertController.dismiss(animated: true)
 		})

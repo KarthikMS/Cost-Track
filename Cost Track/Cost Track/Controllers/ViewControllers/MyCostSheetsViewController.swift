@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyCostSheetsViewController: UIViewController {
+class MyCostSheetsViewController: UIViewController, GroupSelectTableViewControllerDataSource {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var topBar: UIView!
@@ -82,6 +82,7 @@ class MyCostSheetsViewController: UIViewController {
 			}
 			newCostSheetViewController.dataSource = self
 			newCostSheetViewController.delegate = self
+			newCostSheetViewController.myCostSheetsViewController = self
 		}
 	}
 
@@ -264,51 +265,13 @@ extension MyCostSheetsViewController: NewCostSheetViewControllerDataSource {
 
 }
 
-// MARK: GroupSelectTableViewControllerDataSource
-extension MyCostSheetsViewController: GroupSelectTableViewControllerDataSource {
-
-	var groups: [CostSheetGroup] {
-		return account.groups
-	}
-
-	func numberOfCostSheets(in group: CostSheetGroup) -> Int {
-		return account.costSheetsInGroup(group).count
-	}
-
-}
-
 // MARK: NewCostSheetDelegate
 extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
 
 	func didCreateCostSheet(_ costSheet: CostSheet) {
 		account.costSheets.append(costSheet)
-		tableView.reloadData()
-	}
-
-	func didCreateGroup(withName name: String) {
-		var newGroup = CostSheetGroup()
-		newGroup.name = name
-		newGroup.id = UUID().uuidString
-		account.groups.append(newGroup)
-	}
-
-	func didDeleteGroup(at index: Int) {
-		account.moveCostSheets(from: account.groups[index], to: NotSetGroup)
-		account.groups.remove(at: index)
 		shouldUpdateViews = true
 	}
-
-	// try
-	func sendDeltaComponent(_ component: DocumentContentOperation.Component) {
-		do {
-			var decoder = try DeltaDataApplier(fieldString: component.fields, value: component.value.inBytes.value, operationType: component.opType)
-			try account.decodeMessage(decoder: &decoder)
-			shouldUpdateViews = true
-		} catch {
-			assertionFailure()
-		}
-	}
-	// try
 
 }
 
@@ -367,6 +330,23 @@ extension MyCostSheetsViewController: TransferEntryTableViewControllerDataSource
 			}
 		}
 		return costSheets
+	}
+
+}
+
+// MARK: DeltaDelegate
+extension MyCostSheetsViewController: DeltaDelegate {
+
+	func sendDeltaComponents(_ components: [DocumentContentOperation.Component]) {
+		for component in components {
+			do {
+				var decoder = try DeltaDataApplier(fieldString: component.fields, value: component.value.inBytes.value, operationType: component.opType)
+				try account.decodeMessage(decoder: &decoder)
+				shouldUpdateViews = true
+			} catch {
+				assertionFailure()
+			}
+		}
 	}
 
 }
