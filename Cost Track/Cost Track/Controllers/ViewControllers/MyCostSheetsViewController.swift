@@ -37,7 +37,7 @@ class MyCostSheetsViewController: UIViewController {
 		}
 
 		if account.costSheets.isEmpty {
-			tableView.isHidden = true
+			noCostSheetsTextView.isHidden = false
 		} else {
 			noCostSheetsTextView.isHidden = true
 		}
@@ -50,7 +50,12 @@ class MyCostSheetsViewController: UIViewController {
 		if shouldUpdateViews {
 			sectionsToHide.removeAll()
 			updateTopBar()
-			tableView.reloadData()
+			if account.costSheets.isEmpty {
+				noCostSheetsTextView.isHidden = false
+			} else {
+				noCostSheetsTextView.isHidden = true
+				tableView.reloadData()
+			}
 			shouldUpdateViews = false
 		}
 
@@ -125,6 +130,9 @@ class MyCostSheetsViewController: UIViewController {
 				tableView.deleteRows(at: [indexPath], with: .left)
 			}
 			tableView.endUpdates()
+		}
+		if account.costSheets.isEmpty {
+			noCostSheetsTextView.isHidden = false
 		}
 	}
 }
@@ -274,8 +282,6 @@ extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
 
 	func didCreateCostSheet(_ costSheet: CostSheet) {
 		account.costSheets.append(costSheet)
-		noCostSheetsTextView.isHidden = true
-		tableView.isHidden = false
 		tableView.reloadData()
 	}
 
@@ -291,6 +297,18 @@ extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
 		account.groups.remove(at: index)
 		shouldUpdateViews = true
 	}
+
+	// try
+	func sendDeltaComponent(_ component: DocumentContentOperation.Component) {
+		do {
+			var decoder = try DeltaDataApplier(fieldString: component.fields, value: component.value.inBytes.value, operationType: component.opType)
+			try account.decodeMessage(decoder: &decoder)
+			shouldUpdateViews = true
+		} catch {
+			assertionFailure()
+		}
+	}
+	// try
 
 }
 

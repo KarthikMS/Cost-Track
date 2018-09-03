@@ -17,6 +17,9 @@ protocol NewCostSheetViewControllerDelegate {
 	func didCreateCostSheet(_ costSheet: CostSheet)
 	func didCreateGroup(withName name: String)
 	func didDeleteGroup(at index: Int)
+	// try
+	func sendDeltaComponent(_ component: DocumentContentOperation.Component)
+	// try
 }
 
 class NewCostSheetViewController: UIViewController {
@@ -78,7 +81,16 @@ extension NewCostSheetViewController {
 
 		costSheet.lastModifiedDate = Date().data
 
-		delegate?.didCreateCostSheet(costSheet)
+		// try
+		costSheet.includeInOverallTotal = true
+		var insertCostSheetComp = DocumentContentOperation.Component()
+		insertCostSheetComp.fields = "1,arr:0"
+		insertCostSheetComp.value.inBytes.value = costSheet.safeSerializedData
+		insertCostSheetComp.opType = .insert
+		delegate?.sendDeltaComponent(insertCostSheetComp)
+		// try
+
+//		delegate?.didCreateCostSheet(costSheet)
 		navigationController?.popViewController(animated: true)
 	}
 

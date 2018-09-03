@@ -46,6 +46,7 @@
 		D98974122117451B0051F809 /* CostSheetEntry+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98974112117451B0051F809 /* CostSheetEntry+Util.swift */; };
 		D9B119A22139786E0007CDA1 /* DeltaDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A12139786E0007CDA1 /* DeltaDecoder.swift */; };
 		D9B119A4213980290007CDA1 /* Delta.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A3213980290007CDA1 /* Delta.pb.swift */; };
+		D9B119A6213C3C400007CDA1 /* ProtoExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */; };
 		D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */; };
 		D9F5E5F520FEF77300454FA9 /* CostSheetEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */; };
 /* End PBXBuildFile section */
@@ -117,6 +118,7 @@
 		D98974112117451B0051F809 /* CostSheetEntry+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CostSheetEntry+Util.swift"; sourceTree = "<group>"; };
 		D9B119A12139786E0007CDA1 /* DeltaDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeltaDecoder.swift; sourceTree = "<group>"; };
 		D9B119A3213980290007CDA1 /* Delta.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Delta.pb.swift; path = "../../../../Compiled swift files/Delta.pb.swift"; sourceTree = "<group>"; };
+		D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoExtensions.swift; sourceTree = "<group>"; };
 		D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetEntryViewController.swift; sourceTree = "<group>"; };
 		D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSheetEntryViewController.xib; sourceTree = "<group>"; };
 		F245DB9B1362C7111170B109 /* Pods-Cost Track.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cost Track.release.xcconfig"; path = "Pods/Target Support Files/Pods-Cost Track/Pods-Cost Track.release.xcconfig"; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				D98973E1210E2E480051F809 /* Constants.swift */,
 				D989740F211741410051F809 /* CommonUtil.swift */,
 				D9B119A12139786E0007CDA1 /* DeltaDecoder.swift */,
+				D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -516,15 +519,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-Cost Track-checkManifestLockResult.txt",
 			);
@@ -538,15 +537,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-Cost TrackTests-checkManifestLockResult.txt",
 			);
@@ -560,15 +555,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Cost Track/Pods-Cost Track-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/SwiftProtobuf/SwiftProtobuf.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftProtobuf.framework",
 			);
@@ -582,15 +573,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-Cost TrackUITests-checkManifestLockResult.txt",
 			);
@@ -628,6 +615,7 @@
 				D98973E2210E2E480051F809 /* Constants.swift in Sources */,
 				D962F42E20F9D877003C7C58 /* CostSheetTableViewCell.swift in Sources */,
 				D98974082116FCBA0051F809 /* EntryDatePicker.swift in Sources */,
+				D9B119A6213C3C400007CDA1 /* ProtoExtensions.swift in Sources */,
 				D9897410211741410051F809 /* CommonUtil.swift in Sources */,
 				D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */,
 				D9B119A22139786E0007CDA1 /* DeltaDecoder.swift in Sources */,

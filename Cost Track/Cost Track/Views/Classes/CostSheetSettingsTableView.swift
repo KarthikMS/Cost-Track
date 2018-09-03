@@ -31,7 +31,8 @@ class CostSheetSettingsTableView: UITableView {
 	// MARK: Functions
 	func setMode(_ mode: CostSheetSettingsTableViewMode) {
 		self.mode = mode
-		
+
+		costSheet.id = UUID().uuidString
 		footerTextsAndHeights = getTextAndHeightsForFooterViews()
 		separatorInset.left = 0
 		register(UITableViewCell.self, forCellReuseIdentifier: "CostSheetSettingsTableViewCell")
