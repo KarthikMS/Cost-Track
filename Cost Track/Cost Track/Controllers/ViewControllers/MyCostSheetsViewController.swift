@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyCostSheetsViewController: UIViewController, GroupSelectTableViewControllerDataSource {
+class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var topBar: UIView!
@@ -81,8 +81,7 @@ class MyCostSheetsViewController: UIViewController, GroupSelectTableViewControll
 				return
 			}
 			newCostSheetViewController.dataSource = self
-			newCostSheetViewController.delegate = self
-			newCostSheetViewController.myCostSheetsViewController = self
+			newCostSheetViewController.deltaDelegate = self
 		}
 	}
 
@@ -244,33 +243,6 @@ extension MyCostSheetsViewController: TableViewSectionHeaderViewDelegate {
 			sectionsToHide.insert(section)
 		}
 		tableView.reloadData()
-	}
-
-}
-
-// MARK: NewCostSheetDataSource
-extension MyCostSheetsViewController: NewCostSheetViewControllerDataSource {
-
-	var defaultCostSheetName: String {
-		return account.defaultNewCostSheetName
-	}
-
-	func getGroup(withId id: String) -> CostSheetGroup {
-		guard let group = account.getGroup(withId: id) else {
-			assertionFailure()
-			return CostSheetGroup()
-		}
-		return group
-	}
-
-}
-
-// MARK: NewCostSheetDelegate
-extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
-
-	func didCreateCostSheet(_ costSheet: CostSheet) {
-		account.costSheets.append(costSheet)
-		shouldUpdateViews = true
 	}
 
 }

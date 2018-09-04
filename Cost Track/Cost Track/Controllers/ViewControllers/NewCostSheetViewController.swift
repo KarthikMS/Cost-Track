@@ -9,12 +9,7 @@
 import UIKit
 
 protocol NewCostSheetViewControllerDataSource {
-	var defaultCostSheetName: String { get }
-	func getGroup(withId id: String) -> CostSheetGroup
-}
-
-protocol NewCostSheetViewControllerDelegate {
-	func didCreateCostSheet(_ costSheet: CostSheet)
+	var account: Account { get }
 }
 
 class NewCostSheetViewController: UIViewController {
@@ -23,8 +18,7 @@ class NewCostSheetViewController: UIViewController {
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
 
 	// MARK: Properties
-	weak var myCostSheetsViewController: MyCostSheetsViewController?
-	var delegate: NewCostSheetViewControllerDelegate?
+	weak var deltaDelegate: DeltaDelegate?
 	var dataSource: NewCostSheetViewControllerDataSource?
 	var selectedGroupId = NotSetGroup.id
 
@@ -40,7 +34,7 @@ class NewCostSheetViewController: UIViewController {
 		settingsTableView.costSheetSettingsTableViewDelegate = self
 
 		var newCostSheet = CostSheet()
-		newCostSheet.name = dataSource.defaultCostSheetName
+		newCostSheet.name = dataSource.account.defaultNewCostSheetName
 		newCostSheet.initialBalance = 0
 		newCostSheet.id = UUID().uuidString
 		newCostSheet.group = CostSheetGroup()
@@ -52,15 +46,14 @@ class NewCostSheetViewController: UIViewController {
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == GroupSelectSegue {
-			guard let groupSelectTableViewController = segue.destination as? GroupSelectTableViewController,
-				let myCostSheetsViewController = myCostSheetsViewController else {
-					assertionFailure()
-					return
+			guard let groupSelectTableViewController = segue.destination as? GroupSelectTableViewController else {
+				assertionFailure()
+				return
 			}
 			groupSelectTableViewController.selectedGroupID = selectedGroupId
-			groupSelectTableViewController.groupSelectTableViewControllerDataSource = myCostSheetsViewController
+			groupSelectTableViewController.groupSelectTableViewControllerDataSource = self
 			groupSelectTableViewController.groupSelectTableViewControllerDelegate = self
-			groupSelectTableViewController.deltaDelegate = myCostSheetsViewController
+			groupSelectTableViewController.deltaDelegate = deltaDelegate
 		}
 	}
 
@@ -72,23 +65,24 @@ extension NewCostSheetViewController {
 	@IBAction private func createButtonPressed(_ sender: Any) {
 		settingsTableView.updateCostSheet()
 		var costSheet = settingsTableView.costSheet
-		if costSheet.name == "" {
+		guard costSheet.name != "" else {
 			// Show dialog to enter costSheet name
 			return
 		}
+		guard let deltaDelegate = deltaDelegate,
+			let account = dataSource?.account else {
+				assertionFailure()
+				return
+		}
 
 		costSheet.lastModifiedDate = Date().data
+		// TODO: includeInOverallTotal
+		costSheet.includeInOverallTotal = true
 
-		// try
-//		costSheet.includeInOverallTotal = true
-//		var insertCostSheetComp = DocumentContentOperation.Component()
-//		insertCostSheetComp.fields = "1,arr:0"
-//		insertCostSheetComp.value.inBytes.value = costSheet.safeSerializedData
-//		insertCostSheetComp.opType = .insert
-//		delegate?.sendDeltaComponent(insertCostSheetComp)
-		// try
+		// Delta
+		let insertCostSheetComp = DeltaUtil.getComponentToInsertCostSheet(costSheet, in: account)
+		deltaDelegate.sendDeltaComponents([insertCostSheetComp])
 
-		delegate?.didCreateCostSheet(costSheet)
 		navigationController?.popViewController(animated: true)
 	}
 
@@ -103,16 +97,29 @@ extension NewCostSheetViewController: CostSheetSettingsTableViewDelegate {
 
 }
 
+// MARK: GroupSelectTableViewControllerDataSource
+extension NewCostSheetViewController: GroupSelectTableViewControllerDataSource {
+
+	var account: Account {
+		guard let account = dataSource?.account else {
+			assertionFailure()
+			return Account()
+		}
+		return account
+	}
+
+}
+
 // MARK: GroupSelectTableViewControllerDelegate
 extension NewCostSheetViewController: GroupSelectTableViewControllerDelegate {
 
 	func didSelectGroup(id: String) {
-		guard let dataSource = dataSource else {
+		guard let group = dataSource?.account.getGroup(withId: id) else {
 			assertionFailure()
 			return
 		}
 		selectedGroupId = id
-		settingsTableView.costSheet.group = dataSource.getGroup(withId: id)
+		settingsTableView.costSheet.group = group
 		settingsTableView.updateCostSheet()
 		settingsTableView.reloadData()
 	}
