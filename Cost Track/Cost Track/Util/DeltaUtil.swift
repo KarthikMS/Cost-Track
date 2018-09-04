@@ -45,4 +45,57 @@ class DeltaUtil {
 		return comp
 	}
 
+	static func getComponentToInsertGroup(_ group: CostSheetGroup, in account: Account, at index: Int? = nil) -> DocumentContentOperation.Component {
+		var insertIndex: Int
+		if let index = index {
+			insertIndex = index
+		} else {
+			insertIndex = account.groups.count
+		}
+		let fieldString = "2,arr:\(insertIndex)"
+		return getComponent(opType: .insert, fieldString: fieldString, newValue: group.safeSerializedData)
+	}
+
+	static func getComponentToDeleteGroup(at index: Int, in account: Account) -> DocumentContentOperation.Component {
+		let group = account.groups[index]
+		let fieldString = "2,arr:\(index)"
+		return getComponent(opType: .delete, fieldString: fieldString, oldValue: group.safeSerializedData)
+	}
+
+	static func getComponentToInsertCostSheet(_ costSheet: CostSheet, in account: Account, at index: Int? = nil) -> DocumentContentOperation.Component {
+		var insertIndex: Int
+		if let index = index {
+			insertIndex = index
+		} else {
+			insertIndex = account.costSheets.count
+		}
+		let fieldString = "1,arr:\(insertIndex)"
+		return getComponent(opType: .insert, fieldString: fieldString, newValue: costSheet.safeSerializedData)
+	}
+
+	static func getComponentToDeleteCostSheet(at index: Int, in account: Account) -> DocumentContentOperation.Component {
+		let costSheet = account.costSheets[index]
+		let fieldString = "1,arr:\(index)"
+		return getComponent(opType: .delete, fieldString: fieldString, oldValue: costSheet.safeSerializedData)
+	}
+
+	static func getComponentToUpdateGroupOfCostSheet(at index: Int, from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in accout: Account) -> DocumentContentOperation.Component {
+		let fieldString = "1,arr:\(index),4"
+		return getComponent(
+			opType: .update,
+			fieldString: fieldString,
+			oldValue: fromGroup.safeSerializedData,
+			newValue: toGroup.safeSerializedData
+		)
+	}
+
+	static func getComponentsToMoveCostSheets(from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in account: Account) -> [DocumentContentOperation.Component] {
+		var comps = [DocumentContentOperation.Component]()
+		for i in 0..<account.costSheets.count where account.costSheets[i].group.id == fromGroup.id {
+			let updateGroupComp = getComponentToUpdateGroupOfCostSheet(at: i, from: fromGroup, to: toGroup, in: account)
+			comps.append(updateGroupComp)
+		}
+		return comps
+	}
+
 }
