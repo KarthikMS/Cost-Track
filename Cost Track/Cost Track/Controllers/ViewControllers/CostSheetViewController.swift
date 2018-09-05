@@ -282,12 +282,17 @@ extension CostSheetViewController: UITableViewDelegate {
 		}
 		transferEntryAction.backgroundColor = .darkGray
 		let deleteEntryAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-			guard let entryToDelete = self.getSortedEntry(at: indexPath) else {
-				assertionFailure()
-				return
+			guard let dataSource = self.dataSource,
+				let deltaDelegate = self.deltaDelegate,
+				let deleteEntryId = self.getSortedEntry(at: indexPath)?.id else {
+					assertionFailure()
+					return
 			}
 
-//			self.costSheet.deleteEntry(withId: entryToDelete.id)
+			// Delta
+			let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: self.selectedCostSheetId, account: dataSource.account)
+			deltaDelegate.sendDeltaComponents([deleteEntryComp])
+
 			if self.classificationMode != .date {
 				self.sortEntriesByDate()
 			}

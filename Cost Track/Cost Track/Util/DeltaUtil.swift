@@ -138,4 +138,23 @@ class DeltaUtil {
 		)
 	}
 
+	static func getComponentToDeleteEntryWithId(_ entryId: String, inCostSheetWithId costSheetId: String, account: Account) -> DocumentContentOperation.Component {
+		guard let costSheetIndex = account.indexOfCostSheetWithId(costSheetId) else {
+			assertionFailure("Could not get costSheetIndex")
+			return DocumentContentOperation.Component()
+		}
+		let costSheet = account.costSheets[costSheetIndex]
+		guard let entryIndex = costSheet.indexOfEntryWithId(entryId) else {
+			assertionFailure("Could not get entryIndex")
+			return DocumentContentOperation.Component()
+		}
+		let oldEntry = costSheet.entries[entryIndex]
+		let fieldString = "1,arr:\(costSheetIndex),5,arr:\(entryIndex)"
+		return getComponent(
+			opType: .delete,
+			fieldString: fieldString,
+			oldValue: oldEntry.safeSerializedData
+		)
+	}
+
 }
