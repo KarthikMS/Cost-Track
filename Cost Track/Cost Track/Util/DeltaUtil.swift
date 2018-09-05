@@ -98,4 +98,44 @@ class DeltaUtil {
 		return comps
 	}
 
+	static func getComponentToUpdateEntryWithId(_ entryId: String, with updatedEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, account: Account) -> DocumentContentOperation.Component {
+		guard let costSheetIndex = account.indexOfCostSheetWithId(costSheetId) else {
+			assertionFailure("Could not get costSheetIndex")
+			return DocumentContentOperation.Component()
+		}
+		let costSheet = account.costSheets[costSheetIndex]
+		guard let entryIndex = costSheet.indexOfEntryWithId(entryId) else {
+			assertionFailure("Could not get entryIndex")
+			return DocumentContentOperation.Component()
+		}
+		let oldEntry = costSheet.entries[entryIndex]
+		let fieldString = "1,arr:\(costSheetIndex),5,arr:\(entryIndex)"
+		return getComponent(
+			opType: .update,
+			fieldString: fieldString,
+			oldValue: oldEntry.safeSerializedData,
+			newValue: updatedEntry.safeSerializedData
+		)
+	}
+
+	static func getComponentToInsertEntry(_ newEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, account: Account, at index: Int? = nil) -> DocumentContentOperation.Component {
+		guard let costSheetIndex = account.indexOfCostSheetWithId(costSheetId) else {
+			assertionFailure("Could not get costSheetIndex")
+			return DocumentContentOperation.Component()
+		}
+		let costSheet = account.costSheets[costSheetIndex]
+		let insertIndex: Int
+		if let index = index {
+			insertIndex = index
+		} else {
+			insertIndex = costSheet.entries.count
+		}
+		let fieldString = "1,arr:\(costSheetIndex),5,arr:\(insertIndex)"
+		return getComponent(
+			opType: .insert,
+			fieldString: fieldString,
+			newValue: newEntry.safeSerializedData
+		)
+	}
+
 }

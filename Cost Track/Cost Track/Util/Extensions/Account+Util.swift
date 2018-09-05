@@ -77,6 +77,14 @@ extension Account {
 		return nil
 	}
 
+	func costSheetWithId(_ id: String) -> CostSheet {
+		guard let index = indexOfCostSheetWithId(id) else {
+			assertionFailure()
+			return CostSheet()
+		}
+		return costSheets[index]
+	}
+
 	mutating func updateCostSheet(at index: Int, with updatedCostSheet: CostSheet) {
 		costSheets[index] = updatedCostSheet
 		costSheets[index].lastModifiedDate = Date().data

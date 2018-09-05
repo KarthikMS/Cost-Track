@@ -8,9 +8,9 @@
 
 import UIKit
 
-protocol CostSheetEntryViewControllerDelegate {
-	func didAddEntry(_ entry: CostSheetEntry)
-	func didUpdateEntry(withId id: String, with updatedEntry: CostSheetEntry)
+protocol CostSheetEntryViewControllerDataSource: class {
+	var account: Account { get }
+	var costSheetId: String { get }
 }
 
 class CostSheetEntryViewController: UIViewController {
@@ -37,8 +37,8 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var datePickerShowTopConstraint: NSLayoutConstraint!
 
 	// MARK: Properties
-	// TODO: Delete once saving protos has been added
-	var delegate: CostSheetEntryViewControllerDelegate?
+	weak var dataSource: CostSheetEntryViewControllerDataSource?
+	weak var deltaDelegate: DeltaDelegate?
 	var entryType = CostSheetEntry.EntryType.income
 	var oldEntry: CostSheetEntry?
 
@@ -47,10 +47,7 @@ class CostSheetEntryViewController: UIViewController {
         super.viewDidLoad()
 
 		entryDatePicker.delegate = self
-//		updateDateView(date: entryDatePicker.datePicker.date)
-
 		entryCategoryPicker.delegate = self
-//		updateCategoryView(category: CommonUtil.getAllCategories()[0])
     }
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -225,6 +222,11 @@ extension CostSheetEntryViewController {
 	}
 
 	@IBAction private func saveButtonPressed(_ sender: Any) {
+		guard let dataSource = dataSource,
+			let deltaDelegate = deltaDelegate else {
+				assertionFailure()
+				return
+		}
 		let amount = Float(amountTextView.text)!
 		let category = entryCategoryPicker.selectedCategory
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDatePicker.datePicker.date)
@@ -242,7 +244,8 @@ extension CostSheetEntryViewController {
 			entry.category = category
 			entry.date = dateData
 			entry.description_p = descriptionText
-			delegate?.didUpdateEntry(withId: entry.id, with: entry)
+			let updateEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(entry.id, with: entry, inCostSheetWithId: dataSource.costSheetId, account: dataSource.account)
+			deltaDelegate.sendDeltaComponents([updateEntryComp])
 		} else {
 			var entry = CostSheetEntry()
 			entry.id = UUID().uuidString
@@ -251,7 +254,8 @@ extension CostSheetEntryViewController {
 			entry.category = category
 			entry.date = dateData
 			entry.description_p = descriptionText
-			delegate?.didAddEntry(entry)
+			let insertEntryComp = DeltaUtil.getComponentToInsertEntry(entry, inCostSheetWithId: dataSource.costSheetId, account: dataSource.account)
+			deltaDelegate.sendDeltaComponents([insertEntryComp])
 		}
 
 		oldEntry = nil

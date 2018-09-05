@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource {
+class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource, CostSheetViewControllerDataSource {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var topBar: UIView!
@@ -68,12 +68,13 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 			return
 		}
 		if identifier == CostSheetSegue {
-			guard let sender = sender as? [String: CostSheet],
-				let costSheet = sender["costSheet"],
-				let costSheetViewController = segue.destination as? CostSheetViewController else {
+			guard let costSheetViewController = segue.destination as? CostSheetViewController,
+				let selectedCostSheetId = selectedCostSheetId else {
 					return
 			}
-			costSheetViewController.costSheet = costSheet
+			costSheetViewController.dataSource = self
+			costSheetViewController.selectedCostSheetId = selectedCostSheetId
+			costSheetViewController.deltaDelegate = self
 			costSheetViewController.delegate = self
 			costSheetViewController.myCostSheetsViewController = self
 		} else if identifier == NewCostSheetSegue {
@@ -196,7 +197,7 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 		let costSheet = costSheetAtIndexPath(indexPath)
 		selectedCostSheetId = costSheet.id
 		tableView.deselectRow(at: indexPath, animated: true)
-		performSegue(withIdentifier: "CostSheetSegue", sender: ["costSheet": costSheet])
+		performSegue(withIdentifier: "CostSheetSegue", sender: nil)
 	}
 
 	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
