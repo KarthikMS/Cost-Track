@@ -251,11 +251,6 @@ extension MyCostSheetsViewController: TableViewSectionHeaderViewDelegate {
 // MARK: CostSheetViewControllerDelegate
 extension MyCostSheetsViewController: CostSheetViewControllerDelegate {
 
-	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet) {
-		account.updateCostSheet(withId: id, with: updatedCostSheet)
-		shouldUpdateViews = true
-	}
-
 	func didTransferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet) {
 		guard let selectedCostSheetId = selectedCostSheetId else {
 			assertionFailure()

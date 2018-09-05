@@ -13,7 +13,6 @@ protocol CostSheetViewControllerDataSource: class {
 }
 
 protocol CostSheetViewControllerDelegate {
-	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet)
 	func didTransferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet)
 }
 
@@ -426,8 +425,6 @@ extension CostSheetViewController: DeltaDelegate {
 
 		sortEntries()
 		transactionsTableView.reloadData()
-//		costSheet.entries = entriesSortedByDate
-		delegate?.didUpdateCostSheet(withId: costSheet.id, with: costSheet)
 	}
 
 }
