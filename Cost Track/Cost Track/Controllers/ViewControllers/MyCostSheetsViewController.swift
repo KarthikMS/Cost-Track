@@ -256,11 +256,6 @@ extension MyCostSheetsViewController: CostSheetViewControllerDelegate {
 		shouldUpdateViews = true
 	}
 
-	func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
-		account.deleteCostSheetEntry(withId: entryId, inCostSheetWithId: costSheetId)
-		shouldUpdateViews = true
-	}
-
 	func didTransferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet) {
 		guard let selectedCostSheetId = selectedCostSheetId else {
 			assertionFailure()

@@ -14,7 +14,6 @@ protocol CostSheetViewControllerDataSource: class {
 
 protocol CostSheetViewControllerDelegate {
 	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet)
-	func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String)
 	func didTransferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet)
 }
 
@@ -307,7 +306,6 @@ extension CostSheetViewController: UITableViewDelegate {
 			tableView.endUpdates()
 
 			self.updateAmountLabel()
-//			self.delegate?.didDeleteCostSheetEntry(withId: entryToDelete.id, inCostSheetWithId: self.costSheet.id)
 		}
 		return [deleteEntryAction, transferEntryAction]
 	}
