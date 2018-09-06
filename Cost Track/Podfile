@@ -6,7 +6,7 @@ target 'Cost Track' do
   use_frameworks!
 
   # Pods for Cost Track
-  pod ‘SwiftProtobuf’
+  pod ‘SwiftProtobuf’, '1.0.3'
 
   target 'Cost TrackTests' do
     inherit! :search_paths

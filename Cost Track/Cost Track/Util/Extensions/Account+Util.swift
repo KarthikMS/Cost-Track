@@ -18,6 +18,10 @@ extension Account {
 		return costSheetsInGroup
 	}
 
+	func numberOfCostSheets(in group: CostSheetGroup) -> Int {
+		return costSheetsInGroup(group).count
+	}
+
 	func getGroup(withId id: String) -> CostSheetGroup? {
 		for group in groups where group.id == id {
 			return group
@@ -71,6 +75,14 @@ extension Account {
 			}
 		}
 		return nil
+	}
+
+	func costSheetWithId(_ id: String) -> CostSheet {
+		guard let index = indexOfCostSheetWithId(id) else {
+			assertionFailure()
+			return CostSheet()
+		}
+		return costSheets[index]
 	}
 
 	mutating func updateCostSheet(at index: Int, with updatedCostSheet: CostSheet) {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyCostSheetsViewController: UIViewController {
+class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource, CostSheetViewControllerDataSource {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var topBar: UIView!
@@ -18,8 +18,9 @@ class MyCostSheetsViewController: UIViewController {
 
 	// MARK: Properties
 	var account = Account()
-	var selectedCostSheetId: String?
+	var selectedCostSheetId = ""
 	private var shouldUpdateViews = false
+	private var sectionsToHide = Set<Int>()
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -36,7 +37,7 @@ class MyCostSheetsViewController: UIViewController {
 		}
 
 		if account.costSheets.isEmpty {
-			tableView.isHidden = true
+			noCostSheetsTextView.isHidden = false
 		} else {
 			noCostSheetsTextView.isHidden = true
 		}
@@ -47,12 +48,18 @@ class MyCostSheetsViewController: UIViewController {
 		super.viewWillAppear(animated)
 
 		if shouldUpdateViews {
+			sectionsToHide.removeAll()
 			updateTopBar()
-			tableView.reloadData()
+			if account.costSheets.isEmpty {
+				noCostSheetsTextView.isHidden = false
+			} else {
+				noCostSheetsTextView.isHidden = true
+				tableView.reloadData()
+			}
 			shouldUpdateViews = false
 		}
 
-		selectedCostSheetId = nil
+		selectedCostSheetId = ""
 	}
 
 	// MARK: Navigation
@@ -61,20 +68,17 @@ class MyCostSheetsViewController: UIViewController {
 			return
 		}
 		if identifier == CostSheetSegue {
-			guard let sender = sender as? [String: CostSheet],
-				let costSheet = sender["costSheet"],
-				let costSheetViewController = segue.destination as? CostSheetViewController else {
-					return
+			guard let costSheetViewController = segue.destination as? CostSheetViewController else {
+				return
 			}
-			costSheetViewController.costSheet = costSheet
-			costSheetViewController.delegate = self
-			costSheetViewController.myCostSheetsViewController = self
+			costSheetViewController.dataSource = self
+			costSheetViewController.deltaDelegate = self
 		} else if identifier == NewCostSheetSegue {
 			guard let newCostSheetViewController = segue.destination as? NewCostSheetViewController else {
 				return
 			}
 			newCostSheetViewController.dataSource = self
-			newCostSheetViewController.delegate = self
+			newCostSheetViewController.deltaDelegate = self
 		}
 	}
 
@@ -112,13 +116,21 @@ class MyCostSheetsViewController: UIViewController {
 
 	private func deleteCostSheet(withId id: String, at indexPath: IndexPath) {
 		account.deleteCostSheet(withId: id)
-		tableView.beginUpdates()
-		if tableView.numberOfRows(inSection: indexPath.section) == 1 {
-			tableView.deleteSections([indexPath.section], with: .bottom)
+		if !account.hasCostSheetsInOtherGroups {
+			sectionsToHide.removeAll()
+			tableView.reloadData()
 		} else {
-			tableView.deleteRows(at: [indexPath], with: .left)
+			tableView.beginUpdates()
+			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
+				tableView.deleteSections([indexPath.section], with: .bottom)
+			} else {
+				tableView.deleteRows(at: [indexPath], with: .left)
+			}
+			tableView.endUpdates()
 		}
-		tableView.endUpdates()
+		if account.costSheets.isEmpty {
+			noCostSheetsTextView.isHidden = false
+		}
 	}
 }
 
@@ -154,15 +166,10 @@ extension MyCostSheetsViewController: UITableViewDataSource {
 		return account.groupsWithCostSheets.count
 	}
 
-	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		if !account.hasCostSheetsInOtherGroups {
-			return nil
-		}
-		let groupsWithCostSheets = account.groupsWithCostSheets
-		return groupsWithCostSheets[section].name
-	}
-
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if sectionsToHide.contains(section) {
+			return 0
+		}
 		let groupsWithCostSheets = account.groupsWithCostSheets
 		return account.costSheetsInGroup(groupsWithCostSheets[section]).count
 	}
@@ -186,133 +193,70 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 		let costSheet = costSheetAtIndexPath(indexPath)
 		selectedCostSheetId = costSheet.id
 		tableView.deselectRow(at: indexPath, animated: true)
-		performSegue(withIdentifier: "CostSheetSegue", sender: ["costSheet": costSheet])
+		performSegue(withIdentifier: "CostSheetSegue", sender: nil)
 	}
 
 	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let deleteCostSheetAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
 			let costSheet = self.costSheetAtIndexPath(indexPath)
-			guard costSheet.entries.isEmpty else {
+			if costSheet.entries.isEmpty {
+				self.deleteCostSheet(withId: costSheet.id, at: indexPath)
+			} else {
 				self.showAlertForDeletingCostSheet(withId: costSheet.id, at: indexPath)
-				return
 			}
-			self.deleteCostSheet(withId: costSheet.id, at: indexPath)
 		}
 		return [deleteCostSheetAction]
 	}
 
-}
-
-// MARK: NewCostSheetDataSource
-extension MyCostSheetsViewController: NewCostSheetViewControllerDataSource {
-
-	var defaultCostSheetName: String {
-		return account.defaultNewCostSheetName
-	}
-
-	func getGroup(withId id: String) -> CostSheetGroup {
-		guard let group = account.getGroup(withId: id) else {
-			assertionFailure()
-			return CostSheetGroup()
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		if !account.hasCostSheetsInOtherGroups {
+			return 0
 		}
-		return group
+		return 40
+	}
+
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		if !account.hasCostSheetsInOtherGroups {
+			return nil
+		}
+
+		var frame = tableView.frame
+		frame.origin.y = 0
+		frame.size.height = 40
+		let title = account.groupsWithCostSheets[section].name
+		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, delegate: self)
+		return headerView
 	}
 
 }
 
-// MARK: GroupSelectTableViewControllerDataSource
-extension MyCostSheetsViewController: GroupSelectTableViewControllerDataSource {
+// MARK: TableViewSectionHeaderViewDelegate
+extension MyCostSheetsViewController: TableViewSectionHeaderViewDelegate {
 
-	var groups: [CostSheetGroup] {
-		return account.groups
-	}
-
-	func numberOfCostSheets(in group: CostSheetGroup) -> Int {
-		return account.costSheetsInGroup(group).count
-	}
-
-}
-
-// MARK: NewCostSheetDelegate
-extension MyCostSheetsViewController: NewCostSheetViewControllerDelegate {
-
-	func didCreateCostSheet(_ costSheet: CostSheet) {
-		account.costSheets.append(costSheet)
-		noCostSheetsTextView.isHidden = true
-		tableView.isHidden = false
+	func sectionHeaderViewTapped(section: Int) {
+		if sectionsToHide.contains(section) {
+			sectionsToHide.remove(section)
+		} else {
+			sectionsToHide.insert(section)
+		}
 		tableView.reloadData()
 	}
 
-	func didCreateGroup(withName name: String) {
-		var newGroup = CostSheetGroup()
-		newGroup.name = name
-		newGroup.id = UUID().uuidString
-		account.groups.append(newGroup)
-	}
-
-	func didDeleteGroup(at index: Int) {
-		account.moveCostSheets(from: account.groups[index], to: NotSetGroup)
-		account.groups.remove(at: index)
-		shouldUpdateViews = true
-	}
-
 }
 
-// MARK: CostSheetViewControllerDelegate
-extension MyCostSheetsViewController: CostSheetViewControllerDelegate {
+// MARK: DeltaDelegate
+extension MyCostSheetsViewController: DeltaDelegate {
 
-	func didUpdateCostSheet(withId id: String, with updatedCostSheet: CostSheet) {
-		account.updateCostSheet(withId: id, with: updatedCostSheet)
-		shouldUpdateViews = true
-	}
-
-	func didDeleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
-		account.deleteCostSheetEntry(withId: entryId, inCostSheetWithId: costSheetId)
-		shouldUpdateViews = true
-	}
-
-	func didTransferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet) {
-		guard let selectedCostSheetId = selectedCostSheetId else {
-			assertionFailure()
-			return
-		}
-		var numberOfTasks = 2
-		for i in 0..<account.costSheets.count {
-			if account.costSheets[i].id == selectedCostSheetId {
-				account.costSheets[i].deleteEntry(withId: costSheetEntry.id)
-				if numberOfTasks == 1 {
-					break
-				}
-				numberOfTasks -= 1
-			} else if account.costSheets[i].id == toCostSheet.id {
-				account.costSheets[i].entries.append(costSheetEntry)
-				if numberOfTasks == 1 {
-					break
-				}
-				numberOfTasks -= 1
+	func sendDeltaComponents(_ components: [DocumentContentOperation.Component]) {
+		for component in components {
+			do {
+				var decoder = try DeltaDataApplier(fieldString: component.fields, value: component.value.inBytes.value, operationType: component.opType)
+				try account.decodeMessage(decoder: &decoder)
+				shouldUpdateViews = true
+			} catch {
+				assertionFailure()
 			}
 		}
-
-		shouldUpdateViews = true
-	}
-
-}
-
-// MARK: TransferEntryTableViewControllerDataSource
-extension MyCostSheetsViewController: TransferEntryTableViewControllerDataSource {
-
-	var filteredCostSheets: [CostSheet] {
-		guard let selectedCostSheetId = selectedCostSheetId else {
-			assertionFailure()
-			return []
-		}
-		var costSheets = [CostSheet]()
-		for costSheet in account.costSheets {
-			if costSheet.id != selectedCostSheetId {
-				costSheets.append(costSheet)
-			}
-		}
-		return costSheets
 	}
 
 }

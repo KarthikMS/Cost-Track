@@ -8,15 +8,8 @@
 
 import UIKit
 
-protocol NewCostSheetViewControllerDataSource: GroupSelectTableViewControllerDataSource {
-	var defaultCostSheetName: String { get }
-	func getGroup(withId id: String) -> CostSheetGroup
-}
-
-protocol NewCostSheetViewControllerDelegate {
-	func didCreateCostSheet(_ costSheet: CostSheet)
-	func didCreateGroup(withName name: String)
-	func didDeleteGroup(at index: Int)
+protocol NewCostSheetViewControllerDataSource {
+	var account: Account { get }
 }
 
 class NewCostSheetViewController: UIViewController {
@@ -25,7 +18,7 @@ class NewCostSheetViewController: UIViewController {
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
 
 	// MARK: Properties
-	var delegate: NewCostSheetViewControllerDelegate?
+	weak var deltaDelegate: DeltaDelegate?
 	var dataSource: NewCostSheetViewControllerDataSource?
 	var selectedGroupId = NotSetGroup.id
 
@@ -41,7 +34,7 @@ class NewCostSheetViewController: UIViewController {
 		settingsTableView.costSheetSettingsTableViewDelegate = self
 
 		var newCostSheet = CostSheet()
-		newCostSheet.name = dataSource.defaultCostSheetName
+		newCostSheet.name = dataSource.account.defaultNewCostSheetName
 		newCostSheet.initialBalance = 0
 		newCostSheet.id = UUID().uuidString
 		newCostSheet.group = CostSheetGroup()
@@ -58,8 +51,9 @@ class NewCostSheetViewController: UIViewController {
 				return
 			}
 			groupSelectTableViewController.selectedGroupID = selectedGroupId
-			groupSelectTableViewController.groupSelectTableViewControllerDataSource = self.dataSource
+			groupSelectTableViewController.groupSelectTableViewControllerDataSource = self
 			groupSelectTableViewController.groupSelectTableViewControllerDelegate = self
+			groupSelectTableViewController.deltaDelegate = deltaDelegate
 		}
 	}
 
@@ -71,14 +65,24 @@ extension NewCostSheetViewController {
 	@IBAction private func createButtonPressed(_ sender: Any) {
 		settingsTableView.updateCostSheet()
 		var costSheet = settingsTableView.costSheet
-		if costSheet.name == "" {
+		guard costSheet.name != "" else {
 			// Show dialog to enter costSheet name
 			return
 		}
+		guard let deltaDelegate = deltaDelegate,
+			let account = dataSource?.account else {
+				assertionFailure()
+				return
+		}
 
 		costSheet.lastModifiedDate = Date().data
+		// TODO: includeInOverallTotal
+		costSheet.includeInOverallTotal = true
 
-		delegate?.didCreateCostSheet(costSheet)
+		// Delta
+		let insertCostSheetComp = DeltaUtil.getComponentToInsertCostSheet(costSheet, in: account)
+		deltaDelegate.sendDeltaComponents([insertCostSheetComp])
+
 		navigationController?.popViewController(animated: true)
 	}
 
@@ -93,34 +97,31 @@ extension NewCostSheetViewController: CostSheetSettingsTableViewDelegate {
 
 }
 
+// MARK: GroupSelectTableViewControllerDataSource
+extension NewCostSheetViewController: GroupSelectTableViewControllerDataSource {
+
+	var account: Account {
+		guard let account = dataSource?.account else {
+			assertionFailure()
+			return Account()
+		}
+		return account
+	}
+
+}
+
 // MARK: GroupSelectTableViewControllerDelegate
 extension NewCostSheetViewController: GroupSelectTableViewControllerDelegate {
 
 	func didSelectGroup(id: String) {
-		guard let dataSource = dataSource else {
+		guard let group = dataSource?.account.getGroup(withId: id) else {
 			assertionFailure()
 			return
 		}
 		selectedGroupId = id
-		settingsTableView.costSheet.group = dataSource.getGroup(withId: id)
+		settingsTableView.costSheet.group = group
 		settingsTableView.updateCostSheet()
 		settingsTableView.reloadData()
-	}
-
-	func didCreateGroup(withName name: String) {
-		guard let delegate = delegate else {
-			assertionFailure()
-			return
-		}
-		delegate.didCreateGroup(withName: name)
-	}
-
-	func didDeleteGroup(at index: Int) {
-		guard let delegate = delegate else {
-			assertionFailure()
-			return
-		}
-		delegate.didDeleteGroup(at: index)
 	}
 
 }

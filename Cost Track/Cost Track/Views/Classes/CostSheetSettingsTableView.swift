@@ -31,7 +31,8 @@ class CostSheetSettingsTableView: UITableView {
 	// MARK: Functions
 	func setMode(_ mode: CostSheetSettingsTableViewMode) {
 		self.mode = mode
-		
+
+		costSheet.id = UUID().uuidString
 		footerTextsAndHeights = getTextAndHeightsForFooterViews()
 		separatorInset.left = 0
 		register(UITableViewCell.self, forCellReuseIdentifier: "CostSheetSettingsTableViewCell")
@@ -133,7 +134,7 @@ extension CostSheetSettingsTableView: UITableViewDelegate {
 		frame.size.height = textAndHeight.height
 
 		let textView = UITextView(frame: frame)
-		textView.backgroundColor = UIColor(red: 247/255.0, green: 247/255.0, blue: 247/255.0, alpha: 1.0)
+		textView.backgroundColor = TintedWhiteColor
 		textView.text = textAndHeight.text
 
 		return textView
