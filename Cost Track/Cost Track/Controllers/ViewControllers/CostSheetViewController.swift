@@ -236,6 +236,33 @@ class CostSheetViewController: UIViewController {
 		return Array(entries)[0].value[indexPath.row]
 	}
 
+	// Misc. functions
+	private func deleteEntry(at indexPath: IndexPath) {
+		guard let dataSource = dataSource,
+			let deltaDelegate = deltaDelegate,
+			let deleteEntryId = getSortedEntry(at: indexPath)?.id else {
+				assertionFailure()
+				return
+		}
+
+		// Delta
+		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.selectedCostSheetId, account: dataSource.account)
+		deltaDelegate.sendDeltaComponents([deleteEntryComp])
+
+		if self.classificationMode != .date {
+			sortEntriesByDate()
+		}
+		sortEntries()
+		transactionsTableView.beginUpdates()
+		if transactionsTableView.numberOfRows(inSection: indexPath.section) == 1 {
+			transactionsTableView.deleteSections([indexPath.section], with: .bottom)
+		} else {
+			transactionsTableView.deleteRows(at: [indexPath], with: .left)
+		}
+		transactionsTableView.endUpdates()
+
+		updateAmountLabel()
+	}
 }
 
 // MARK: IBActions
@@ -298,32 +325,7 @@ extension CostSheetViewController: UITableViewDelegate {
 		}
 		transferEntryAction.backgroundColor = .darkGray
 		let deleteEntryAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-			// MAKE THIS A SEPARATE FUNCTION
-			guard let dataSource = self.dataSource,
-				let deltaDelegate = self.deltaDelegate,
-				let deleteEntryId = self.getSortedEntry(at: indexPath)?.id else {
-					assertionFailure()
-					return
-			}
-
-			// Delta
-			let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.selectedCostSheetId, account: dataSource.account)
-			deltaDelegate.sendDeltaComponents([deleteEntryComp])
-
-			if self.classificationMode != .date {
-				self.sortEntriesByDate()
-			}
-			self.sortEntries()
-//			self.costSheet.entries = self.entriesSortedByDate
-			tableView.beginUpdates()
-			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
-				tableView.deleteSections([indexPath.section], with: .bottom)
-			} else {
-				tableView.deleteRows(at: [indexPath], with: .left)
-			}
-			tableView.endUpdates()
-
-			self.updateAmountLabel()
+			self.deleteEntry(at: indexPath)
 		}
 		return [deleteEntryAction, transferEntryAction]
 	}
