@@ -157,4 +157,32 @@ class DeltaUtil {
 		)
 	}
 
+	static func getComponentsToTransferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String, account: Account) -> [DocumentContentOperation.Component] {
+		guard let fromCostSheetIndex = account.indexOfCostSheetWithId(fromCostSheetId),
+		let toCostSheetIndex = account.indexOfCostSheetWithId(toCostSheetId) else {
+			assertionFailure("Could not get costSheetIndex")
+			return []
+		}
+		let fromCostSheet = account.costSheets[fromCostSheetIndex]
+		let toCostSheet = account.costSheets[toCostSheetIndex]
+		guard let entryIndex = fromCostSheet.indexOfEntryWithId(entryId) else {
+			assertionFailure("Could not get entryIndex")
+			return []
+		}
+		let entryData = fromCostSheet.entries[entryIndex].safeSerializedData
+		let deleteFieldString = "1,arr:\(fromCostSheetIndex),5,arr:\(entryIndex)"
+		let insertFieldString =	"1,arr:\(toCostSheetIndex),5,arr:\(toCostSheet.entries.count)"
+		let deleteEntryComp = getComponent(
+			opType: .delete,
+			fieldString: deleteFieldString,
+			oldValue: entryData
+		)
+		let insertEntryComp = getComponent(
+			opType: .insert,
+			fieldString: insertFieldString,
+			newValue: entryData
+		)
+		return [deleteEntryComp, insertEntryComp]
+	}
+
 }

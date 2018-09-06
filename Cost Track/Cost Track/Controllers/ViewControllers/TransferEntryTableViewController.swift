@@ -9,11 +9,9 @@
 import UIKit
 
 protocol TransferEntryTableViewControllerDataSource: class {
-	var filteredCostSheets: [CostSheet] {get}
-}
-
-protocol TransferEntryTableViewControllerDelegate: class {
-	func didTransferCostSheetEntryToCostSheet(_ toCostSheet: CostSheet)
+	var fromCostSheetId: String { get }
+	var entryToTransferId: String { get }
+	var account: Account { get }
 }
 
 class TransferEntryTableViewController: UITableViewController {
@@ -23,14 +21,26 @@ class TransferEntryTableViewController: UITableViewController {
 
 	// MARK: Properties
 	weak var dataSource: TransferEntryTableViewControllerDataSource?
-	weak var delegate: TransferEntryTableViewControllerDelegate?
-	private var selectedCostSheet: CostSheet?
+	weak var deltaDelegate: DeltaDelegate?
+	private var filteredCostSheets = [CostSheet]()
 	private var selectedIndexPath: IndexPath?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
+		guard let dataSource = dataSource else {
+			assertionFailure()
+			return
+		}
 
+		// Getting filteredCostSheets
+		let fromCostSheetId = dataSource.fromCostSheetId
+		let account = dataSource.account
+		for costSheet in account.costSheets {
+			if costSheet.id != fromCostSheetId {
+				filteredCostSheets.append(costSheet)
+			}
+		}
     }
 
 }
@@ -39,20 +49,12 @@ class TransferEntryTableViewController: UITableViewController {
 extension TransferEntryTableViewController {
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return 0
-		}
-		return dataSource.filteredCostSheets.count
+		return filteredCostSheets.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "TransferEntryCell", for: indexPath)
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return cell
-		}
-		cell.textLabel?.text = "\(dataSource.filteredCostSheets[indexPath.row].name)"
+		cell.textLabel?.text = "\(filteredCostSheets[indexPath.row].name)"
 		if let selectedIndexPath = selectedIndexPath, selectedIndexPath == indexPath {
 			cell.accessoryType = .checkmark
 		}
@@ -65,11 +67,6 @@ extension TransferEntryTableViewController {
 extension TransferEntryTableViewController {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return
-		}
-		selectedCostSheet = dataSource.filteredCostSheets[indexPath.row]
 		selectedIndexPath = indexPath
 		transferButton.isEnabled = true
 		tableView.reloadData()
@@ -81,11 +78,18 @@ extension TransferEntryTableViewController {
 extension TransferEntryTableViewController {
 
 	@IBAction func transferButtonPressed(_ sender: Any) {
-		guard let selectedCostSheet = selectedCostSheet else {
-			assertionFailure()
-			return
+		guard let dataSource = dataSource,
+			let selectedIndexPath = selectedIndexPath,
+			let deltaDelegate = deltaDelegate else {
+				assertionFailure()
+				return
 		}
-		delegate?.didTransferCostSheetEntryToCostSheet(selectedCostSheet)
+		let entryId = dataSource.entryToTransferId
+		let fromCostSheetId = dataSource.fromCostSheetId
+		let toCostSheetId = filteredCostSheets[selectedIndexPath.row].id
+		let account = dataSource.account
+		let transferEntryComps = DeltaUtil.getComponentsToTransferEntry(withId: entryId, fromCostSheetWithId: fromCostSheetId, toCostSheetWithId: toCostSheetId, account: account)
+		deltaDelegate.sendDeltaComponents(transferEntryComps)
 		dismiss(animated: true, completion: nil)
 	}
 

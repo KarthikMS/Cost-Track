@@ -18,7 +18,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 
 	// MARK: Properties
 	var account = Account()
-	var selectedCostSheetId: String?
+	var selectedCostSheetId = ""
 	private var shouldUpdateViews = false
 	private var sectionsToHide = Set<Int>()
 
@@ -59,7 +59,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 			shouldUpdateViews = false
 		}
 
-		selectedCostSheetId = nil
+		selectedCostSheetId = ""
 	}
 
 	// MARK: Navigation
@@ -68,15 +68,11 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 			return
 		}
 		if identifier == CostSheetSegue {
-			guard let costSheetViewController = segue.destination as? CostSheetViewController,
-				let selectedCostSheetId = selectedCostSheetId else {
-					return
+			guard let costSheetViewController = segue.destination as? CostSheetViewController else {
+				return
 			}
 			costSheetViewController.dataSource = self
-			costSheetViewController.selectedCostSheetId = selectedCostSheetId
 			costSheetViewController.deltaDelegate = self
-			costSheetViewController.delegate = self
-			costSheetViewController.myCostSheetsViewController = self
 		} else if identifier == NewCostSheetSegue {
 			guard let newCostSheetViewController = segue.destination as? NewCostSheetViewController else {
 				return
@@ -244,55 +240,6 @@ extension MyCostSheetsViewController: TableViewSectionHeaderViewDelegate {
 			sectionsToHide.insert(section)
 		}
 		tableView.reloadData()
-	}
-
-}
-
-// MARK: CostSheetViewControllerDelegate
-extension MyCostSheetsViewController: CostSheetViewControllerDelegate {
-
-	func didTransferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet) {
-		guard let selectedCostSheetId = selectedCostSheetId else {
-			assertionFailure()
-			return
-		}
-		var numberOfTasks = 2
-		for i in 0..<account.costSheets.count {
-			if account.costSheets[i].id == selectedCostSheetId {
-				account.costSheets[i].deleteEntry(withId: costSheetEntry.id)
-				if numberOfTasks == 1 {
-					break
-				}
-				numberOfTasks -= 1
-			} else if account.costSheets[i].id == toCostSheet.id {
-				account.costSheets[i].entries.append(costSheetEntry)
-				if numberOfTasks == 1 {
-					break
-				}
-				numberOfTasks -= 1
-			}
-		}
-
-		shouldUpdateViews = true
-	}
-
-}
-
-// MARK: TransferEntryTableViewControllerDataSource
-extension MyCostSheetsViewController: TransferEntryTableViewControllerDataSource {
-
-	var filteredCostSheets: [CostSheet] {
-		guard let selectedCostSheetId = selectedCostSheetId else {
-			assertionFailure()
-			return []
-		}
-		var costSheets = [CostSheet]()
-		for costSheet in account.costSheets {
-			if costSheet.id != selectedCostSheetId {
-				costSheets.append(costSheet)
-			}
-		}
-		return costSheets
 	}
 
 }

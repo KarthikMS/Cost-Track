@@ -10,10 +10,7 @@ import UIKit
 
 protocol CostSheetViewControllerDataSource: class {
 	var account: Account { get }
-}
-
-protocol CostSheetViewControllerDelegate {
-	func didTransferCostSheetEntry(_ costSheetEntry: CostSheetEntry, to toCostSheet: CostSheet)
+	var selectedCostSheetId: String { get }
 }
 
 enum TransactionClassificationMode {
@@ -32,11 +29,8 @@ class CostSheetViewController: UIViewController {
 	// MARK: Properties
 	weak var dataSource: CostSheetViewControllerDataSource?
 	weak var deltaDelegate: DeltaDelegate?
-	var selectedCostSheetId = ""
 
-	weak var myCostSheetsViewController = MyCostSheetsViewController()
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
-	var delegate: CostSheetViewControllerDelegate?
 	var classificationMode = TransactionClassificationMode.date
 	var sortedEntriesForTableView = [
 		Int: [
@@ -45,7 +39,7 @@ class CostSheetViewController: UIViewController {
 		]()
 	private var entriesSortedByDate = [CostSheetEntry]()
 	private let categories = CommonUtil.getAllCategories()
-	private var transferIndexPath: IndexPath?
+	private var transferEntryIndexPath: IndexPath?
 	var sectionsToHide = Set<Int>()
 
 	// MARK: UIViewController functions
@@ -55,7 +49,7 @@ class CostSheetViewController: UIViewController {
 			assertionFailure()
 			return
 		}
-		let costSheet = dataSource.account.costSheetWithId(selectedCostSheetId)
+		let costSheet = dataSource.account.costSheetWithId(dataSource.selectedCostSheetId)
 
 		navigationItem.title = costSheet.name
 
@@ -75,7 +69,7 @@ class CostSheetViewController: UIViewController {
 		super.viewWillAppear(animated)
 
 		updateAmountLabel()
-		transferIndexPath = nil
+		transferEntryIndexPath = nil
 	}
 
 	// MARK: Navigation
@@ -102,18 +96,39 @@ class CostSheetViewController: UIViewController {
 				assertionFailure()
 				return
 			}
-			transferEntryTableViewController.dataSource = myCostSheetsViewController
-			transferEntryTableViewController.delegate = self
+			transferEntryTableViewController.dataSource = self
+			transferEntryTableViewController.deltaDelegate = self
 		}
 	}
 
 	// MARK: View functions
+	private func reloadAfterEntryModification() {
+		guard let dataSource = dataSource else {
+			assertionFailure()
+			return
+		}
+		let costSheet = dataSource.account.costSheetWithId(dataSource.selectedCostSheetId)
+
+		if classificationMode != .date {
+			sortEntriesByDate()
+		}
+
+		if costSheet.entries.isEmpty {
+			noEntriesTextView.isHidden = false
+		} else {
+			noEntriesTextView.isHidden = true
+		}
+
+		sortEntries()
+		transactionsTableView.reloadData()
+	}
+
 	private func updateAmountLabel() {
 		guard let dataSource = dataSource else {
 			assertionFailure()
 			return
 		}
-		let costSheet = dataSource.account.costSheetWithId(selectedCostSheetId)
+		let costSheet = dataSource.account.costSheetWithId(dataSource.selectedCostSheetId)
 
 		var balance = costSheet.balance
 		if balance < 0 {
@@ -143,7 +158,7 @@ class CostSheetViewController: UIViewController {
 			assertionFailure()
 			return
 		}
-		let costSheet = dataSource.account.costSheetWithId(selectedCostSheetId)
+		let costSheet = dataSource.account.costSheetWithId(dataSource.selectedCostSheetId)
 
 		let entries = costSheet.entries.sorted(by: { (entry1, entry2) -> Bool in
 			guard let date1 = entry1.date.date,
@@ -238,7 +253,6 @@ extension CostSheetViewController {
 		switch sender.selectedSegmentIndex {
 		case 0:
 			classificationMode = .date
-
 		case 1:
 			classificationMode = .category
 		default:
@@ -268,18 +282,23 @@ extension CostSheetViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		guard let dataSource = dataSource else {
+			assertionFailure()
+			return nil
+		}
 		let transferEntryAction = UITableViewRowAction(style: .normal, title: "Transfer") { (action, indexPath) in
 			// Checking cost sheets count
-			if self.myCostSheetsViewController?.account.costSheets.count == 1 {
+			if dataSource.account.costSheets.count == 1 {
 				// Show alert
 				return
 			}
 
-			self.transferIndexPath = indexPath
+			self.transferEntryIndexPath = indexPath
 			self.performSegue(withIdentifier: TransferEntrySegue, sender: nil)
 		}
 		transferEntryAction.backgroundColor = .darkGray
 		let deleteEntryAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+			// MAKE THIS A SEPARATE FUNCTION
 			guard let dataSource = self.dataSource,
 				let deltaDelegate = self.deltaDelegate,
 				let deleteEntryId = self.getSortedEntry(at: indexPath)?.id else {
@@ -288,7 +307,7 @@ extension CostSheetViewController: UITableViewDelegate {
 			}
 
 			// Delta
-			let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: self.selectedCostSheetId, account: dataSource.account)
+			let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.selectedCostSheetId, account: dataSource.account)
 			deltaDelegate.sendDeltaComponents([deleteEntryComp])
 
 			if self.classificationMode != .date {
@@ -354,42 +373,29 @@ extension CostSheetViewController: CostSheetEntryViewControllerDataSource {
 	}
 
 	var costSheetId: String {
-		return selectedCostSheetId
+		guard let dataSource = dataSource else {
+			assertionFailure()
+			return ""
+		}
+		return dataSource.selectedCostSheetId
 	}
 
 }
 
-// MARK: TransferEntryTableViewControllerDelegate
-extension CostSheetViewController: TransferEntryTableViewControllerDelegate {
+// MARK: TransferEntryTableViewControllerDataSource
+extension CostSheetViewController: TransferEntryTableViewControllerDataSource {
 
-	func didTransferCostSheetEntryToCostSheet(_ toCostSheet: CostSheet) {
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return
-		}
-		let costSheet = dataSource.account.costSheetWithId(selectedCostSheetId)
+	var fromCostSheetId: String {
+		return costSheetId
+	}
 
-		guard let transferIndexPath = transferIndexPath,
-			let entryToTransfer = getSortedEntry(at: transferIndexPath) else {
-				assertionFailure("transferIndexPath not set")
-				return
+	var entryToTransferId: String {
+		guard let transferEntryIndexPath = transferEntryIndexPath,
+			let entryToTransfer = getSortedEntry(at: transferEntryIndexPath) else {
+				assertionFailure("transferEntryIndexPath not set")
+				return ""
 		}
-//		costSheet.deleteEntry(withId: entryToTransfer.id)
-		if classificationMode != .date {
-			sortEntriesByDate()
-		}
-		sortEntries()
-//		costSheet.entries = entriesSortedByDate
-		transactionsTableView.beginUpdates()
-		if transactionsTableView.numberOfRows(inSection: transferIndexPath.section) == 1 {
-			transactionsTableView.deleteSections([transferIndexPath.section], with: .bottom)
-		} else {
-			transactionsTableView.deleteRows(at: [transferIndexPath], with: .left)
-		}
-		transactionsTableView.endUpdates()
-
-		updateAmountLabel()
-		delegate?.didTransferCostSheetEntry(entryToTransfer, to: toCostSheet)
+		return entryToTransfer.id
 	}
 
 }
@@ -404,27 +410,6 @@ extension CostSheetViewController: DeltaDelegate {
 		}
 		deltaDelegate.sendDeltaComponents(components)
 		reloadAfterEntryModification()
-	}
-
-	private func reloadAfterEntryModification() {
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return
-		}
-		let costSheet = dataSource.account.costSheetWithId(selectedCostSheetId)
-
-		if classificationMode != .date {
-			sortEntriesByDate()
-		}
-
-		if costSheet.entries.isEmpty {
-			noEntriesTextView.isHidden = false
-		} else {
-			noEntriesTextView.isHidden = true
-		}
-
-		sortEntries()
-		transactionsTableView.reloadData()
 	}
 
 }
