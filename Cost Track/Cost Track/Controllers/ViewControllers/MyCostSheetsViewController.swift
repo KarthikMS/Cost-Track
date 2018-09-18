@@ -17,7 +17,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	@IBOutlet weak var noCostSheetsTextView: UITextView!
 
 	// MARK: Properties
-	var account = Account()
+	var document = Document()
 	var selectedCostSheetId = ""
 	private var shouldUpdateViews = false
 	private var sectionsToHide = Set<Int>()
@@ -26,17 +26,19 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		testSaving()
+
 		// Setting NotSetGroup. Should happen only once in app's life time.
-		if account.groups.isEmpty {
+		if document.groups.isEmpty {
 			var notSetGroup = CostSheetGroup()
 			notSetGroup.name = "Not set"
 			notSetGroup.id = UUID().uuidString
-			account.groups.append(notSetGroup)
+			document.groups.append(notSetGroup)
 
 			NotSetGroup = notSetGroup
 		}
 
-		if account.costSheets.isEmpty {
+		if document.costSheets.isEmpty {
 			noCostSheetsTextView.isHidden = false
 		} else {
 			noCostSheetsTextView.isHidden = true
@@ -50,7 +52,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		if shouldUpdateViews {
 			sectionsToHide.removeAll()
 			updateTopBar()
-			if account.costSheets.isEmpty {
+			if document.costSheets.isEmpty {
 				noCostSheetsTextView.isHidden = false
 			} else {
 				noCostSheetsTextView.isHidden = true
@@ -84,7 +86,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 
 	// MARK: View functions
 	private func updateTopBar() {
-		var totalAmount = account.totalAmount
+		var totalAmount = document.totalAmount
 		if totalAmount < 0 {
 			topBar.backgroundColor = DarkExpenseColor
 			totalAmount *= -1
@@ -96,8 +98,8 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 
 	// MARK: Misc. functions
 	private func costSheetAtIndexPath(_ indexPath: IndexPath) -> CostSheet {
-		let groupsWithCostSheets = account.groupsWithCostSheets
-		return account.costSheetsInGroup(groupsWithCostSheets[indexPath.section])[indexPath.row]
+		let groupsWithCostSheets = document.groupsWithCostSheets
+		return document.costSheetsInGroup(groupsWithCostSheets[indexPath.section])[indexPath.row]
 	}
 
 	private func showAlertForDeletingCostSheet(withId id: String, at indexPath: IndexPath) {
@@ -115,8 +117,8 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	}
 
 	private func deleteCostSheet(withId id: String, at indexPath: IndexPath) {
-		account.deleteCostSheet(withId: id)
-		if !account.hasCostSheetsInOtherGroups {
+		document.deleteCostSheet(withId: id)
+		if !document.hasCostSheetsInOtherGroups {
 			sectionsToHide.removeAll()
 			tableView.reloadData()
 		} else {
@@ -128,7 +130,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 			}
 			tableView.endUpdates()
 		}
-		if account.costSheets.isEmpty {
+		if document.costSheets.isEmpty {
 			noCostSheetsTextView.isHidden = false
 		}
 	}
@@ -163,15 +165,15 @@ extension MyCostSheetsViewController {
 extension MyCostSheetsViewController: UITableViewDataSource {
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return account.groupsWithCostSheets.count
+		return document.groupsWithCostSheets.count
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if sectionsToHide.contains(section) {
 			return 0
 		}
-		let groupsWithCostSheets = account.groupsWithCostSheets
-		return account.costSheetsInGroup(groupsWithCostSheets[section]).count
+		let groupsWithCostSheets = document.groupsWithCostSheets
+		return document.costSheetsInGroup(groupsWithCostSheets[section]).count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -209,21 +211,21 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if !account.hasCostSheetsInOtherGroups {
+		if !document.hasCostSheetsInOtherGroups {
 			return 0
 		}
 		return 40
 	}
 
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		if !account.hasCostSheetsInOtherGroups {
+		if !document.hasCostSheetsInOtherGroups {
 			return nil
 		}
 
 		var frame = tableView.frame
 		frame.origin.y = 0
 		frame.size.height = 40
-		let title = account.groupsWithCostSheets[section].name
+		let title = document.groupsWithCostSheets[section].name
 		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, delegate: self)
 		return headerView
 	}
@@ -251,7 +253,7 @@ extension MyCostSheetsViewController: DeltaDelegate {
 		for component in components {
 			do {
 				var decoder = try DeltaDataApplier(fieldString: component.fields, value: component.value.inBytes.value, operationType: component.opType)
-				try account.decodeMessage(decoder: &decoder)
+				try document.decodeMessage(decoder: &decoder)
 				shouldUpdateViews = true
 			} catch {
 				assertionFailure()

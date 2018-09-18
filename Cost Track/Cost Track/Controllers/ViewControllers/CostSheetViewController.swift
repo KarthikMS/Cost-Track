@@ -9,7 +9,7 @@
 import UIKit
 
 protocol CostSheetViewControllerDataSource: class {
-	var account: Account { get }
+	var document: Document { get }
 	var selectedCostSheetId: String { get }
 }
 
@@ -49,7 +49,7 @@ class CostSheetViewController: UIViewController {
 			assertionFailure()
 			return
 		}
-		let costSheet = dataSource.account.costSheetWithId(dataSource.selectedCostSheetId)
+		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
 
 		navigationItem.title = costSheet.name
 
@@ -107,7 +107,7 @@ class CostSheetViewController: UIViewController {
 			assertionFailure()
 			return
 		}
-		let costSheet = dataSource.account.costSheetWithId(dataSource.selectedCostSheetId)
+		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
 
 		if classificationMode != .date {
 			sortEntriesByDate()
@@ -128,7 +128,7 @@ class CostSheetViewController: UIViewController {
 			assertionFailure()
 			return
 		}
-		let costSheet = dataSource.account.costSheetWithId(dataSource.selectedCostSheetId)
+		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
 
 		var balance = costSheet.balance
 		if balance < 0 {
@@ -158,7 +158,7 @@ class CostSheetViewController: UIViewController {
 			assertionFailure()
 			return
 		}
-		let costSheet = dataSource.account.costSheetWithId(dataSource.selectedCostSheetId)
+		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
 
 		let entries = costSheet.entries.sorted(by: { (entry1, entry2) -> Bool in
 			guard let date1 = entry1.date.date,
@@ -246,7 +246,7 @@ class CostSheetViewController: UIViewController {
 		}
 
 		// Delta
-		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.selectedCostSheetId, account: dataSource.account)
+		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.selectedCostSheetId, document: dataSource.document)
 		deltaDelegate.sendDeltaComponents([deleteEntryComp])
 
 		if self.classificationMode != .date {
@@ -315,7 +315,7 @@ extension CostSheetViewController: UITableViewDelegate {
 		}
 		let transferEntryAction = UITableViewRowAction(style: .normal, title: "Transfer") { (action, indexPath) in
 			// Checking cost sheets count
-			if dataSource.account.costSheets.count == 1 {
+			if dataSource.document.costSheets.count == 1 {
 				// Show alert
 				return
 			}
@@ -366,12 +366,12 @@ extension CostSheetViewController: TableViewSectionHeaderViewDelegate {
 // MARK: CostSheetEntryViewControllerDataSource
 extension CostSheetViewController: CostSheetEntryViewControllerDataSource {
 
-	var account: Account {
+	var document: Document {
 		guard let dataSource = dataSource else {
 			assertionFailure()
-			return Account()
+			return Document()
 		}
-		return dataSource.account
+		return dataSource.document
 	}
 
 	var costSheetId: String {

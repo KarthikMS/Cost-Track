@@ -9,7 +9,7 @@
 import UIKit
 
 protocol NewCostSheetViewControllerDataSource {
-	var account: Account { get }
+	var document: Document { get }
 }
 
 class NewCostSheetViewController: UIViewController {
@@ -34,7 +34,7 @@ class NewCostSheetViewController: UIViewController {
 		settingsTableView.costSheetSettingsTableViewDelegate = self
 
 		var newCostSheet = CostSheet()
-		newCostSheet.name = dataSource.account.defaultNewCostSheetName
+		newCostSheet.name = dataSource.document.defaultNewCostSheetName
 		newCostSheet.initialBalance = 0
 		newCostSheet.id = UUID().uuidString
 		newCostSheet.group = CostSheetGroup()
@@ -70,7 +70,7 @@ extension NewCostSheetViewController {
 			return
 		}
 		guard let deltaDelegate = deltaDelegate,
-			let account = dataSource?.account else {
+			let document = dataSource?.document else {
 				assertionFailure()
 				return
 		}
@@ -80,7 +80,7 @@ extension NewCostSheetViewController {
 		costSheet.includeInOverallTotal = true
 
 		// Delta
-		let insertCostSheetComp = DeltaUtil.getComponentToInsertCostSheet(costSheet, in: account)
+		let insertCostSheetComp = DeltaUtil.getComponentToInsertCostSheet(costSheet, in: document)
 		deltaDelegate.sendDeltaComponents([insertCostSheetComp])
 
 		navigationController?.popViewController(animated: true)
@@ -100,12 +100,12 @@ extension NewCostSheetViewController: CostSheetSettingsTableViewDelegate {
 // MARK: GroupSelectTableViewControllerDataSource
 extension NewCostSheetViewController: GroupSelectTableViewControllerDataSource {
 
-	var account: Account {
-		guard let account = dataSource?.account else {
+	var document: Document {
+		guard let document = dataSource?.document else {
 			assertionFailure()
-			return Account()
+			return Document()
 		}
-		return account
+		return document
 	}
 
 }
@@ -114,7 +114,7 @@ extension NewCostSheetViewController: GroupSelectTableViewControllerDataSource {
 extension NewCostSheetViewController: GroupSelectTableViewControllerDelegate {
 
 	func didSelectGroup(id: String) {
-		guard let group = dataSource?.account.getGroup(withId: id) else {
+		guard let group = dataSource?.document.getGroup(withId: id) else {
 			assertionFailure()
 			return
 		}

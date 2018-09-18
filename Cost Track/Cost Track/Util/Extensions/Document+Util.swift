@@ -1,14 +1,14 @@
 //
-//  Account+Util.swift
+//  Document+Util.swift
 //  Cost Track
 //
-//  Created by Karthik M S on 29/07/18.
+//  Created by Karthik M S on 18/09/18.
 //  Copyright © 2018 Karthik M S. All rights reserved.
 //
 
 import Foundation
 
-extension Account {
+extension Document {
 
 	func costSheetsInGroup(_ group: CostSheetGroup) -> [CostSheet] {
 		var costSheetsInGroup = [CostSheet]()
@@ -108,9 +108,9 @@ extension Account {
 
 	mutating func deleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
 		guard let costSheetIndex = indexOfCostSheetWithId(costSheetId),
-		let entryIndex = costSheets[costSheetIndex].indexOfEntryWithId(entryId) else {
-			assertionFailure()
-			return
+			let entryIndex = costSheets[costSheetIndex].indexOfEntryWithId(entryId) else {
+				assertionFailure()
+				return
 		}
 		costSheets[costSheetIndex].entries.remove(at: entryIndex)
 		costSheets[costSheetIndex].lastModifiedDate = Date().data

@@ -30,8 +30,6 @@
 		D97AB0F92123071300000D6F /* TransferEntryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97AB0F82123071300000D6F /* TransferEntryTableViewController.swift */; };
 		D97AB0FB212D90D200000D6F /* GroupSelectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97AB0FA212D90D200000D6F /* GroupSelectTableViewController.swift */; };
 		D97AB0FE213284C000000D6F /* TableViewSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97AB0FD213284BF00000D6F /* TableViewSectionHeaderView.swift */; };
-		D98973CA210E147D0051F809 /* Account+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973C9210E147D0051F809 /* Account+Util.swift */; };
-		D98973D7210E16120051F809 /* Account.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973D3210E16110051F809 /* Account.pb.swift */; };
 		D98973DA210E16120051F809 /* CostSheetGroup.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973D6210E16120051F809 /* CostSheetGroup.pb.swift */; };
 		D98973E0210E281F0051F809 /* CostSheet+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973DF210E281F0051F809 /* CostSheet+Util.swift */; };
 		D98973E2210E2E480051F809 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98973E1210E2E480051F809 /* Constants.swift */; };
@@ -45,10 +43,12 @@
 		D9897410211741410051F809 /* CommonUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D989740F211741410051F809 /* CommonUtil.swift */; };
 		D98974122117451B0051F809 /* CostSheetEntry+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98974112117451B0051F809 /* CostSheetEntry+Util.swift */; };
 		D9B119A22139786E0007CDA1 /* DeltaDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A12139786E0007CDA1 /* DeltaDecoder.swift */; };
-		D9B119A4213980290007CDA1 /* Delta.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A3213980290007CDA1 /* Delta.pb.swift */; };
 		D9B119A6213C3C400007CDA1 /* ProtoExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */; };
 		D9B119A8213D9D5E0007CDA1 /* FieldStringUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A7213D9D5E0007CDA1 /* FieldStringUtil.swift */; };
 		D9B119AA213D9EDB0007CDA1 /* DeltaUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A9213D9EDB0007CDA1 /* DeltaUtil.swift */; };
+		D9B119AE21515B240007CDA1 /* Document.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119AD21515B240007CDA1 /* Document.pb.swift */; };
+		D9B119B021515B4D0007CDA1 /* Delta.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119AF21515B4D0007CDA1 /* Delta.pb.swift */; };
+		D9B119B221515BD50007CDA1 /* Document+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119B121515BD50007CDA1 /* Document+Util.swift */; };
 		D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */; };
 		D9F5E5F520FEF77300454FA9 /* CostSheetEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */; };
 /* End PBXBuildFile section */
@@ -104,8 +104,6 @@
 		D97AB0F82123071300000D6F /* TransferEntryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferEntryTableViewController.swift; sourceTree = "<group>"; };
 		D97AB0FA212D90D200000D6F /* GroupSelectTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSelectTableViewController.swift; sourceTree = "<group>"; };
 		D97AB0FD213284BF00000D6F /* TableViewSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewSectionHeaderView.swift; sourceTree = "<group>"; };
-		D98973C9210E147D0051F809 /* Account+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+Util.swift"; sourceTree = "<group>"; };
-		D98973D3210E16110051F809 /* Account.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.pb.swift; sourceTree = "<group>"; };
 		D98973D6210E16120051F809 /* CostSheetGroup.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheetGroup.pb.swift; sourceTree = "<group>"; };
 		D98973DF210E281F0051F809 /* CostSheet+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CostSheet+Util.swift"; sourceTree = "<group>"; };
 		D98973E1210E2E480051F809 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -119,10 +117,12 @@
 		D989740F211741410051F809 /* CommonUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUtil.swift; sourceTree = "<group>"; };
 		D98974112117451B0051F809 /* CostSheetEntry+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CostSheetEntry+Util.swift"; sourceTree = "<group>"; };
 		D9B119A12139786E0007CDA1 /* DeltaDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeltaDecoder.swift; sourceTree = "<group>"; };
-		D9B119A3213980290007CDA1 /* Delta.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Delta.pb.swift; path = "../../../../Compiled swift files/Delta.pb.swift"; sourceTree = "<group>"; };
 		D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoExtensions.swift; sourceTree = "<group>"; };
 		D9B119A7213D9D5E0007CDA1 /* FieldStringUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldStringUtil.swift; sourceTree = "<group>"; };
 		D9B119A9213D9EDB0007CDA1 /* DeltaUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeltaUtil.swift; sourceTree = "<group>"; };
+		D9B119AD21515B240007CDA1 /* Document.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.pb.swift; sourceTree = "<group>"; };
+		D9B119AF21515B4D0007CDA1 /* Delta.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Delta.pb.swift; sourceTree = "<group>"; };
+		D9B119B121515BD50007CDA1 /* Document+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Document+Util.swift"; sourceTree = "<group>"; };
 		D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetEntryViewController.swift; sourceTree = "<group>"; };
 		D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSheetEntryViewController.xib; sourceTree = "<group>"; };
 		F245DB9B1362C7111170B109 /* Pods-Cost Track.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cost Track.release.xcconfig"; path = "Pods/Target Support Files/Pods-Cost Track/Pods-Cost Track.release.xcconfig"; sourceTree = "<group>"; };
@@ -335,11 +335,11 @@
 		D989739C210D6C7C0051F809 /* Proto */ = {
 			isa = PBXGroup;
 			children = (
+				D9B119AF21515B4D0007CDA1 /* Delta.pb.swift */,
+				D9B119AD21515B240007CDA1 /* Document.pb.swift */,
 				D98973E3210E330F0051F809 /* CostSheet.pb.swift */,
-				D98973D3210E16110051F809 /* Account.pb.swift */,
 				D98973D6210E16120051F809 /* CostSheetGroup.pb.swift */,
 				D98973E5210E336B0051F809 /* CostSheetEntry.pb.swift */,
-				D9B119A3213980290007CDA1 /* Delta.pb.swift */,
 			);
 			path = Proto;
 			sourceTree = "<group>";
@@ -361,7 +361,7 @@
 		D98973C8210E14600051F809 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				D98973C9210E147D0051F809 /* Account+Util.swift */,
+				D9B119B121515BD50007CDA1 /* Document+Util.swift */,
 				D98973DF210E281F0051F809 /* CostSheet+Util.swift */,
 				D98974052116E08A0051F809 /* DateUtil.swift */,
 				D98974112117451B0051F809 /* CostSheetEntry+Util.swift */,
@@ -600,15 +600,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				D98973E6210E336B0051F809 /* CostSheetEntry.pb.swift in Sources */,
-				D98973D7210E16120051F809 /* Account.pb.swift in Sources */,
 				D98973E4210E33100051F809 /* CostSheet.pb.swift in Sources */,
 				D9032EBA20FB4F20009EF5FC /* TransactionsTableViewCell.swift in Sources */,
 				D9032EB620FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift in Sources */,
+				D9B119B221515BD50007CDA1 /* Document+Util.swift in Sources */,
 				D98974122117451B0051F809 /* CostSheetEntry+Util.swift in Sources */,
 				D98974062116E08A0051F809 /* DateUtil.swift in Sources */,
 				D9032EBF20FB7806009EF5FC /* CostSheetSettingsTableView.swift in Sources */,
+				D9B119AE21515B240007CDA1 /* Document.pb.swift in Sources */,
+				D9B119B021515B4D0007CDA1 /* Delta.pb.swift in Sources */,
 				D97AB0FB212D90D200000D6F /* GroupSelectTableViewController.swift in Sources */,
-				D9B119A4213980290007CDA1 /* Delta.pb.swift in Sources */,
 				D9032EBD20FB75EC009EF5FC /* NewCostSheetViewController.swift in Sources */,
 				D989740C21173E9A0051F809 /* EntryCategoryPicker.swift in Sources */,
 				D962F42820F9C152003C7C58 /* MyCostSheetsViewController.swift in Sources */,
@@ -616,7 +617,6 @@
 				D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */,
 				D9032E9020FB1A71009EF5FC /* CostSheetViewController.swift in Sources */,
 				D97AB0FE213284C000000D6F /* TableViewSectionHeaderView.swift in Sources */,
-				D98973CA210E147D0051F809 /* Account+Util.swift in Sources */,
 				D98973E0210E281F0051F809 /* CostSheet+Util.swift in Sources */,
 				D9B119AA213D9EDB0007CDA1 /* DeltaUtil.swift in Sources */,
 				D98973DA210E16120051F809 /* CostSheetGroup.pb.swift in Sources */,

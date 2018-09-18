@@ -45,41 +45,41 @@ class DeltaUtil {
 		return comp
 	}
 
-	static func getComponentToInsertGroup(_ group: CostSheetGroup, in account: Account, at index: Int? = nil) -> DocumentContentOperation.Component {
+	static func getComponentToInsertGroup(_ group: CostSheetGroup, in document: Document, at index: Int? = nil) -> DocumentContentOperation.Component {
 		var insertIndex: Int
 		if let index = index {
 			insertIndex = index
 		} else {
-			insertIndex = account.groups.count
+			insertIndex = document.groups.count
 		}
 		let fieldString = "2,arr:\(insertIndex)"
 		return getComponent(opType: .insert, fieldString: fieldString, newValue: group.safeSerializedData)
 	}
 
-	static func getComponentToDeleteGroup(at index: Int, in account: Account) -> DocumentContentOperation.Component {
-		let group = account.groups[index]
+	static func getComponentToDeleteGroup(at index: Int, in document: Document) -> DocumentContentOperation.Component {
+		let group = document.groups[index]
 		let fieldString = "2,arr:\(index)"
 		return getComponent(opType: .delete, fieldString: fieldString, oldValue: group.safeSerializedData)
 	}
 
-	static func getComponentToInsertCostSheet(_ costSheet: CostSheet, in account: Account, at index: Int? = nil) -> DocumentContentOperation.Component {
+	static func getComponentToInsertCostSheet(_ costSheet: CostSheet, in document: Document, at index: Int? = nil) -> DocumentContentOperation.Component {
 		var insertIndex: Int
 		if let index = index {
 			insertIndex = index
 		} else {
-			insertIndex = account.costSheets.count
+			insertIndex = document.costSheets.count
 		}
 		let fieldString = "1,arr:\(insertIndex)"
 		return getComponent(opType: .insert, fieldString: fieldString, newValue: costSheet.safeSerializedData)
 	}
 
-	static func getComponentToDeleteCostSheet(at index: Int, in account: Account) -> DocumentContentOperation.Component {
-		let costSheet = account.costSheets[index]
+	static func getComponentToDeleteCostSheet(at index: Int, in document: Document) -> DocumentContentOperation.Component {
+		let costSheet = document.costSheets[index]
 		let fieldString = "1,arr:\(index)"
 		return getComponent(opType: .delete, fieldString: fieldString, oldValue: costSheet.safeSerializedData)
 	}
 
-	static func getComponentToUpdateGroupOfCostSheet(at index: Int, from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in accout: Account) -> DocumentContentOperation.Component {
+	static func getComponentToUpdateGroupOfCostSheet(at index: Int, from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in document: Document) -> DocumentContentOperation.Component {
 		let fieldString = "1,arr:\(index),4"
 		return getComponent(
 			opType: .update,
@@ -89,21 +89,21 @@ class DeltaUtil {
 		)
 	}
 
-	static func getComponentsToMoveCostSheets(from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in account: Account) -> [DocumentContentOperation.Component] {
+	static func getComponentsToMoveCostSheets(from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in document: Document) -> [DocumentContentOperation.Component] {
 		var comps = [DocumentContentOperation.Component]()
-		for i in 0..<account.costSheets.count where account.costSheets[i].group.id == fromGroup.id {
-			let updateGroupComp = getComponentToUpdateGroupOfCostSheet(at: i, from: fromGroup, to: toGroup, in: account)
+		for i in 0..<document.costSheets.count where document.costSheets[i].group.id == fromGroup.id {
+			let updateGroupComp = getComponentToUpdateGroupOfCostSheet(at: i, from: fromGroup, to: toGroup, in: document)
 			comps.append(updateGroupComp)
 		}
 		return comps
 	}
 
-	static func getComponentToUpdateEntryWithId(_ entryId: String, with updatedEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, account: Account) -> DocumentContentOperation.Component {
-		guard let costSheetIndex = account.indexOfCostSheetWithId(costSheetId) else {
+	static func getComponentToUpdateEntryWithId(_ entryId: String, with updatedEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, document: Document) -> DocumentContentOperation.Component {
+		guard let costSheetIndex = document.indexOfCostSheetWithId(costSheetId) else {
 			assertionFailure("Could not get costSheetIndex")
 			return DocumentContentOperation.Component()
 		}
-		let costSheet = account.costSheets[costSheetIndex]
+		let costSheet = document.costSheets[costSheetIndex]
 		guard let entryIndex = costSheet.indexOfEntryWithId(entryId) else {
 			assertionFailure("Could not get entryIndex")
 			return DocumentContentOperation.Component()
@@ -118,12 +118,12 @@ class DeltaUtil {
 		)
 	}
 
-	static func getComponentToInsertEntry(_ newEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, account: Account, at index: Int? = nil) -> DocumentContentOperation.Component {
-		guard let costSheetIndex = account.indexOfCostSheetWithId(costSheetId) else {
+	static func getComponentToInsertEntry(_ newEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, document: Document, at index: Int? = nil) -> DocumentContentOperation.Component {
+		guard let costSheetIndex = document.indexOfCostSheetWithId(costSheetId) else {
 			assertionFailure("Could not get costSheetIndex")
 			return DocumentContentOperation.Component()
 		}
-		let costSheet = account.costSheets[costSheetIndex]
+		let costSheet = document.costSheets[costSheetIndex]
 		let insertIndex: Int
 		if let index = index {
 			insertIndex = index
@@ -138,12 +138,12 @@ class DeltaUtil {
 		)
 	}
 
-	static func getComponentToDeleteEntryWithId(_ entryId: String, inCostSheetWithId costSheetId: String, account: Account) -> DocumentContentOperation.Component {
-		guard let costSheetIndex = account.indexOfCostSheetWithId(costSheetId) else {
+	static func getComponentToDeleteEntryWithId(_ entryId: String, inCostSheetWithId costSheetId: String, document: Document) -> DocumentContentOperation.Component {
+		guard let costSheetIndex = document.indexOfCostSheetWithId(costSheetId) else {
 			assertionFailure("Could not get costSheetIndex")
 			return DocumentContentOperation.Component()
 		}
-		let costSheet = account.costSheets[costSheetIndex]
+		let costSheet = document.costSheets[costSheetIndex]
 		guard let entryIndex = costSheet.indexOfEntryWithId(entryId) else {
 			assertionFailure("Could not get entryIndex")
 			return DocumentContentOperation.Component()
@@ -157,14 +157,14 @@ class DeltaUtil {
 		)
 	}
 
-	static func getComponentsToTransferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String, account: Account) -> [DocumentContentOperation.Component] {
-		guard let fromCostSheetIndex = account.indexOfCostSheetWithId(fromCostSheetId),
-		let toCostSheetIndex = account.indexOfCostSheetWithId(toCostSheetId) else {
+	static func getComponentsToTransferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String, document: Document) -> [DocumentContentOperation.Component] {
+		guard let fromCostSheetIndex = document.indexOfCostSheetWithId(fromCostSheetId),
+		let toCostSheetIndex = document.indexOfCostSheetWithId(toCostSheetId) else {
 			assertionFailure("Could not get costSheetIndex")
 			return []
 		}
-		let fromCostSheet = account.costSheets[fromCostSheetIndex]
-		let toCostSheet = account.costSheets[toCostSheetIndex]
+		let fromCostSheet = document.costSheets[fromCostSheetIndex]
+		let toCostSheet = document.costSheets[toCostSheetIndex]
 		guard let entryIndex = fromCostSheet.indexOfEntryWithId(entryId) else {
 			assertionFailure("Could not get entryIndex")
 			return []

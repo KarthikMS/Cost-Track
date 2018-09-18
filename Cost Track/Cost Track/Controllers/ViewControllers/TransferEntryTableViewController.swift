@@ -11,7 +11,7 @@ import UIKit
 protocol TransferEntryTableViewControllerDataSource: class {
 	var fromCostSheetId: String { get }
 	var entryToTransferId: String { get }
-	var account: Account { get }
+	var document: Document { get }
 }
 
 class TransferEntryTableViewController: UITableViewController {
@@ -35,8 +35,8 @@ class TransferEntryTableViewController: UITableViewController {
 
 		// Getting filteredCostSheets
 		let fromCostSheetId = dataSource.fromCostSheetId
-		let account = dataSource.account
-		for costSheet in account.costSheets {
+		let document = dataSource.document
+		for costSheet in document.costSheets {
 			if costSheet.id != fromCostSheetId {
 				filteredCostSheets.append(costSheet)
 			}
@@ -87,8 +87,8 @@ extension TransferEntryTableViewController {
 		let entryId = dataSource.entryToTransferId
 		let fromCostSheetId = dataSource.fromCostSheetId
 		let toCostSheetId = filteredCostSheets[selectedIndexPath.row].id
-		let account = dataSource.account
-		let transferEntryComps = DeltaUtil.getComponentsToTransferEntry(withId: entryId, fromCostSheetWithId: fromCostSheetId, toCostSheetWithId: toCostSheetId, account: account)
+		let document = dataSource.document
+		let transferEntryComps = DeltaUtil.getComponentsToTransferEntry(withId: entryId, fromCostSheetWithId: fromCostSheetId, toCostSheetWithId: toCostSheetId, document: document)
 		deltaDelegate.sendDeltaComponents(transferEntryComps)
 		dismiss(animated: true, completion: nil)
 	}

@@ -49,7 +49,7 @@ class CostSheetSettingsTableView: UITableView {
 	private func getTextAndHeightsForFooterViews() -> [(text: String, height: CGFloat)] {
 		var textsAndHeights = [(text: String, height: CGFloat)]()
 		let texts = [
-			"Enter a cost sheet name for your account (Cash, Debit Card, Bank Account, etc.) or event(Wedding, Summer Holidays, Apartment Renovation, etc.) for which you will track your incomes and expenses.",
+			"Enter a cost sheet name for your document (Cash, Debit Card, Bank Account, etc.) or event(Wedding, Summer Holidays, Apartment Renovation, etc.) for which you will track your incomes and expenses.",
 			"Select a currency for the cost sheet. Please note that you can convert currencies when entering incomes or expenses.",
 			"Initial balance can be positive or negative. It is used for the current sheet balance calculation only.",
 			"Define whether you want to include this cost sheet in overall total or not.",

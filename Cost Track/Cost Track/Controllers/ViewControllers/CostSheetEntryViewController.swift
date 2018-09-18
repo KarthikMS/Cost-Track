@@ -9,7 +9,7 @@
 import UIKit
 
 protocol CostSheetEntryViewControllerDataSource: class {
-	var account: Account { get }
+	var document: Document { get }
 	var costSheetId: String { get }
 }
 
@@ -244,7 +244,7 @@ extension CostSheetEntryViewController {
 			entry.category = category
 			entry.date = dateData
 			entry.description_p = descriptionText
-			let updateEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(entry.id, with: entry, inCostSheetWithId: dataSource.costSheetId, account: dataSource.account)
+			let updateEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(entry.id, with: entry, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
 			deltaDelegate.sendDeltaComponents([updateEntryComp])
 		} else {
 			var entry = CostSheetEntry()
@@ -254,7 +254,7 @@ extension CostSheetEntryViewController {
 			entry.category = category
 			entry.date = dateData
 			entry.description_p = descriptionText
-			let insertEntryComp = DeltaUtil.getComponentToInsertEntry(entry, inCostSheetWithId: dataSource.costSheetId, account: dataSource.account)
+			let insertEntryComp = DeltaUtil.getComponentToInsertEntry(entry, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
 			deltaDelegate.sendDeltaComponents([insertEntryComp])
 		}
 
