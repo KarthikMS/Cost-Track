@@ -17,7 +17,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	@IBOutlet weak var noCostSheetsTextView: UITextView!
 
 	// MARK: Properties
-	var document = Document()
+	var document = CTFileManager.getDocument()
 	var selectedCostSheetId = ""
 	private var shouldUpdateViews = false
 	private var sectionsToHide = Set<Int>()
@@ -25,18 +25,6 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
-
-		testSaving()
-
-		// Setting NotSetGroup. Should happen only once in app's life time.
-		if document.groups.isEmpty {
-			var notSetGroup = CostSheetGroup()
-			notSetGroup.name = "Not set"
-			notSetGroup.id = UUID().uuidString
-			document.groups.append(notSetGroup)
-
-			NotSetGroup = notSetGroup
-		}
 
 		if document.costSheets.isEmpty {
 			noCostSheetsTextView.isHidden = false
@@ -259,6 +247,7 @@ extension MyCostSheetsViewController: DeltaDelegate {
 				assertionFailure()
 			}
 		}
+		CTFileManager.saveDocument(document)
 	}
 
 }
