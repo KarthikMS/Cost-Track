@@ -10,7 +10,7 @@ import Foundation
 
 class CTFileManager {
 
-	static var userDocumentUrl: URL? {
+	private static var userDocumentUrl: URL? {
 		let directories = NSSearchPathForDirectoriesInDomains(.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
 		guard let documents = directories.first,
 			let urlDocuments = NSURL(string: documents),
@@ -21,27 +21,32 @@ class CTFileManager {
 		return userDocumentURL
 	}
 
-	static func getDocument() -> Document {
+	static func getDocument() -> (document: Document, shouldSave: Bool) {
 		guard let userDocumentUrl = userDocumentUrl else {
 			assertionFailure()
-			return Document()
+			return (Document(), false)
 		}
 		do {
-			let loadedDocumentData = try NSData(contentsOfFile: userDocumentUrl.path) as Data
-			let loadedDocument = try Document(serializedData: loadedDocumentData)
-			return loadedDocument
-		} catch {
-			// Setting NotSetGroup. Should happen only once in app's life time.
-			var document = Document()
-			if document.groups.isEmpty {
-				var notSetGroup = CostSheetGroup()
-				notSetGroup.name = "Not set"
-				notSetGroup.id = UUID().uuidString
-				document.groups.append(notSetGroup)
+			// Checking if document already exists
+			let loadedDocData = try NSData(contentsOfFile: userDocumentUrl.path) as Data
+			let loadedDoc = try Document(serializedData: loadedDocData)
 
-				NotSetGroup = notSetGroup
+			// Setting NotSetGroup
+			for group in loadedDoc.groups where group.name == "Not Set" {
+				NotSetGroup = group
 			}
-			return document
+
+			return (loadedDoc, false)
+		} catch {
+			// Creating new document
+			var newDoc = Document()
+
+			// Setting NotSetGroup
+			NotSetGroup.name = "Not set"
+			NotSetGroup.id = UUID().uuidString
+			newDoc.groups.append(NotSetGroup)
+
+			return (newDoc, true)
 		}
 	}
 

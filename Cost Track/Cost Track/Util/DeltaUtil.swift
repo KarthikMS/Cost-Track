@@ -20,12 +20,14 @@ class DeltaUtil {
 		comp.fields = fieldString
 		switch opType {
 		case .insert:
+			assert(oldValue == nil, "Insert component should not have oldValue")
 			guard let newValue = newValue else {
 				assertionFailure("Insert component should have newValue")
 				return comp
 			}
 			comp.value.inBytes.value = newValue
 		case .delete:
+			assert(newValue == nil, "Delete component should not have newValue")
 			guard let oldValue = oldValue else {
 				assertionFailure("Delete component should have oldValue")
 				return comp
@@ -77,6 +79,14 @@ class DeltaUtil {
 		let costSheet = document.costSheets[index]
 		let fieldString = "1,arr:\(index)"
 		return getComponent(opType: .delete, fieldString: fieldString, oldValue: costSheet.safeSerializedData)
+	}
+
+	static func getComponentToDeleteCostSheet(withId costSheetId: String, in document: Document) -> DocumentContentOperation.Component {
+		guard let index = document.indexOfCostSheetWithId(costSheetId) else {
+			assertionFailure()
+			return DocumentContentOperation.Component()
+		}
+		return getComponentToDeleteCostSheet(at: index, in: document)
 	}
 
 	static func getComponentToUpdateGroupOfCostSheet(at index: Int, from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in document: Document) -> DocumentContentOperation.Component {

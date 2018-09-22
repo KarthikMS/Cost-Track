@@ -17,7 +17,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	@IBOutlet weak var noCostSheetsTextView: UITextView!
 
 	// MARK: Properties
-	var document = CTFileManager.getDocument()
+	var (document, isNewDocument) = CTFileManager.getDocument()
 	var selectedCostSheetId = ""
 	private var shouldUpdateViews = false
 	private var sectionsToHide = Set<Int>()
@@ -25,6 +25,10 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
+
+		if isNewDocument {
+			CTFileManager.saveDocument(document)
+		}
 
 		if document.costSheets.isEmpty {
 			noCostSheetsTextView.isHidden = false
@@ -105,7 +109,9 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	}
 
 	private func deleteCostSheet(withId id: String, at indexPath: IndexPath) {
-		document.deleteCostSheet(withId: id)
+		let deleteCostSheetComp = DeltaUtil.getComponentToDeleteCostSheet(withId: id, in: document)
+		sendDeltaComponents([deleteCostSheetComp])
+		
 		if !document.hasCostSheetsInOtherGroups {
 			sectionsToHide.removeAll()
 			tableView.reloadData()
