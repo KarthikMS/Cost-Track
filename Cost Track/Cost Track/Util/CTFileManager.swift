@@ -32,7 +32,7 @@ class CTFileManager {
 			let loadedDoc = try Document(serializedData: loadedDocData)
 
 			// Setting NotSetGroup
-			for group in loadedDoc.groups where group.name == "Not Set" {
+			for group in loadedDoc.groups where group.name == "Not set" {
 				NotSetGroup = group
 			}
 

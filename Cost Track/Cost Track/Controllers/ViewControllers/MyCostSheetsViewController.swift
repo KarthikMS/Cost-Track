@@ -61,18 +61,26 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		guard let identifier = segue.identifier else {
 			return
 		}
-		if identifier == CostSheetSegue {
+		switch identifier {
+		case CostSheetSegue:
 			guard let costSheetViewController = segue.destination as? CostSheetViewController else {
 				return
 			}
 			costSheetViewController.dataSource = self
 			costSheetViewController.deltaDelegate = self
-		} else if identifier == NewCostSheetSegue {
+		case NewCostSheetSegue:
 			guard let newCostSheetViewController = segue.destination as? NewCostSheetViewController else {
 				return
 			}
 			newCostSheetViewController.dataSource = self
 			newCostSheetViewController.deltaDelegate = self
+		case SettingsSegue:
+			guard let settingsTableViewController = segue.destination as? SettingsTableViewController else {
+				return
+			}
+			settingsTableViewController.settingsTableViewControllerDelegate = self
+		default:
+			break
 		}
 	}
 
@@ -236,6 +244,19 @@ extension MyCostSheetsViewController: TableViewSectionHeaderViewDelegate {
 			sectionsToHide.insert(section)
 		}
 		tableView.reloadData()
+	}
+
+}
+
+// MARK: SettingsTableViewControllerDelegate
+extension MyCostSheetsViewController: SettingsTableViewControllerDelegate {
+
+	func refreshView() {
+		(document, isNewDocument) = CTFileManager.getDocument()
+		if isNewDocument {
+			CTFileManager.saveDocument(document)
+		}
+		shouldUpdateViews = true
 	}
 
 }

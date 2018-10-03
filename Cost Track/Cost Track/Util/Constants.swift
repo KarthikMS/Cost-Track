@@ -21,5 +21,6 @@ let TintedWhiteColor = UIColor(red: 247/255.0, green: 247/255.0, blue: 247/255.0
 let	CostSheetSegue = "CostSheetSegue"
 let CostSheetEntrySegue = "CostSheetEntrySegue"
 let NewCostSheetSegue = "NewCostSheetSegue"
+let SettingsSegue = "SettingsSegue"
 let TransferEntrySegue = "TransferEntrySegue"
 let GroupSelectSegue = "GroupSelectSegue"

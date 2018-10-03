@@ -42,6 +42,7 @@
 		D989740E21173EA60051F809 /* EntryCategoryPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = D989740D21173EA60051F809 /* EntryCategoryPicker.xib */; };
 		D9897410211741410051F809 /* CommonUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D989740F211741410051F809 /* CommonUtil.swift */; };
 		D98974122117451B0051F809 /* CostSheetEntry+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98974112117451B0051F809 /* CostSheetEntry+Util.swift */; };
+		D9982E69216374E90093B28C /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9982E68216374E90093B28C /* SettingsTableViewController.swift */; };
 		D9B119A22139786E0007CDA1 /* DeltaDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A12139786E0007CDA1 /* DeltaDecoder.swift */; };
 		D9B119A6213C3C400007CDA1 /* ProtoExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */; };
 		D9B119A8213D9D5E0007CDA1 /* FieldStringUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A7213D9D5E0007CDA1 /* FieldStringUtil.swift */; };
@@ -119,6 +120,7 @@
 		D989740D21173EA60051F809 /* EntryCategoryPicker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EntryCategoryPicker.xib; sourceTree = "<group>"; };
 		D989740F211741410051F809 /* CommonUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUtil.swift; sourceTree = "<group>"; };
 		D98974112117451B0051F809 /* CostSheetEntry+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CostSheetEntry+Util.swift"; sourceTree = "<group>"; };
+		D9982E68216374E90093B28C /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		D9B119A12139786E0007CDA1 /* DeltaDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeltaDecoder.swift; sourceTree = "<group>"; };
 		D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoExtensions.swift; sourceTree = "<group>"; };
 		D9B119A7213D9D5E0007CDA1 /* FieldStringUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldStringUtil.swift; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 				D97AB0F82123071300000D6F /* TransferEntryTableViewController.swift */,
 				D97AB0FA212D90D200000D6F /* GroupSelectTableViewController.swift */,
 				D9C453FD21561C9D00890E60 /* TransferAmountViewController.swift */,
+				D9982E68216374E90093B28C /* SettingsTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -637,6 +640,7 @@
 				D98974082116FCBA0051F809 /* EntryDatePicker.swift in Sources */,
 				D9B119A6213C3C400007CDA1 /* ProtoExtensions.swift in Sources */,
 				D9897410211741410051F809 /* CommonUtil.swift in Sources */,
+				D9982E69216374E90093B28C /* SettingsTableViewController.swift in Sources */,
 				D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */,
 				D9B119A22139786E0007CDA1 /* DeltaDecoder.swift in Sources */,
 				D97AB0F92123071300000D6F /* TransferEntryTableViewController.swift in Sources */,
