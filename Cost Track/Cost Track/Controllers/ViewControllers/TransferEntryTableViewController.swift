@@ -75,7 +75,7 @@ extension TransferEntryTableViewController {
 }
 
 // MARK: IBActions
-extension TransferEntryTableViewController {
+private extension TransferEntryTableViewController {
 
 	@IBAction func transferButtonPressed(_ sender: Any) {
 		guard let dataSource = dataSource,

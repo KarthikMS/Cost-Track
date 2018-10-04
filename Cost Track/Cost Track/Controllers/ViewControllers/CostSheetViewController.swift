@@ -271,17 +271,17 @@ class CostSheetViewController: UIViewController {
 }
 
 // MARK: IBActions
-extension CostSheetViewController {
+private extension CostSheetViewController {
 
-	@IBAction private func expenseButtonPressed(_ sender: Any) {
+	@IBAction func expenseButtonPressed(_ sender: Any) {
 		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.expense])
 	}
 
-	@IBAction private func incomeButtonPressed(_ sender: Any) {
+	@IBAction func incomeButtonPressed(_ sender: Any) {
 		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.income])
 	}
 
-	@IBAction private func classificationSegmentedControlValueChanged(_ sender: UISegmentedControl) {
+	@IBAction func classificationSegmentedControlValueChanged(_ sender: UISegmentedControl) {
 		switch sender.selectedSegmentIndex {
 		case 0:
 			classificationMode = .date

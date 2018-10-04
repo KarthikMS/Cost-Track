@@ -60,9 +60,9 @@ class NewCostSheetViewController: UIViewController {
 }
 
 // MARK: IBActions
-extension NewCostSheetViewController {
+private extension NewCostSheetViewController {
 
-	@IBAction private func createButtonPressed(_ sender: Any) {
+	@IBAction func createButtonPressed(_ sender: Any) {
 		settingsTableView.updateCostSheet()
 		var costSheet = settingsTableView.costSheet
 		guard costSheet.name != "" else {

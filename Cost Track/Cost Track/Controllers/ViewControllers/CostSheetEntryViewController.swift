@@ -173,9 +173,9 @@ class CostSheetEntryViewController: UIViewController {
 }
 
 // MARK: IBActions
-extension CostSheetEntryViewController {
+private extension CostSheetEntryViewController {
 
-	@IBAction private func navigationBarTitleButtonPressed(_ sender: UIButton) {
+	@IBAction func navigationBarTitleButtonPressed(_ sender: UIButton) {
 		switch entryType {
 		case .income:
 			entryType = .expense
@@ -185,12 +185,12 @@ extension CostSheetEntryViewController {
 		updateViewsBasedOnEntryType()
 	}
 
-	@IBAction private func currencyButtonPressed(_ sender: Any) {
+	@IBAction func currencyButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction private func categoryViewTapped(_ sender: Any) {
+	@IBAction func categoryViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 
@@ -198,22 +198,22 @@ extension CostSheetEntryViewController {
 		showCategoryPicker()
 	}
 
-	@IBAction private func locationButtonPressed(_ sender: Any) {
+	@IBAction func locationButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction private func imageButtonPressed(_ sender: Any) {
+	@IBAction func imageButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction private func voiceNoteButtonPressed(_ sender: Any) {
+	@IBAction func voiceNoteButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
 
-	@IBAction private func dateViewTapped(_ sender: Any) {
+	@IBAction func dateViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 
@@ -221,7 +221,7 @@ extension CostSheetEntryViewController {
 		showDatePicker()
 	}
 
-	@IBAction private func saveButtonPressed(_ sender: Any) {
+	@IBAction func saveButtonPressed(_ sender: Any) {
 		guard let dataSource = dataSource,
 			let deltaDelegate = deltaDelegate else {
 				assertionFailure()

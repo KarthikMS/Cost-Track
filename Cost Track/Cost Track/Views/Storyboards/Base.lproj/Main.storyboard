@@ -257,10 +257,23 @@
             </objects>
             <point key="canvasLocation" x="1990" y="842"/>
         </scene>
-        <!--Transfer Amount View Controller-->
+        <!--Incoming-->
         <scene sceneID="LNh-1A-w5o">
             <objects>
-                <viewController id="DT4-xC-FO1" customClass="TransferAmountViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController"/>
+                <viewController id="DT4-xC-FO1" customClass="TransferAmountViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" title="Incoming" id="g8x-t1-NGB">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="dbx-LD-meS">
+                            <connections>
+                                <action selector="cancelButtonPressed:" destination="DT4-xC-FO1" id="hHT-Mm-jKo"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="DOj-sJ-uV3">
+                            <connections>
+                                <action selector="saveButtonPressed:" destination="DT4-xC-FO1" id="aii-rV-MXb"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KEk-k8-55Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2754" y="109"/>

@@ -144,7 +144,7 @@ extension GroupSelectTableViewController {
 }
 
 // MARK: IBActions
-extension GroupSelectTableViewController {
+private extension GroupSelectTableViewController {
 
 	@IBAction func createGroupButtonPressed(_ sender: Any) {
 		let alertController = UIAlertController(title: "New Group", message: "Please enter a group name.", preferredStyle: .alert)
@@ -184,7 +184,7 @@ extension GroupSelectTableViewController {
 	}
 
 	@objc
-	private func alertTextFieldTextDidChange(textField: UITextField) {
+	func alertTextFieldTextDidChange(textField: UITextField) {
 		guard let alertOkAction = alertOkAction else {
 			assertionFailure()
 			return
