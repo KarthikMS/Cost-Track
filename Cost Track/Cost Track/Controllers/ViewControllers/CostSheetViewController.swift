@@ -74,7 +74,8 @@ class CostSheetViewController: UIViewController {
 
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == CostSheetEntrySegue {
+		switch segue.identifier {
+		case CostSheetEntrySegue:
 			guard let costSheetEntryViewController = segue.destination as? CostSheetEntryViewController,
 			let sender = sender as? [String: Any] else {
 					assertionFailure()
@@ -91,13 +92,17 @@ class CostSheetViewController: UIViewController {
 				}
 				costSheetEntryViewController.entryType = entryType
 			}
-		} else if segue.identifier == TransferEntrySegue {
+		case TransferEntrySegue:
 			guard let transferEntryTableViewController = (segue.destination as? UINavigationController)?.topViewController as? TransferEntryTableViewController else {
 				assertionFailure()
 				return
 			}
 			transferEntryTableViewController.dataSource = self
 			transferEntryTableViewController.deltaDelegate = self
+		case DirectTransferSegue:
+			break
+		default:
+			break
 		}
 	}
 
@@ -288,6 +293,16 @@ extension CostSheetViewController {
 		sortEntries()
 		sectionsToHide.removeAll()
 		transactionsTableView.reloadData()
+	}
+
+	@IBAction func transferAmountButtonPressed(_ sender: Any) {
+		let senderInfo: [String: Any] = [
+			"entryType": CostSheetEntry.EntryType.expense
+		]
+		performSegue(withIdentifier: DirectTransferSegue, sender: senderInfo)
+	}
+
+	@IBAction func settingsButtonPressed(_ sender: Any) {
 	}
 
 }

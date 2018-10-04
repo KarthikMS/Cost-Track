@@ -117,13 +117,30 @@
             </objects>
             <point key="canvasLocation" x="513" y="1581"/>
         </scene>
-        <!--Cost Sheet View Controller-->
+        <!--Cost sheet name-->
         <scene sceneID="aTx-MN-Tcw">
             <objects>
                 <viewController id="egc-Yf-OgO" customClass="CostSheetViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Cost sheet name" id="fGy-wO-y2X">
+                        <rightBarButtonItems>
+                            <barButtonItem title="Sett" id="7il-T7-ecw">
+                                <connections>
+                                    <action selector="settingsButtonPressed:" destination="egc-Yf-OgO" id="CVt-nW-aCI"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Tran" id="JaV-8d-QVF">
+                                <connections>
+                                    <action selector="transferAmountButtonPressed:" destination="egc-Yf-OgO" id="Fo6-4h-BY6"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <segue destination="VJY-cq-tDL" kind="show" identifier="CostSheetEntrySegue" id="pWF-n5-Vqd"/>
                         <segue destination="e0M-uA-qqC" kind="presentation" identifier="TransferEntrySegue" id="UfP-jf-kuQ"/>
+                        <segue destination="DT4-xC-FO1" kind="show" identifier="DirectTransferSegue" id="dQC-iJ-4SH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pIF-24-eZY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -240,10 +257,10 @@
             </objects>
             <point key="canvasLocation" x="1990" y="842"/>
         </scene>
-        <!--View Controller-->
+        <!--Transfer Amount View Controller-->
         <scene sceneID="LNh-1A-w5o">
             <objects>
-                <viewController id="DT4-xC-FO1" sceneMemberID="viewController"/>
+                <viewController id="DT4-xC-FO1" customClass="TransferAmountViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KEk-k8-55Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2754" y="109"/>
@@ -277,4 +294,7 @@
             <point key="canvasLocation" x="1238" y="-652"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="dQC-iJ-4SH"/>
+    </inferredMetricsTieBreakers>
 </document>
