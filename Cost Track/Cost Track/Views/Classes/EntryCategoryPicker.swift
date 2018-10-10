@@ -70,6 +70,7 @@ extension EntryCategoryPicker: UIPickerViewDataSource {
 		
 }
 
+// MARK: UIPickerViewDelegate
 extension EntryCategoryPicker: UIPickerViewDelegate {
 
 	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {

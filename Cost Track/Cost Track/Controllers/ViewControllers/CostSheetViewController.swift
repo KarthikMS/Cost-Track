@@ -8,9 +8,7 @@
 
 import UIKit
 
-protocol CostSheetViewControllerDataSource: class {
-	var document: Document { get }
-	var selectedCostSheetId: String { get }
+protocol CostSheetViewControllerDataSource: TransferAmountViewControllerDataSource {
 }
 
 enum TransactionClassificationMode {
@@ -99,8 +97,13 @@ class CostSheetViewController: UIViewController {
 			}
 			transferEntryTableViewController.dataSource = self
 			transferEntryTableViewController.deltaDelegate = self
-		case DirectTransferSegue:
-			break
+		case DirectAmountTransferSegue:
+			guard let transferAmountViewController = segue.destination as? TransferAmountViewController,
+				let dataSource = dataSource else {
+					assertionFailure()
+					return
+			}
+			transferAmountViewController.dataSource = dataSource
 		default:
 			break
 		}
@@ -296,10 +299,7 @@ private extension CostSheetViewController {
 	}
 
 	@IBAction func transferAmountButtonPressed(_ sender: Any) {
-		let senderInfo: [String: Any] = [
-			"entryType": CostSheetEntry.EntryType.expense
-		]
-		performSegue(withIdentifier: DirectTransferSegue, sender: senderInfo)
+		performSegue(withIdentifier: DirectAmountTransferSegue, sender: nil)
 	}
 
 	@IBAction func settingsButtonPressed(_ sender: Any) {
