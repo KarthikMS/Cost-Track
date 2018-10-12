@@ -24,7 +24,8 @@ class TransferAmountViewController: UIViewController {
 	@IBOutlet weak var costSheetPickerView: UIPickerView!
 
 	// MARK: Properties
-	var dataSource: TransferAmountViewControllerDataSource?
+	weak var dataSource: TransferAmountViewControllerDataSource?
+	weak var deltaDelegate: DeltaDelegate?
 	private var entryType = CostSheetEntry.EntryType.expense
 	private var sourceCostSheet = CostSheet()
 	private var destinationCostSheetId = ""
@@ -66,6 +67,12 @@ private extension TransferAmountViewController {
 	}
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
+		guard let amount = Float(amountTextView.text),
+			amount > 0 else {
+				// TODO: Show alert to enter amount > 0
+				return
+		}
+		
 		navigationController?.popViewController(animated: true)
 	}
 
