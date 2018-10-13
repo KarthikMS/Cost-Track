@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GooglePlacePicker
 
 protocol CostSheetEntryViewControllerDataSource: class {
 	var document: Document { get }
@@ -41,6 +42,8 @@ class CostSheetEntryViewController: UIViewController {
 	weak var deltaDelegate: DeltaDelegate?
 	var entryType = CostSheetEntry.EntryType.income
 	var oldEntry: CostSheetEntry?
+	private let locationManager = CLLocationManager()
+	private var entryPlace: Place?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -48,6 +51,10 @@ class CostSheetEntryViewController: UIViewController {
 
 		entryDatePicker.delegate = self
 		entryCategoryPicker.delegate = self
+
+		locationManager.distanceFilter = 50
+		locationManager.desiredAccuracy = kCLLocationAccuracyBest
+		locationManager.delegate = self
     }
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -65,6 +72,11 @@ class CostSheetEntryViewController: UIViewController {
 
 		categoryPickerHeightConstraint.constant = view.frame.size.height - view.safeAreaInsets.bottom - (descriptionTextView.frame.origin.y + descriptionTextView.frame.size.height)
 		datePickerHeightConstraint.constant = categoryPickerHeightConstraint.constant
+	}
+
+	private func openPlacePicker() {
+		locationManager.requestWhenInUseAuthorization()
+		locationManager.startUpdatingLocation()
 	}
 
 	// MARK: View functions
@@ -201,6 +213,8 @@ private extension CostSheetEntryViewController {
 	@IBAction func locationButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
+
+		openPlacePicker()
 	}
 
 	@IBAction func imageButtonPressed(_ sender: Any) {
@@ -227,6 +241,8 @@ private extension CostSheetEntryViewController {
 				assertionFailure()
 				return
 		}
+
+		// Getting data for entry
 		let amount = Float(amountTextView.text)!
 		let category = entryCategoryPicker.selectedCategory
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDatePicker.datePicker.date)
@@ -237,21 +253,30 @@ private extension CostSheetEntryViewController {
 			descriptionText = ""
 		}
 
-		if let oldEntry = oldEntry {
-			var entry = oldEntry
-			entry.type = entryType
-			entry.amount = amount
-			entry.category = category
-			entry.date = dateData
-			entry.description_p = descriptionText
-			let updateEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(entry.id, with: entry, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
+		if var oldEntry = oldEntry {
+			// Updating oldEntry
+			oldEntry.type = entryType
+			oldEntry.amount = amount
+			oldEntry.category = category
+			if let place = entryPlace {
+				oldEntry.place = place
+			} else {
+				oldEntry.clearPlace()
+			}
+			oldEntry.date = dateData
+			oldEntry.description_p = descriptionText
+			let updateEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.id, with: oldEntry, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
 			deltaDelegate.sendDeltaComponents([updateEntryComp])
 		} else {
+			// Creating new entry
 			var entry = CostSheetEntry()
 			entry.id = UUID().uuidString
 			entry.type = entryType
 			entry.amount = amount
 			entry.category = category
+			if let place = entryPlace {
+				entry.place = place
+			}
 			entry.date = dateData
 			entry.description_p = descriptionText
 			let insertEntryComp = DeltaUtil.getComponentToInsertEntry(entry, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
@@ -278,6 +303,59 @@ extension CostSheetEntryViewController: EntryCategoryPickerDelegate {
 
 	func categoryChanged(to category: CostSheetEntry.Category) {
 		updateCategoryViews(category: category)
+	}
+
+}
+
+// MARK: GMSPlacePickerViewControllerDelegate
+extension CostSheetEntryViewController: GMSPlacePickerViewControllerDelegate {
+
+	func placePicker(_ viewController: GMSPlacePickerViewController, didPick place: GMSPlace) {
+		entryPlace = nil
+		entryPlace?.id = place.placeID
+		entryPlace?.name = place.name
+		entryPlace?.latitude = place.coordinate.latitude
+		entryPlace?.longitude = place.coordinate.longitude
+		if let address = place.formattedAddress {
+			entryPlace?.address = address
+		}
+		if let phoneNumber = place.phoneNumber {
+			entryPlace?.phoneNumber = phoneNumber
+		}
+		viewController.dismiss(animated: true)
+	}
+
+	func placePickerDidCancel(_ viewController: GMSPlacePickerViewController) {
+		viewController.dismiss(animated: true)
+	}
+
+}
+
+
+extension CostSheetEntryViewController: CLLocationManagerDelegate {
+
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+		manager.stopUpdatingLocation()
+
+		// Getting viewPort
+		let location = locations.last!
+		let latitude = location.coordinate.latitude
+		let longitude = location.coordinate.longitude
+		let center = CLLocationCoordinate2DMake(latitude, longitude)
+		let northEast = CLLocationCoordinate2DMake(center.latitude + 0.001, center.longitude + 0.001)
+		let southWest = CLLocationCoordinate2DMake(center.latitude - 0.001, center.longitude - 0.001)
+		let viewPort = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
+
+		let config = GMSPlacePickerConfig(viewport: viewPort)
+		let placePicker = GMSPlacePickerViewController(config: config)
+		placePicker.delegate = self
+
+		present(placePicker, animated: true, completion: nil)
+	}
+
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+		manager.stopUpdatingLocation()
+		print("locationManager Error: \(error.localizedDescription)")
 	}
 
 }

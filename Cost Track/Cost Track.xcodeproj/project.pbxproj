@@ -53,6 +53,7 @@
 		D9B119B621516A670007CDA1 /* CTFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119B521516A670007CDA1 /* CTFileManager.swift */; };
 		D9C453FF21561C9D00890E60 /* TransferAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C453FD21561C9D00890E60 /* TransferAmountViewController.swift */; };
 		D9C4540021561C9D00890E60 /* TransferAmountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C453FE21561C9D00890E60 /* TransferAmountViewController.xib */; };
+		D9D7F01D217214CC00749589 /* Place.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D7F01C217214CC00749589 /* Place.pb.swift */; };
 		D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */; };
 		D9F5E5F520FEF77300454FA9 /* CostSheetEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */; };
 /* End PBXBuildFile section */
@@ -131,6 +132,7 @@
 		D9B119B521516A670007CDA1 /* CTFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTFileManager.swift; sourceTree = "<group>"; };
 		D9C453FD21561C9D00890E60 /* TransferAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAmountViewController.swift; sourceTree = "<group>"; };
 		D9C453FE21561C9D00890E60 /* TransferAmountViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferAmountViewController.xib; sourceTree = "<group>"; };
+		D9D7F01C217214CC00749589 /* Place.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Place.pb.swift; sourceTree = "<group>"; };
 		D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetEntryViewController.swift; sourceTree = "<group>"; };
 		D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSheetEntryViewController.xib; sourceTree = "<group>"; };
 		F245DB9B1362C7111170B109 /* Pods-Cost Track.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cost Track.release.xcconfig"; path = "Pods/Target Support Files/Pods-Cost Track/Pods-Cost Track.release.xcconfig"; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 				D98973E3210E330F0051F809 /* CostSheet.pb.swift */,
 				D98973D6210E16120051F809 /* CostSheetGroup.pb.swift */,
 				D98973E5210E336B0051F809 /* CostSheetEntry.pb.swift */,
+				D9D7F01C217214CC00749589 /* Place.pb.swift */,
 			);
 			path = Proto;
 			sourceTree = "<group>";
@@ -403,6 +406,7 @@
 				D962F3EB20F9BE81003C7C58 /* Frameworks */,
 				D962F3EC20F9BE81003C7C58 /* Resources */,
 				9A4B8CF64BBAF77E2D4ACDF6 /* [CP] Embed Pods Frameworks */,
+				9B775289D4C8415A64D3441B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -587,6 +591,32 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Cost Track/Pods-Cost Track-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		9B775289D4C8415A64D3441B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Cost Track/Pods-Cost Track-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GooglePlacePicker/Frameworks/GooglePlacePicker.framework/Resources/GooglePlacePicker.bundle",
+				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlacePicker.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlaces.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Cost Track/Pods-Cost Track-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C9778B7AC614B56B7B408423 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -625,6 +655,7 @@
 				D9B119B021515B4D0007CDA1 /* Delta.pb.swift in Sources */,
 				D97AB0FB212D90D200000D6F /* GroupSelectTableViewController.swift in Sources */,
 				D9032EBD20FB75EC009EF5FC /* NewCostSheetViewController.swift in Sources */,
+				D9D7F01D217214CC00749589 /* Place.pb.swift in Sources */,
 				D9B119B621516A670007CDA1 /* CTFileManager.swift in Sources */,
 				D989740C21173E9A0051F809 /* EntryCategoryPicker.swift in Sources */,
 				D962F42820F9C152003C7C58 /* MyCostSheetsViewController.swift in Sources */,

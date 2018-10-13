@@ -25,67 +25,67 @@ struct CostSheetEntry {
   // methods supported on all messages.
 
   var type: CostSheetEntry.EntryType {
-    get {return _type ?? .income}
-    set {_type = newValue}
+    get {return _storage._type ?? .income}
+    set {_uniqueStorage()._type = newValue}
   }
   /// Returns true if `type` has been explicitly set.
-  var hasType: Bool {return self._type != nil}
+  var hasType: Bool {return _storage._type != nil}
   /// Clears the value of `type`. Subsequent reads from it will return its default value.
-  mutating func clearType() {self._type = nil}
+  mutating func clearType() {_uniqueStorage()._type = nil}
 
   var amount: Float {
-    get {return _amount ?? 0}
-    set {_amount = newValue}
+    get {return _storage._amount ?? 0}
+    set {_uniqueStorage()._amount = newValue}
   }
   /// Returns true if `amount` has been explicitly set.
-  var hasAmount: Bool {return self._amount != nil}
+  var hasAmount: Bool {return _storage._amount != nil}
   /// Clears the value of `amount`. Subsequent reads from it will return its default value.
-  mutating func clearAmount() {self._amount = nil}
+  mutating func clearAmount() {_uniqueStorage()._amount = nil}
 
   var category: CostSheetEntry.Category {
-    get {return _category ?? .salary}
-    set {_category = newValue}
+    get {return _storage._category ?? .salary}
+    set {_uniqueStorage()._category = newValue}
   }
   /// Returns true if `category` has been explicitly set.
-  var hasCategory: Bool {return self._category != nil}
+  var hasCategory: Bool {return _storage._category != nil}
   /// Clears the value of `category`. Subsequent reads from it will return its default value.
-  mutating func clearCategory() {self._category = nil}
+  mutating func clearCategory() {_uniqueStorage()._category = nil}
 
-  var place: String {
-    get {return _place ?? String()}
-    set {_place = newValue}
+  var place: Place {
+    get {return _storage._place ?? Place()}
+    set {_uniqueStorage()._place = newValue}
   }
   /// Returns true if `place` has been explicitly set.
-  var hasPlace: Bool {return self._place != nil}
+  var hasPlace: Bool {return _storage._place != nil}
   /// Clears the value of `place`. Subsequent reads from it will return its default value.
-  mutating func clearPlace() {self._place = nil}
+  mutating func clearPlace() {_uniqueStorage()._place = nil}
 
   var date: Data {
-    get {return _date ?? SwiftProtobuf.Internal.emptyData}
-    set {_date = newValue}
+    get {return _storage._date ?? SwiftProtobuf.Internal.emptyData}
+    set {_uniqueStorage()._date = newValue}
   }
   /// Returns true if `date` has been explicitly set.
-  var hasDate: Bool {return self._date != nil}
+  var hasDate: Bool {return _storage._date != nil}
   /// Clears the value of `date`. Subsequent reads from it will return its default value.
-  mutating func clearDate() {self._date = nil}
+  mutating func clearDate() {_uniqueStorage()._date = nil}
 
   var description_p: String {
-    get {return _description_p ?? String()}
-    set {_description_p = newValue}
+    get {return _storage._description_p ?? String()}
+    set {_uniqueStorage()._description_p = newValue}
   }
   /// Returns true if `description_p` has been explicitly set.
-  var hasDescription_p: Bool {return self._description_p != nil}
+  var hasDescription_p: Bool {return _storage._description_p != nil}
   /// Clears the value of `description_p`. Subsequent reads from it will return its default value.
-  mutating func clearDescription_p() {self._description_p = nil}
+  mutating func clearDescription_p() {_uniqueStorage()._description_p = nil}
 
   var id: String {
-    get {return _id ?? String()}
-    set {_id = newValue}
+    get {return _storage._id ?? String()}
+    set {_uniqueStorage()._id = newValue}
   }
   /// Returns true if `id` has been explicitly set.
-  var hasID: Bool {return self._id != nil}
+  var hasID: Bool {return _storage._id != nil}
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
-  mutating func clearID() {self._id = nil}
+  mutating func clearID() {_uniqueStorage()._id = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -179,14 +179,20 @@ struct CostSheetEntry {
 
   init() {}
 
-  fileprivate var _type: CostSheetEntry.EntryType? = nil
-  fileprivate var _amount: Float? = nil
-  fileprivate var _category: CostSheetEntry.Category? = nil
-  fileprivate var _place: String? = nil
-  fileprivate var _date: Data? = nil
-  fileprivate var _description_p: String? = nil
-  fileprivate var _id: String? = nil
+  fileprivate var _storage = _StorageClass.defaultInstance
 }
+
+#if swift(>=4.2)
+
+extension CostSheetEntry.EntryType: CaseIterable {
+  // Support synthesized by the compiler.
+}
+
+extension CostSheetEntry.Category: CaseIterable {
+  // Support synthesized by the compiler.
+}
+
+#endif  // swift(>=4.2)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -202,63 +208,110 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     7: .same(proto: "id"),
   ]
 
+  fileprivate class _StorageClass {
+    var _type: CostSheetEntry.EntryType? = nil
+    var _amount: Float? = nil
+    var _category: CostSheetEntry.Category? = nil
+    var _place: Place? = nil
+    var _date: Data? = nil
+    var _description_p: String? = nil
+    var _id: String? = nil
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _type = source._type
+      _amount = source._amount
+      _category = source._category
+      _place = source._place
+      _date = source._date
+      _description_p = source._description_p
+      _id = source._id
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
   public var isInitialized: Bool {
-    if self._type == nil {return false}
-    if self._amount == nil {return false}
-    if self._category == nil {return false}
-    if self._date == nil {return false}
-    if self._id == nil {return false}
-    return true
+    return withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if _storage._type == nil {return false}
+      if _storage._amount == nil {return false}
+      if _storage._category == nil {return false}
+      if _storage._date == nil {return false}
+      if _storage._id == nil {return false}
+      if let v = _storage._place, !v.isInitialized {return false}
+      return true
+    }
   }
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      switch fieldNumber {
-      case 1: try decoder.decodeSingularEnumField(value: &self._type)
-      case 2: try decoder.decodeSingularFloatField(value: &self._amount)
-      case 3: try decoder.decodeSingularEnumField(value: &self._category)
-      case 4: try decoder.decodeSingularStringField(value: &self._place)
-      case 5: try decoder.decodeSingularBytesField(value: &self._date)
-      case 6: try decoder.decodeSingularStringField(value: &self._description_p)
-      case 7: try decoder.decodeSingularStringField(value: &self._id)
-      default: break
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeSingularEnumField(value: &_storage._type)
+        case 2: try decoder.decodeSingularFloatField(value: &_storage._amount)
+        case 3: try decoder.decodeSingularEnumField(value: &_storage._category)
+        case 4: try decoder.decodeSingularMessageField(value: &_storage._place)
+        case 5: try decoder.decodeSingularBytesField(value: &_storage._date)
+        case 6: try decoder.decodeSingularStringField(value: &_storage._description_p)
+        case 7: try decoder.decodeSingularStringField(value: &_storage._id)
+        default: break
+        }
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._type {
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 1)
-    }
-    if let v = self._amount {
-      try visitor.visitSingularFloatField(value: v, fieldNumber: 2)
-    }
-    if let v = self._category {
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 3)
-    }
-    if let v = self._place {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 4)
-    }
-    if let v = self._date {
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 5)
-    }
-    if let v = self._description_p {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 6)
-    }
-    if let v = self._id {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 7)
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if let v = _storage._type {
+        try visitor.visitSingularEnumField(value: v, fieldNumber: 1)
+      }
+      if let v = _storage._amount {
+        try visitor.visitSingularFloatField(value: v, fieldNumber: 2)
+      }
+      if let v = _storage._category {
+        try visitor.visitSingularEnumField(value: v, fieldNumber: 3)
+      }
+      if let v = _storage._place {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+      }
+      if let v = _storage._date {
+        try visitor.visitSingularBytesField(value: v, fieldNumber: 5)
+      }
+      if let v = _storage._description_p {
+        try visitor.visitSingularStringField(value: v, fieldNumber: 6)
+      }
+      if let v = _storage._id {
+        try visitor.visitSingularStringField(value: v, fieldNumber: 7)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   func _protobuf_generated_isEqualTo(other: CostSheetEntry) -> Bool {
-    if self._type != other._type {return false}
-    if self._amount != other._amount {return false}
-    if self._category != other._category {return false}
-    if self._place != other._place {return false}
-    if self._date != other._date {return false}
-    if self._description_p != other._description_p {return false}
-    if self._id != other._id {return false}
+    if _storage !== other._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._type != rhs_storage._type {return false}
+        if _storage._amount != rhs_storage._amount {return false}
+        if _storage._category != rhs_storage._category {return false}
+        if _storage._place != rhs_storage._place {return false}
+        if _storage._date != rhs_storage._date {return false}
+        if _storage._description_p != rhs_storage._description_p {return false}
+        if _storage._id != rhs_storage._id {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
     if unknownFields != other.unknownFields {return false}
     return true
   }

@@ -2,6 +2,8 @@ syntax = "proto2";
 
 option swift_prefix = "";
 
+import "Place.proto";
+
 message CostSheetEntry {
 
   enum EntryType {
@@ -29,7 +31,7 @@ message CostSheetEntry {
   required EntryType type = 1;
   required float amount = 2;
   required Category category = 3;
-  optional string place = 4;
+  optional Place place = 4;
   required bytes date = 5;
   optional string description = 6;
   required string id = 7;
