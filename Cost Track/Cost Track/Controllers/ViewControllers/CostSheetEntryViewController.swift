@@ -24,6 +24,9 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var categoryLabel: UILabel!
 	@IBOutlet weak var dateLabel: UILabel!
 	@IBOutlet weak var timeLabel: UILabel!
+	@IBOutlet weak var selectPlaceLabel: UILabel!
+	@IBOutlet weak var placeNameLabel: UILabel!
+	@IBOutlet weak var placeAddressLabel: UILabel!
 	@IBOutlet weak var descriptionTextView: UITextView!
 	@IBOutlet weak var entryDatePicker: EntryDatePicker!
 	@IBOutlet weak var entryCategoryPicker: EntryCategoryPicker!
@@ -36,6 +39,10 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var datePickerHeightConstraint: NSLayoutConstraint!
 	@IBOutlet weak var datePickerHideTopConstraint: NSLayoutConstraint!
 	@IBOutlet weak var datePickerShowTopConstraint: NSLayoutConstraint!
+
+	@IBOutlet weak var placeEditorHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var placeEditorHideTopConstraint: NSLayoutConstraint!
+	@IBOutlet weak var placeEditorShowTopConstraint: NSLayoutConstraint!
 
 	// MARK: Properties
 	weak var dataSource: CostSheetEntryViewControllerDataSource?
@@ -55,28 +62,41 @@ class CostSheetEntryViewController: UIViewController {
 		locationManager.distanceFilter = 50
 		locationManager.desiredAccuracy = kCLLocationAccuracyBest
 		locationManager.delegate = self
-    }
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
 
 		if oldEntry != nil {
 			updateViewsForOldEntry()
 		} else {
 			updateViewsToDefaultValues()
 		}
-	}
+    }
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
-		categoryPickerHeightConstraint.constant = view.frame.size.height - view.safeAreaInsets.bottom - (descriptionTextView.frame.origin.y + descriptionTextView.frame.size.height)
+		// Calculating height constraints for views in the bottom
+		categoryPickerHeightConstraint.constant = view.frame.size.height - (descriptionTextView.frame.origin.y + descriptionTextView.frame.size.height)
 		datePickerHeightConstraint.constant = categoryPickerHeightConstraint.constant
+		placeEditorHeightConstraint.constant = categoryPickerHeightConstraint.constant
 	}
 
 	private func openPlacePicker() {
-		locationManager.requestWhenInUseAuthorization()
+		requestLocationServicesIfNecessary()
 		locationManager.startUpdatingLocation()
+	}
+
+	private func requestLocationServicesIfNecessary() {
+		if CLLocationManager.locationServicesEnabled() {
+			switch CLLocationManager.authorizationStatus() {
+			case .notDetermined:
+				locationManager.requestWhenInUseAuthorization()
+			case .denied:
+				showAlertToTakeUserToSettings()
+			default:
+				return
+			}
+		} else {
+			showAlertToTakeUserToSettings()
+		}
 	}
 
 	// MARK: View functions
@@ -91,6 +111,12 @@ class CostSheetEntryViewController: UIViewController {
 		amountTextView.text = String(oldEntry.amount)
 		updateCategoryViews(category: oldEntry.category)
 		updateDateViews(date: oldEntryDate)
+		if oldEntry.hasPlace {
+			entryPlace = oldEntry.place
+			updatePlaceViews(place: oldEntry.place)
+		} else {
+			updatePlaceViews(place: nil)
+		}
 		descriptionTextView.text = oldEntry.description_p
 	}
 
@@ -132,6 +158,16 @@ class CostSheetEntryViewController: UIViewController {
 			entryCategoryPicker.categoryPickerView.selectRow(0, inComponent: 0, animated: false)
 		}
 		categoryLabel.text = entryCategoryPicker.selectedCategory.name
+	}
+
+	private func updatePlaceViews(place: Place?) {
+		if let place = place {
+			selectPlaceLabel.isHidden = true
+			self.placeNameLabel.text = place.name
+			self.placeAddressLabel.text = place.address
+		} else {
+			selectPlaceLabel.isHidden = false
+		}
 	}
 
 	private func showCategoryPicker() {
@@ -182,6 +218,49 @@ class CostSheetEntryViewController: UIViewController {
 		}
 	}
 
+	private func showPlaceEditor() {
+		if placeEditorShowTopConstraint.isActive {
+			return
+		}
+
+		view.removeConstraint(placeEditorHideTopConstraint)
+		view.addConstraint(placeEditorShowTopConstraint)
+		UIView.animate(withDuration: 0.75) {
+			self.view.layoutIfNeeded()
+		}
+	}
+
+	private func hidePlaceEditor() {
+		if placeEditorHideTopConstraint.isActive {
+			return
+		}
+
+		view.removeConstraint(placeEditorShowTopConstraint)
+		view.addConstraint(placeEditorHideTopConstraint)
+		UIView.animate(withDuration: 0.75) {
+			self.view.layoutIfNeeded()
+		}
+	}
+
+	private func showAlertToTakeUserToSettings() {
+		let alertController = UIAlertController(title: "Location not detected", message: "Please go to settings and enable location services to use this feature.", preferredStyle: .alert)
+
+		let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) in
+			guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
+				return
+			}
+			if UIApplication.shared.canOpenURL(settingsUrl) {
+				UIApplication.shared.open(settingsUrl, options: [:])
+			}
+		}
+		alertController.addAction(settingsAction)
+
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+		alertController.addAction(cancelAction)
+
+		present(alertController, animated: true)
+	}
+
 }
 
 // MARK: IBActions
@@ -207,22 +286,35 @@ private extension CostSheetEntryViewController {
 		descriptionTextView.resignFirstResponder()
 
 		hideDatePicker()
+		hidePlaceEditor()
 		showCategoryPicker()
 	}
 
-	@IBAction func locationButtonPressed(_ sender: Any) {
+	@IBAction func placeViewTapped(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 
+		hideCategoryPicker()
+		hideDatePicker()
+
+		if entryPlace == nil {
+			openPlacePicker()
+		} else {
+			showPlaceEditor()
+		}
+	}
+
+	@IBAction func changePlaceButtonPressed(_ sender: Any) {
 		openPlacePicker()
 	}
 
-	@IBAction func imageButtonPressed(_ sender: Any) {
-		amountTextView.resignFirstResponder()
-		descriptionTextView.resignFirstResponder()
+	@IBAction func deletePlaceButtonPressed(_ sender: Any) {
+		entryPlace = nil
+		updatePlaceViews(place: entryPlace)
+		hidePlaceEditor()
 	}
 
-	@IBAction func voiceNoteButtonPressed(_ sender: Any) {
+	@IBAction func imageButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
 	}
@@ -232,6 +324,7 @@ private extension CostSheetEntryViewController {
 		descriptionTextView.resignFirstResponder()
 
 		hideCategoryPicker()
+		hidePlaceEditor()
 		showDatePicker()
 	}
 
@@ -311,7 +404,8 @@ extension CostSheetEntryViewController: EntryCategoryPickerDelegate {
 extension CostSheetEntryViewController: GMSPlacePickerViewControllerDelegate {
 
 	func placePicker(_ viewController: GMSPlacePickerViewController, didPick place: GMSPlace) {
-		entryPlace = nil
+//		entryPlace = nil
+		entryPlace = Place()
 		entryPlace?.id = place.placeID
 		entryPlace?.name = place.name
 		entryPlace?.latitude = place.coordinate.latitude
@@ -322,7 +416,10 @@ extension CostSheetEntryViewController: GMSPlacePickerViewControllerDelegate {
 		if let phoneNumber = place.phoneNumber {
 			entryPlace?.phoneNumber = phoneNumber
 		}
-		viewController.dismiss(animated: true)
+		updatePlaceViews(place: entryPlace)
+		viewController.dismiss(animated: true) {
+			self.showPlaceEditor()
+		}
 	}
 
 	func placePickerDidCancel(_ viewController: GMSPlacePickerViewController) {
@@ -331,7 +428,7 @@ extension CostSheetEntryViewController: GMSPlacePickerViewControllerDelegate {
 
 }
 
-
+// MARK: CLLocationManagerDelegate
 extension CostSheetEntryViewController: CLLocationManagerDelegate {
 
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
