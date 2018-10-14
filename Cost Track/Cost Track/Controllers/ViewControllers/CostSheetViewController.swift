@@ -34,7 +34,7 @@ class CostSheetViewController: UIViewController {
 		Int: [
 			String: [CostSheetEntry]
 		]
-		]()
+		]() // [section: [sectionHeaderTitle: [CostSheetEntry]]]
 	private var entriesSortedByDate = [CostSheetEntry]()
 	private let categories = CommonUtil.getAllCategories()
 	private var transferEntryIndexPath: IndexPath?
@@ -233,7 +233,39 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByPlace() {
+		guard let dataSource = dataSource else {
+			return
+		}
+		let costSheetEntries = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId).entries
+		var entriesSortedByPlace = [String: [CostSheetEntry]]()
+		for entry in costSheetEntries {
+			if !entry.hasPlace {
+				if entriesSortedByPlace["No place"] == nil {
+					entriesSortedByPlace["No place"] = [CostSheetEntry]()
+				}
+				entriesSortedByPlace["No place"]?.append(entry)
+			} else {
+				if entriesSortedByPlace[entry.place.name] == nil {
+					entriesSortedByPlace[entry.place.name] = [CostSheetEntry]()
+				}
+				entriesSortedByPlace[entry.place.name]?.append(entry)
+			}
+		}
 
+		var i = 0
+		let entriesWithoutPlace = entriesSortedByPlace["No place"]
+		if let entriesWithoutPlace = entriesWithoutPlace {
+			sortedEntriesForTableView[i] = ["No place": entriesWithoutPlace]
+			i += 1
+		}
+
+		let sortedEntriesWithPlace = entriesSortedByPlace
+			.filter { $0.key != "No place" }
+			.sorted { $0.key < $1.key }
+		for (placeName, entries) in sortedEntriesWithPlace {
+			sortedEntriesForTableView[i] = [placeName: entries]
+			i += 1
+		}
 	}
 
 	func getSortedEntry(at indexPath: IndexPath) -> CostSheetEntry? {
