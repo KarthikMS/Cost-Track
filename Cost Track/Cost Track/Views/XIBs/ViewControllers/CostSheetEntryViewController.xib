@@ -210,7 +210,7 @@
                         <constraint firstAttribute="bottom" secondItem="lHo-ux-wWV" secondAttribute="bottom" id="yw1-he-M3m"/>
                     </constraints>
                 </view>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Enter description" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="OcW-2E-2Hg">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="OcW-2E-2Hg">
                     <rect key="frame" x="0.0" y="304" width="375" height="181"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -220,6 +220,9 @@
                             <integer key="value" value="2"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="5R6-Yd-GSy"/>
+                    </connections>
                 </textView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dVv-Mq-aOk" customClass="EntryDatePicker" customModule="Cost_Track" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="667" width="375" height="1"/>

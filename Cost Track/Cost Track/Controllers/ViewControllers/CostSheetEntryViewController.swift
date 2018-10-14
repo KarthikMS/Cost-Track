@@ -118,6 +118,7 @@ class CostSheetEntryViewController: UIViewController {
 			updatePlaceViews(place: nil)
 		}
 		descriptionTextView.text = oldEntry.description_p
+		descriptionTextView.textColor = .black
 	}
 
 	private func updateViewsToDefaultValues() {
@@ -125,7 +126,8 @@ class CostSheetEntryViewController: UIViewController {
 		amountTextView.text = "0.00"
 		updateCategoryViews(category: nil)
 		updateDateViews(date: Date())
-		descriptionTextView.text = "Description"
+		descriptionTextView.text = "Enter description..."
+		descriptionTextView.textColor = .lightGray
 	}
 
 	private func updateViewsBasedOnEntryType() {
@@ -453,6 +455,25 @@ extension CostSheetEntryViewController: CLLocationManagerDelegate {
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
 		manager.stopUpdatingLocation()
 		print("locationManager Error: \(error.localizedDescription)")
+	}
+
+}
+
+// MARK: UITextViewDelegate
+extension CostSheetEntryViewController: UITextViewDelegate {
+
+	func textViewDidBeginEditing(_ textView: UITextView) {
+		if textView.textColor == .lightGray {
+			textView.text = nil
+			textView.textColor = .black
+		}
+	}
+
+	func textViewDidEndEditing(_ textView: UITextView) {
+		if textView.text.isEmpty {
+			textView.text = "Enter description..."
+			textView.textColor = .lightGray
+		}
 	}
 
 }

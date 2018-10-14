@@ -49,7 +49,14 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 				assertionFailure()
 				return cell
 		}
-		
+
+		let entryDescription: String?
+		if costSheetEntry.hasDescription_p {
+			entryDescription = costSheetEntry.description_p
+		} else {
+			entryDescription = nil
+		}
+
 		let place: Place?
 		if costSheetEntry.hasPlace {
 			place = costSheetEntry.place
@@ -63,7 +70,7 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 					   time: entryDate.string(format: "hh:mm a"),
 					   category: costSheetEntry.category.name,
 					   place: place,
-					   description: costSheetEntry.description_p,
+					   description: entryDescription,
 					   forMode: dataSource.classificationMode
 		)
 		return cell

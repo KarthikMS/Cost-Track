@@ -50,9 +50,11 @@ class TransactionsTableViewCell: UITableViewCell {
 			descriptionLabel.text = ""
 		}
 
-		var placeName = "No place"
+		let placeName: String
 		if let place = place {
-//			placeName = place
+			placeName = place.name
+		} else {
+			placeName = "No place"
 		}
 
 		switch mode {
