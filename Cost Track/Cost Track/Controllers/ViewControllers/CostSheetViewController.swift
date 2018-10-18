@@ -36,7 +36,6 @@ class CostSheetViewController: UIViewController {
 		]
 		]() // [section: [sectionHeaderTitle: [CostSheetEntry]]]
 	private var entriesSortedByDate = [CostSheetEntry]()
-	private let categories = CommonUtil.getAllCategories()
 	private var transferEntryIndexPath: IndexPath?
 	var sectionsToHide = Set<Int>()
 
@@ -211,22 +210,26 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByCategory() {
-		var entriesSortedByCategory = [CostSheetEntry.Category: [CostSheetEntry]]()
-		for category in categories {
-			entriesSortedByCategory[category] = [CostSheetEntry]()
+		guard let dataSource = dataSource else {
+			assertionFailure()
+			return
+		}
+		var entriesSortedByCategory = [String: [CostSheetEntry]]()
+		for category in dataSource.document.categories {
+			entriesSortedByCategory[category.name] = [CostSheetEntry]()
 		}
 
 		for entry in entriesSortedByDate {
-			entriesSortedByCategory[entry.category]?.append(entry)
+			entriesSortedByCategory[entry.category.name]?.append(entry)
 		}
 
 		var i = 0
-		for (category, entries) in entriesSortedByCategory {
+		for (categoryName, entries) in entriesSortedByCategory {
 			if entries.count == 0 {
 				continue
 			}
 
-			let dict = [category.name: entries]
+			let dict = [categoryName: entries]
 			sortedEntriesForTableView[i] = dict
 			i += 1
 		}

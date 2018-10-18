@@ -57,6 +57,7 @@ class CostSheetEntryViewController: UIViewController {
         super.viewDidLoad()
 
 		entryDatePicker.delegate = self
+		entryCategoryPicker.dataSource = self
 		entryCategoryPicker.delegate = self
 
 		locationManager.distanceFilter = 50
@@ -153,7 +154,7 @@ class CostSheetEntryViewController: UIViewController {
 		entryDatePicker.datePicker.date = date
 	}
 
-	private func updateCategoryViews(category: CostSheetEntry.Category?) {
+	private func updateCategoryViews(category: Category?) {
 		if let category = category {
 			entryCategoryPicker.selectCategory(category)
 		} else {
@@ -342,7 +343,8 @@ private extension CostSheetEntryViewController {
 		let category = entryCategoryPicker.selectedCategory
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDatePicker.datePicker.date)
 		let descriptionText: String
-		if let desctiptionTextViewText = descriptionTextView.text {
+		if let desctiptionTextViewText = descriptionTextView.text,
+			descriptionTextView.textColor == .black {
 			descriptionText = desctiptionTextViewText
 		} else  {
 			descriptionText = ""
@@ -393,10 +395,23 @@ extension CostSheetEntryViewController: EntryDatePickerDelegate {
 
 }
 
+// MARK: EntryCategoryPickerDataSource
+extension CostSheetEntryViewController: EntryCategoryPickerDataSource {
+
+	var categories: [Category] {
+		guard let categories = dataSource?.document.categories else {
+			assertionFailure()
+			return []
+		}
+		return categories
+	}
+
+}
+
 // MARK: EntryCategoryPickerDelegate
 extension CostSheetEntryViewController: EntryCategoryPickerDelegate {
 
-	func categoryChanged(to category: CostSheetEntry.Category) {
+	func categoryChanged(to category: Category) {
 		updateCategoryViews(category: category)
 	}
 

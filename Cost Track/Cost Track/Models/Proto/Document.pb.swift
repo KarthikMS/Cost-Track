@@ -28,6 +28,8 @@ struct Document {
 
   var groups: [CostSheetGroup] = []
 
+  var categories: [Category] = []
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -40,11 +42,13 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "costSheets"),
     2: .same(proto: "groups"),
+    3: .same(proto: "categories"),
   ]
 
   public var isInitialized: Bool {
     if !SwiftProtobuf.Internal.areAllInitialized(self.costSheets) {return false}
     if !SwiftProtobuf.Internal.areAllInitialized(self.groups) {return false}
+    if !SwiftProtobuf.Internal.areAllInitialized(self.categories) {return false}
     return true
   }
 
@@ -53,6 +57,7 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       switch fieldNumber {
       case 1: try decoder.decodeRepeatedMessageField(value: &self.costSheets)
       case 2: try decoder.decodeRepeatedMessageField(value: &self.groups)
+      case 3: try decoder.decodeRepeatedMessageField(value: &self.categories)
       default: break
       }
     }
@@ -65,13 +70,17 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if !self.groups.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.groups, fieldNumber: 2)
     }
+    if !self.categories.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.categories, fieldNumber: 3)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   func _protobuf_generated_isEqualTo(other: Document) -> Bool {
     if self.costSheets != other.costSheets {return false}
     if self.groups != other.groups {return false}
-    if unknownFields != other.unknownFields {return false}
+    if self.categories != other.categories {return false}
+    if self.unknownFields != other.unknownFields {return false}
     return true
   }
 }

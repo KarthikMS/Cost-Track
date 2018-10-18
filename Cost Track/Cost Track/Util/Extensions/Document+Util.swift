@@ -116,4 +116,81 @@ extension Document {
 		costSheets[costSheetIndex].lastModifiedDate = Date().data
 	}
 
+	mutating func addDefaultCategories() {
+		var salary = Category()
+		salary.name = "Salary"
+		salary.iconType = .salary
+
+		var vehicleAndTransport = Category()
+		vehicleAndTransport.name = "Vehicle & Transport"
+		vehicleAndTransport.iconType = .vehicleAndTransport
+
+		var household = Category()
+		household.name = "Household"
+		household.iconType = .household
+
+		var shopping = Category()
+		shopping.name = "Shopping"
+		shopping.iconType = .shopping
+
+		var phone = Category()
+		phone.name = "Phone"
+		phone.iconType = .phone
+
+		var entertainment = Category()
+		entertainment.name = "Entertainment"
+		entertainment.iconType = .entertainment
+
+		var medicine = Category()
+		medicine.name = "Medicine"
+		medicine.iconType = .medicine
+
+		var investment = Category()
+		investment.name = "Investment"
+		investment.iconType = .investment
+
+		var investmentReturn = Category()
+		investmentReturn.name = "Investment Return"
+		investmentReturn.iconType = .investmentReturn
+
+		var tax = Category()
+		tax.name = "Tax"
+		tax.iconType = .tax
+
+		var insurance = Category()
+		insurance.name = "Insurance"
+		insurance.iconType = .insurance
+
+		var foodAndDrinks = Category()
+		foodAndDrinks.name = "Food & Drinks"
+		foodAndDrinks.iconType = .foodAndDrinks
+
+		var misc = Category()
+		misc.name = "Misc"
+		misc.iconType = .misc
+
+		var transfer = Category()
+		transfer.name = "Transfer"
+		transfer.iconType = .transfer
+
+		categories.append(contentsOf: [
+			salary,
+			vehicleAndTransport,
+			household,
+			shopping,
+			phone,
+
+			entertainment,
+			medicine,
+			investment,
+			investmentReturn,
+			tax,
+
+			insurance,
+			foodAndDrinks,
+			misc,
+			transfer
+			])
+	}
+
 }

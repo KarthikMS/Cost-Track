@@ -46,6 +46,8 @@ class CTFileManager {
 			NotSetGroup.id = UUID().uuidString
 			newDoc.groups.append(NotSetGroup)
 
+			newDoc.addDefaultCategories()
+
 			return (newDoc, true)
 		}
 	}

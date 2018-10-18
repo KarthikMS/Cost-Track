@@ -8,8 +8,12 @@
 
 import UIKit
 
+protocol EntryCategoryPickerDataSource: class {
+	var categories: [Category] { get }
+}
+
 protocol EntryCategoryPickerDelegate: class {
-	func categoryChanged(to category: CostSheetEntry.Category)
+	func categoryChanged(to category: Category)
 }
 
 class EntryCategoryPicker: UIView {
@@ -19,8 +23,8 @@ class EntryCategoryPicker: UIView {
 	@IBOutlet weak var categoryPickerView: UIPickerView!
 
 	// MARK: Properties
+	weak var dataSource: EntryCategoryPickerDataSource?
 	weak var delegate: EntryCategoryPickerDelegate?
-	private let categories = CommonUtil.getAllCategories()
 
 	// MARK: Initializers
 	override init(frame: CGRect) {
@@ -40,11 +44,19 @@ class EntryCategoryPicker: UIView {
 	}
 
 	// MARK: Functions
-	var selectedCategory: CostSheetEntry.Category {
+	var selectedCategory: Category {
+		guard let categories = dataSource?.categories else {
+			assertionFailure()
+			return Category()
+		}
 		return categories[categoryPickerView.selectedRow(inComponent: 0)]
 	}
 
-	func selectCategory(_ categoryToSelect: CostSheetEntry.Category) {
+	func selectCategory(_ categoryToSelect: Category) {
+		guard let categories = dataSource?.categories else {
+			assertionFailure()
+			return
+		}
 		for i in 0..<categories.count {
 			let category = categories[i]
 			if category == categoryToSelect {
@@ -65,6 +77,10 @@ extension EntryCategoryPicker: UIPickerViewDataSource {
 	}
 
 	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		guard let categories = dataSource?.categories else {
+			assertionFailure()
+			return -1
+		}
 		return categories.count
 	}
 		
@@ -74,10 +90,18 @@ extension EntryCategoryPicker: UIPickerViewDataSource {
 extension EntryCategoryPicker: UIPickerViewDelegate {
 
 	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+		guard let categories = dataSource?.categories else {
+			assertionFailure()
+			return nil
+		}
 		return categories[row].name
 	}
 
 	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+		guard let categories = dataSource?.categories else {
+			assertionFailure()
+			return
+		}
 		delegate?.categoryChanged(to: categories[row])
 	}
 
