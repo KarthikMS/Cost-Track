@@ -270,6 +270,8 @@ class CostSheetEntryViewController: UIViewController {
 private extension CostSheetEntryViewController {
 
 	@IBAction func navigationBarTitleButtonPressed(_ sender: UIButton) {
+		let oldSelectedCategory = entryCategoryPicker.selectedCategory
+
 		switch entryType {
 		case .income:
 			entryType = .expense
@@ -277,6 +279,15 @@ private extension CostSheetEntryViewController {
 			entryType = .income
 		}
 		updateViewsBasedOnEntryType()
+
+		// If the oldSelectedCategory does not belong to both entry types, the first category is selected. If it does, the correct row is selected.
+		entryCategoryPicker.categoryPickerView.reloadComponent(0)
+		if categoriesFilteredByEntryType.contains(oldSelectedCategory) {
+			updateCategoryViews(category: oldSelectedCategory)
+		} else {
+			updateCategoryViews(category: nil)
+		}
+
 	}
 
 	@IBAction func currencyButtonPressed(_ sender: Any) {
@@ -398,12 +409,12 @@ extension CostSheetEntryViewController: EntryDatePickerDelegate {
 // MARK: EntryCategoryPickerDataSource
 extension CostSheetEntryViewController: EntryCategoryPickerDataSource {
 
-	var categories: [Category] {
+	var categoriesFilteredByEntryType: [Category] {
 		guard let categories = dataSource?.document.categories else {
 			assertionFailure()
 			return []
 		}
-		return categories
+		return categories.filter { $0.entryTypes.contains(entryType) }
 	}
 
 }

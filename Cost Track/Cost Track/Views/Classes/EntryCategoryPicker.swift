@@ -9,7 +9,7 @@
 import UIKit
 
 protocol EntryCategoryPickerDataSource: class {
-	var categories: [Category] { get }
+	var categoriesFilteredByEntryType: [Category] { get }
 }
 
 protocol EntryCategoryPickerDelegate: class {
@@ -45,7 +45,7 @@ class EntryCategoryPicker: UIView {
 
 	// MARK: Functions
 	var selectedCategory: Category {
-		guard let categories = dataSource?.categories else {
+		guard let categories = dataSource?.categoriesFilteredByEntryType else {
 			assertionFailure()
 			return Category()
 		}
@@ -53,7 +53,7 @@ class EntryCategoryPicker: UIView {
 	}
 
 	func selectCategory(_ categoryToSelect: Category) {
-		guard let categories = dataSource?.categories else {
+		guard let categories = dataSource?.categoriesFilteredByEntryType else {
 			assertionFailure()
 			return
 		}
@@ -77,7 +77,7 @@ extension EntryCategoryPicker: UIPickerViewDataSource {
 	}
 
 	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		guard let categories = dataSource?.categories else {
+		guard let categories = dataSource?.categoriesFilteredByEntryType else {
 			assertionFailure()
 			return -1
 		}
@@ -90,7 +90,7 @@ extension EntryCategoryPicker: UIPickerViewDataSource {
 extension EntryCategoryPicker: UIPickerViewDelegate {
 
 	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		guard let categories = dataSource?.categories else {
+		guard let categories = dataSource?.categoriesFilteredByEntryType else {
 			assertionFailure()
 			return nil
 		}
@@ -98,7 +98,7 @@ extension EntryCategoryPicker: UIPickerViewDelegate {
 	}
 
 	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		guard let categories = dataSource?.categories else {
+		guard let categories = dataSource?.categoriesFilteredByEntryType else {
 			assertionFailure()
 			return
 		}
