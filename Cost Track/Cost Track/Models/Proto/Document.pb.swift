@@ -30,9 +30,20 @@ struct Document {
 
   var categories: [Category] = []
 
+  var createdOnDate: Data {
+    get {return _createdOnDate ?? SwiftProtobuf.Internal.emptyData}
+    set {_createdOnDate = newValue}
+  }
+  /// Returns true if `createdOnDate` has been explicitly set.
+  var hasCreatedOnDate: Bool {return self._createdOnDate != nil}
+  /// Clears the value of `createdOnDate`. Subsequent reads from it will return its default value.
+  mutating func clearCreatedOnDate() {self._createdOnDate = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
+
+  fileprivate var _createdOnDate: Data? = nil
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -43,9 +54,11 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     1: .same(proto: "costSheets"),
     2: .same(proto: "groups"),
     3: .same(proto: "categories"),
+    4: .same(proto: "createdOnDate"),
   ]
 
   public var isInitialized: Bool {
+    if self._createdOnDate == nil {return false}
     if !SwiftProtobuf.Internal.areAllInitialized(self.costSheets) {return false}
     if !SwiftProtobuf.Internal.areAllInitialized(self.groups) {return false}
     if !SwiftProtobuf.Internal.areAllInitialized(self.categories) {return false}
@@ -58,6 +71,7 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       case 1: try decoder.decodeRepeatedMessageField(value: &self.costSheets)
       case 2: try decoder.decodeRepeatedMessageField(value: &self.groups)
       case 3: try decoder.decodeRepeatedMessageField(value: &self.categories)
+      case 4: try decoder.decodeSingularBytesField(value: &self._createdOnDate)
       default: break
       }
     }
@@ -73,6 +87,9 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if !self.categories.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.categories, fieldNumber: 3)
     }
+    if let v = self._createdOnDate {
+      try visitor.visitSingularBytesField(value: v, fieldNumber: 4)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -80,6 +97,7 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if self.costSheets != other.costSheets {return false}
     if self.groups != other.groups {return false}
     if self.categories != other.categories {return false}
+    if self._createdOnDate != other._createdOnDate {return false}
     if self.unknownFields != other.unknownFields {return false}
     return true
   }

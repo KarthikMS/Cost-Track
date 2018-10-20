@@ -4,13 +4,9 @@ option swift_prefix = "";
 
 import "Category.proto";
 import "Place.proto";
+import "CTEnums.proto";
 
 message CostSheetEntry {
-
-  enum EntryType {
-		INCOME = 0;
-		EXPENSE = 1;
-	}
 
   required EntryType type = 1;
   required float amount = 2;

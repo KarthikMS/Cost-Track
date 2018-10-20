@@ -2,6 +2,8 @@ syntax = "proto2";
 
 option swift_prefix = "";
 
+import "CTEnums.proto";
+
 message Category {
 
   enum IconType {
@@ -13,15 +15,17 @@ message Category {
     ENTERTAINMENT = 5;
     MEDICINE = 6;
     INVESTMENT = 7;
-    INVESTMENT_RETURN = 8;
-    TAX = 9;
-    INSURANCE = 10;
-    FOOD_AND_DRINKS = 11;
-    MISC = 12;
-    TRANSFER = 13;
+    TAX = 8;
+    INSURANCE = 9;
+    FOOD_AND_DRINKS = 10;
+    MISC = 11;
+    TRANSFER = 12;
+    LEND = 13;
+    BORROW = 14;
   }
 
   required string name = 1;
   required IconType iconType = 2;
+  repeated EntryType entryTypes = 3;
 
 }

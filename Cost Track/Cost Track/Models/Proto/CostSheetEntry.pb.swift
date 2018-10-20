@@ -24,7 +24,7 @@ struct CostSheetEntry {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var type: CostSheetEntry.EntryType {
+  var type: EntryType {
     get {return _storage._type ?? .income}
     set {_uniqueStorage()._type = newValue}
   }
@@ -89,44 +89,10 @@ struct CostSheetEntry {
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
-  enum EntryType: SwiftProtobuf.Enum {
-    typealias RawValue = Int
-    case income // = 0
-    case expense // = 1
-
-    init() {
-      self = .income
-    }
-
-    init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .income
-      case 1: self = .expense
-      default: return nil
-      }
-    }
-
-    var rawValue: Int {
-      switch self {
-      case .income: return 0
-      case .expense: return 1
-      }
-    }
-
-  }
-
   init() {}
 
   fileprivate var _storage = _StorageClass.defaultInstance
 }
-
-#if swift(>=4.2)
-
-extension CostSheetEntry.EntryType: CaseIterable {
-  // Support synthesized by the compiler.
-}
-
-#endif  // swift(>=4.2)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
@@ -143,7 +109,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
   ]
 
   fileprivate class _StorageClass {
-    var _type: CostSheetEntry.EntryType? = nil
+    var _type: EntryType? = nil
     var _amount: Float? = nil
     var _category: Category? = nil
     var _place: Place? = nil
@@ -250,11 +216,4 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if self.unknownFields != other.unknownFields {return false}
     return true
   }
-}
-
-extension CostSheetEntry.EntryType: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "INCOME"),
-    1: .same(proto: "EXPENSE"),
-  ]
 }

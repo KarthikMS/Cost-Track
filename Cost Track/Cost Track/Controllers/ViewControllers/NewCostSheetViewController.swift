@@ -75,7 +75,8 @@ private extension NewCostSheetViewController {
 				return
 		}
 
-		costSheet.lastModifiedDate = Date().data
+		costSheet.createdOnDate = Date().data
+		costSheet.lastModifiedDate = costSheet.createdOnDate
 		// TODO: includeInOverallTotal
 		costSheet.includeInOverallTotal = true
 

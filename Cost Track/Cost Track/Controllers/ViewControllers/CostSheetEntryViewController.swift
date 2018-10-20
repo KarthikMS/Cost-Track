@@ -47,7 +47,7 @@ class CostSheetEntryViewController: UIViewController {
 	// MARK: Properties
 	weak var dataSource: CostSheetEntryViewControllerDataSource?
 	weak var deltaDelegate: DeltaDelegate?
-	var entryType = CostSheetEntry.EntryType.income
+	var entryType = EntryType.income
 	var oldEntry: CostSheetEntry?
 	private let locationManager = CLLocationManager()
 	private var entryPlace: Place?

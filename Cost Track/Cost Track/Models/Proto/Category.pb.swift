@@ -42,6 +42,8 @@ struct Category {
   /// Clears the value of `iconType`. Subsequent reads from it will return its default value.
   mutating func clearIconType() {self._iconType = nil}
 
+  var entryTypes: [EntryType] = []
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum IconType: SwiftProtobuf.Enum {
@@ -54,12 +56,13 @@ struct Category {
     case entertainment // = 5
     case medicine // = 6
     case investment // = 7
-    case investmentReturn // = 8
-    case tax // = 9
-    case insurance // = 10
-    case foodAndDrinks // = 11
-    case misc // = 12
-    case transfer // = 13
+    case tax // = 8
+    case insurance // = 9
+    case foodAndDrinks // = 10
+    case misc // = 11
+    case transfer // = 12
+    case lend // = 13
+    case borrow // = 14
 
     init() {
       self = .salary
@@ -75,12 +78,13 @@ struct Category {
       case 5: self = .entertainment
       case 6: self = .medicine
       case 7: self = .investment
-      case 8: self = .investmentReturn
-      case 9: self = .tax
-      case 10: self = .insurance
-      case 11: self = .foodAndDrinks
-      case 12: self = .misc
-      case 13: self = .transfer
+      case 8: self = .tax
+      case 9: self = .insurance
+      case 10: self = .foodAndDrinks
+      case 11: self = .misc
+      case 12: self = .transfer
+      case 13: self = .lend
+      case 14: self = .borrow
       default: return nil
       }
     }
@@ -95,12 +99,13 @@ struct Category {
       case .entertainment: return 5
       case .medicine: return 6
       case .investment: return 7
-      case .investmentReturn: return 8
-      case .tax: return 9
-      case .insurance: return 10
-      case .foodAndDrinks: return 11
-      case .misc: return 12
-      case .transfer: return 13
+      case .tax: return 8
+      case .insurance: return 9
+      case .foodAndDrinks: return 10
+      case .misc: return 11
+      case .transfer: return 12
+      case .lend: return 13
+      case .borrow: return 14
       }
     }
 
@@ -127,6 +132,7 @@ extension Category: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "name"),
     2: .same(proto: "iconType"),
+    3: .same(proto: "entryTypes"),
   ]
 
   public var isInitialized: Bool {
@@ -140,6 +146,7 @@ extension Category: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       switch fieldNumber {
       case 1: try decoder.decodeSingularStringField(value: &self._name)
       case 2: try decoder.decodeSingularEnumField(value: &self._iconType)
+      case 3: try decoder.decodeRepeatedEnumField(value: &self.entryTypes)
       default: break
       }
     }
@@ -152,12 +159,16 @@ extension Category: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if let v = self._iconType {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
     }
+    if !self.entryTypes.isEmpty {
+      try visitor.visitRepeatedEnumField(value: self.entryTypes, fieldNumber: 3)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   func _protobuf_generated_isEqualTo(other: Category) -> Bool {
     if self._name != other._name {return false}
     if self._iconType != other._iconType {return false}
+    if self.entryTypes != other.entryTypes {return false}
     if self.unknownFields != other.unknownFields {return false}
     return true
   }
@@ -173,11 +184,12 @@ extension Category.IconType: SwiftProtobuf._ProtoNameProviding {
     5: .same(proto: "ENTERTAINMENT"),
     6: .same(proto: "MEDICINE"),
     7: .same(proto: "INVESTMENT"),
-    8: .same(proto: "INVESTMENT_RETURN"),
-    9: .same(proto: "TAX"),
-    10: .same(proto: "INSURANCE"),
-    11: .same(proto: "FOOD_AND_DRINKS"),
-    12: .same(proto: "MISC"),
-    13: .same(proto: "TRANSFER"),
+    8: .same(proto: "TAX"),
+    9: .same(proto: "INSURANCE"),
+    10: .same(proto: "FOOD_AND_DRINKS"),
+    11: .same(proto: "MISC"),
+    12: .same(proto: "TRANSFER"),
+    13: .same(proto: "LEND"),
+    14: .same(proto: "BORROW"),
   ]
 }

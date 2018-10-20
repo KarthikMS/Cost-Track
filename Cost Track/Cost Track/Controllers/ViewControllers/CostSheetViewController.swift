@@ -83,7 +83,7 @@ class CostSheetViewController: UIViewController {
 			if let oldEntry = sender["oldEntry"] as? CostSheetEntry {
 				costSheetEntryViewController.oldEntry = oldEntry
 			} else {
-				guard let entryType = sender["entryType"] as? CostSheetEntry.EntryType else {
+				guard let entryType = sender["entryType"] as? EntryType else {
 					assertionFailure()
 					return
 				}
@@ -312,11 +312,11 @@ class CostSheetViewController: UIViewController {
 private extension CostSheetViewController {
 
 	@IBAction func expenseButtonPressed(_ sender: Any) {
-		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.expense])
+		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": EntryType.expense])
 	}
 
 	@IBAction func incomeButtonPressed(_ sender: Any) {
-		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": CostSheetEntry.EntryType.income])
+		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["entryType": EntryType.income])
 	}
 
 	@IBAction func classificationSegmentedControlValueChanged(_ sender: UISegmentedControl) {

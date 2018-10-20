@@ -38,16 +38,7 @@ class CTFileManager {
 
 			return (loadedDoc, false)
 		} catch {
-			// Creating new document
-			var newDoc = Document()
-
-			// Setting NotSetGroup
-			NotSetGroup.name = "Not set"
-			NotSetGroup.id = UUID().uuidString
-			newDoc.groups.append(NotSetGroup)
-
-			newDoc.addDefaultCategories()
-
+			let newDoc = Document.new
 			return (newDoc, true)
 		}
 	}

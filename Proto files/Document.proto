@@ -11,5 +11,6 @@ message Document {
   repeated CostSheet costSheets = 1;
   repeated CostSheetGroup groups = 2;
   repeated Category categories = 3;
+  required bytes createdOnDate = 4;
 
 }

@@ -26,7 +26,7 @@ class TransferAmountViewController: UIViewController {
 	// MARK: Properties
 	weak var dataSource: TransferAmountViewControllerDataSource?
 	weak var deltaDelegate: DeltaDelegate?
-	private var entryType = CostSheetEntry.EntryType.expense
+	private var entryType = EntryType.expense
 	private var sourceCostSheet = CostSheet()
 	private var destinationCostSheetId = ""
 	private var sourceCostSheets = [CostSheet]()

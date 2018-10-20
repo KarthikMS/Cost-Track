@@ -31,7 +31,7 @@ struct CostSheet {
   /// Returns true if `name` has been explicitly set.
   var hasName: Bool {return _storage._name != nil}
   /// Clears the value of `name`. Subsequent reads from it will return its default value.
-  mutating func clearName() {_storage._name = nil}
+  mutating func clearName() {_uniqueStorage()._name = nil}
 
   var initialBalance: Float {
     get {return _storage._initialBalance ?? 0}
@@ -40,7 +40,7 @@ struct CostSheet {
   /// Returns true if `initialBalance` has been explicitly set.
   var hasInitialBalance: Bool {return _storage._initialBalance != nil}
   /// Clears the value of `initialBalance`. Subsequent reads from it will return its default value.
-  mutating func clearInitialBalance() {_storage._initialBalance = nil}
+  mutating func clearInitialBalance() {_uniqueStorage()._initialBalance = nil}
 
   var includeInOverallTotal: Bool {
     get {return _storage._includeInOverallTotal ?? false}
@@ -49,7 +49,7 @@ struct CostSheet {
   /// Returns true if `includeInOverallTotal` has been explicitly set.
   var hasIncludeInOverallTotal: Bool {return _storage._includeInOverallTotal != nil}
   /// Clears the value of `includeInOverallTotal`. Subsequent reads from it will return its default value.
-  mutating func clearIncludeInOverallTotal() {_storage._includeInOverallTotal = nil}
+  mutating func clearIncludeInOverallTotal() {_uniqueStorage()._includeInOverallTotal = nil}
 
   var group: CostSheetGroup {
     get {return _storage._group ?? CostSheetGroup()}
@@ -58,7 +58,7 @@ struct CostSheet {
   /// Returns true if `group` has been explicitly set.
   var hasGroup: Bool {return _storage._group != nil}
   /// Clears the value of `group`. Subsequent reads from it will return its default value.
-  mutating func clearGroup() {_storage._group = nil}
+  mutating func clearGroup() {_uniqueStorage()._group = nil}
 
   var entries: [CostSheetEntry] {
     get {return _storage._entries}
@@ -72,7 +72,16 @@ struct CostSheet {
   /// Returns true if `lastModifiedDate` has been explicitly set.
   var hasLastModifiedDate: Bool {return _storage._lastModifiedDate != nil}
   /// Clears the value of `lastModifiedDate`. Subsequent reads from it will return its default value.
-  mutating func clearLastModifiedDate() {_storage._lastModifiedDate = nil}
+  mutating func clearLastModifiedDate() {_uniqueStorage()._lastModifiedDate = nil}
+
+  var createdOnDate: Data {
+    get {return _storage._createdOnDate ?? SwiftProtobuf.Internal.emptyData}
+    set {_uniqueStorage()._createdOnDate = newValue}
+  }
+  /// Returns true if `createdOnDate` has been explicitly set.
+  var hasCreatedOnDate: Bool {return _storage._createdOnDate != nil}
+  /// Clears the value of `createdOnDate`. Subsequent reads from it will return its default value.
+  mutating func clearCreatedOnDate() {_uniqueStorage()._createdOnDate = nil}
 
   var id: String {
     get {return _storage._id ?? String()}
@@ -81,7 +90,7 @@ struct CostSheet {
   /// Returns true if `id` has been explicitly set.
   var hasID: Bool {return _storage._id != nil}
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
-  mutating func clearID() {_storage._id = nil}
+  mutating func clearID() {_uniqueStorage()._id = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -101,7 +110,8 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     4: .same(proto: "group"),
     5: .same(proto: "entries"),
     6: .same(proto: "lastModifiedDate"),
-    7: .same(proto: "id"),
+    7: .same(proto: "createdOnDate"),
+    8: .same(proto: "id"),
   ]
 
   fileprivate class _StorageClass {
@@ -111,6 +121,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     var _group: CostSheetGroup? = nil
     var _entries: [CostSheetEntry] = []
     var _lastModifiedDate: Data? = nil
+    var _createdOnDate: Data? = nil
     var _id: String? = nil
 
     static let defaultInstance = _StorageClass()
@@ -124,6 +135,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       _group = source._group
       _entries = source._entries
       _lastModifiedDate = source._lastModifiedDate
+      _createdOnDate = source._createdOnDate
       _id = source._id
     }
   }
@@ -142,6 +154,7 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       if _storage._includeInOverallTotal == nil {return false}
       if _storage._group == nil {return false}
       if _storage._lastModifiedDate == nil {return false}
+      if _storage._createdOnDate == nil {return false}
       if _storage._id == nil {return false}
       if let v = _storage._group, !v.isInitialized {return false}
       if !SwiftProtobuf.Internal.areAllInitialized(_storage._entries) {return false}
@@ -160,7 +173,8 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
         case 4: try decoder.decodeSingularMessageField(value: &_storage._group)
         case 5: try decoder.decodeRepeatedMessageField(value: &_storage._entries)
         case 6: try decoder.decodeSingularBytesField(value: &_storage._lastModifiedDate)
-        case 7: try decoder.decodeSingularStringField(value: &_storage._id)
+        case 7: try decoder.decodeSingularBytesField(value: &_storage._createdOnDate)
+        case 8: try decoder.decodeSingularStringField(value: &_storage._id)
         default: break
         }
       }
@@ -187,30 +201,34 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       if let v = _storage._lastModifiedDate {
         try visitor.visitSingularBytesField(value: v, fieldNumber: 6)
       }
+      if let v = _storage._createdOnDate {
+        try visitor.visitSingularBytesField(value: v, fieldNumber: 7)
+      }
       if let v = _storage._id {
-        try visitor.visitSingularStringField(value: v, fieldNumber: 7)
+        try visitor.visitSingularStringField(value: v, fieldNumber: 8)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: CostSheet) -> Bool {
-    if _storage !== other._storage {
-      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+  static func ==(lhs: CostSheet, rhs: CostSheet) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
-        let other_storage = _args.1
-        if _storage._name != other_storage._name {return false}
-        if _storage._initialBalance != other_storage._initialBalance {return false}
-        if _storage._includeInOverallTotal != other_storage._includeInOverallTotal {return false}
-        if _storage._group != other_storage._group {return false}
-        if _storage._entries != other_storage._entries {return false}
-        if _storage._lastModifiedDate != other_storage._lastModifiedDate {return false}
-        if _storage._id != other_storage._id {return false}
+        let rhs_storage = _args.1
+        if _storage._name != rhs_storage._name {return false}
+        if _storage._initialBalance != rhs_storage._initialBalance {return false}
+        if _storage._includeInOverallTotal != rhs_storage._includeInOverallTotal {return false}
+        if _storage._group != rhs_storage._group {return false}
+        if _storage._entries != rhs_storage._entries {return false}
+        if _storage._lastModifiedDate != rhs_storage._lastModifiedDate {return false}
+        if _storage._createdOnDate != rhs_storage._createdOnDate {return false}
+        if _storage._id != rhs_storage._id {return false}
         return true
       }
       if !storagesAreEqual {return false}
     }
-    if unknownFields != other.unknownFields {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
