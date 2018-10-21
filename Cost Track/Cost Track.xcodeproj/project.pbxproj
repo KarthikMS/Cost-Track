@@ -45,6 +45,7 @@
 		D9AC8186217AFD49002FCA94 /* CTEnums.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC8181217AFD49002FCA94 /* CTEnums.pb.swift */; };
 		D9AC8187217AFD49002FCA94 /* Document.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC8182217AFD49002FCA94 /* Document.pb.swift */; };
 		D9AC8189217B0085002FCA94 /* Category+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC8188217B0085002FCA94 /* Category+Util.swift */; };
+		D9AC818B217CD54A002FCA94 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC818A217CD549002FCA94 /* UIViewControllerExtensions.swift */; };
 		D9B119A22139786E0007CDA1 /* DeltaDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A12139786E0007CDA1 /* DeltaDecoder.swift */; };
 		D9B119A6213C3C400007CDA1 /* ProtoExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */; };
 		D9B119A8213D9D5E0007CDA1 /* FieldStringUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B119A7213D9D5E0007CDA1 /* FieldStringUtil.swift */; };
@@ -125,6 +126,7 @@
 		D9AC8181217AFD49002FCA94 /* CTEnums.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTEnums.pb.swift; sourceTree = "<group>"; };
 		D9AC8182217AFD49002FCA94 /* Document.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.pb.swift; sourceTree = "<group>"; };
 		D9AC8188217B0085002FCA94 /* Category+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Category+Util.swift"; sourceTree = "<group>"; };
+		D9AC818A217CD549002FCA94 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		D9B119A12139786E0007CDA1 /* DeltaDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeltaDecoder.swift; sourceTree = "<group>"; };
 		D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoExtensions.swift; sourceTree = "<group>"; };
 		D9B119A7213D9D5E0007CDA1 /* FieldStringUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldStringUtil.swift; sourceTree = "<group>"; };
@@ -383,6 +385,7 @@
 				D98973DF210E281F0051F809 /* CostSheet+Util.swift */,
 				D9AC8188217B0085002FCA94 /* Category+Util.swift */,
 				D98974052116E08A0051F809 /* DateUtil.swift */,
+				D9AC818A217CD549002FCA94 /* UIViewControllerExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -672,6 +675,7 @@
 				D98973DA210E16120051F809 /* CostSheetGroup.pb.swift in Sources */,
 				D98973E2210E2E480051F809 /* Constants.swift in Sources */,
 				D962F42E20F9D877003C7C58 /* CostSheetTableViewCell.swift in Sources */,
+				D9AC818B217CD54A002FCA94 /* UIViewControllerExtensions.swift in Sources */,
 				D98974082116FCBA0051F809 /* EntryDatePicker.swift in Sources */,
 				D9B119A6213C3C400007CDA1 /* ProtoExtensions.swift in Sources */,
 				D9982E69216374E90093B28C /* SettingsTableViewController.swift in Sources */,

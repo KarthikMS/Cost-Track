@@ -32,7 +32,7 @@ class GroupSelectTableViewController: UITableViewController {
 		groupSelectTableViewControllerDelegate?.didSelectGroup(id: selectedGroupID)
 	}
 
-	// MARK: Misc. functions
+	// MARK: View functions
 	private func deleteGroup(at indexPath: IndexPath) {
 		guard let document = groupSelectTableViewControllerDataSource?.document,
 			let deltaDelegate = deltaDelegate else {
@@ -162,6 +162,11 @@ private extension GroupSelectTableViewController {
 				let groupName = textField.text else {
 					assertionFailure()
 					return
+			}
+
+			guard document.isGroupNameNew(groupName) else {
+				self.showAlertSaying("\'\(groupName)\' already exists. Please enter a different name.")
+				return
 			}
 
 			// New group

@@ -89,6 +89,13 @@ extension Document {
 		return true
 	}
 
+	func isGroupNameNew(_ name: String) -> Bool {
+		for group in groups where group.name == name {
+			return false
+		}
+		return true
+	}
+
 	func indexOfCostSheetWithId(_ id: String) -> Int? {
 		for i in 0..<costSheets.count {
 			if costSheets[i].id == id {

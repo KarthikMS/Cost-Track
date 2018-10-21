@@ -317,15 +317,6 @@ class CostSheetViewController: UIViewController {
 		updateAmountLabel()
 	}
 
-	private func showAlertSaying(_ message: String) {
-		let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-		let okAction = UIAlertAction(title: "Ok", style: .default) { (_) in
-			alertController.dismiss(animated: true)
-		}
-		alertController.addAction(okAction)
-		present(alertController, animated: true)
-	}
-
 	// MARK: Util funtions
 	private func entry(at indexPath: IndexPath) -> CostSheetEntry? {
 		if let entryToTransfer = getSortedEntry(at: indexPath) {

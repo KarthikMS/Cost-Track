@@ -57,16 +57,6 @@ class NewCostSheetViewController: UIViewController {
 		}
 	}
 
-	// MARK: View functions
-	private func showAlertSaying(_ message: String) {
-		let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-		let okAction = UIAlertAction(title: "Ok", style: .default) { (_) in
-			alertController.dismiss(animated: true)
-		}
-		alertController.addAction(okAction)
-		present(alertController, animated: true)
-	}
-
 }
 
 // MARK: IBActions
