@@ -91,12 +91,11 @@ extension Document {
 		return nil
 	}
 
-	func costSheetWithId(_ id: String) -> CostSheet {
-		guard let index = indexOfCostSheetWithId(id) else {
-			assertionFailure()
-			return CostSheet()
+	func costSheetWithId(_ id: String) -> CostSheet? {
+		if let index = indexOfCostSheetWithId(id) {
+			return costSheets[index]
 		}
-		return costSheets[index]
+		return nil
 	}
 
 	mutating func updateCostSheet(at index: Int, with updatedCostSheet: CostSheet) {
@@ -105,29 +104,23 @@ extension Document {
 	}
 
 	mutating func updateCostSheet(withId id: String, with updatedCostSheet: CostSheet) {
-		guard let index = indexOfCostSheetWithId(id) else {
-			assertionFailure()
-			return
+		if let index = indexOfCostSheetWithId(id) {
+			updateCostSheet(at: index, with: updatedCostSheet)
 		}
-		updateCostSheet(at: index, with: updatedCostSheet)
 	}
 
 	mutating func deleteCostSheet(withId id: String) {
-		guard let index = indexOfCostSheetWithId(id) else {
-			assertionFailure()
-			return
+		if let index = indexOfCostSheetWithId(id) {
+			costSheets.remove(at: index)
 		}
-		costSheets.remove(at: index)
 	}
 
 	mutating func deleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
-		guard let costSheetIndex = indexOfCostSheetWithId(costSheetId),
-			let entryIndex = costSheets[costSheetIndex].indexOfEntryWithId(entryId) else {
-				assertionFailure()
-				return
+		if let costSheetIndex = indexOfCostSheetWithId(costSheetId),
+			let entryIndex = costSheets[costSheetIndex].indexOfEntryWithId(entryId) {
+			costSheets[costSheetIndex].entries.remove(at: entryIndex)
+			costSheets[costSheetIndex].lastModifiedDate = Date().data
 		}
-		costSheets[costSheetIndex].entries.remove(at: entryIndex)
-		costSheets[costSheetIndex].lastModifiedDate = Date().data
 	}
 
 }

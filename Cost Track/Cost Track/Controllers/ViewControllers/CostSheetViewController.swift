@@ -50,9 +50,9 @@ class CostSheetViewController: UIViewController {
 		}
 		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
 
-		navigationItem.title = costSheet.name
+		navigationItem.title = costSheet!.name
 
-		if costSheet.entries.isEmpty {
+		if costSheet!.entries.isEmpty {
 			noEntriesTextView.isHidden = false
 		} else {
 			noEntriesTextView.isHidden = true
@@ -120,7 +120,7 @@ class CostSheetViewController: UIViewController {
 			sortEntriesByDate()
 		}
 
-		if costSheet.entries.isEmpty {
+		if costSheet!.entries.isEmpty {
 			noEntriesTextView.isHidden = false
 		} else {
 			noEntriesTextView.isHidden = true
@@ -137,7 +137,7 @@ class CostSheetViewController: UIViewController {
 		}
 		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
 
-		var balance = costSheet.balance
+		var balance = costSheet!.balance
 		if balance < 0 {
 			amountLabel.backgroundColor = DarkExpenseColor
 			balance *= -1
@@ -165,7 +165,7 @@ class CostSheetViewController: UIViewController {
 			assertionFailure()
 			return
 		}
-		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
+		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)!
 
 		let entries = costSheet.entries.sorted(by: { (entry1, entry2) -> Bool in
 			guard let date1 = entry1.date.date,
@@ -239,7 +239,7 @@ class CostSheetViewController: UIViewController {
 		guard let dataSource = dataSource else {
 			return
 		}
-		let costSheetEntries = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId).entries
+		let costSheetEntries = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)!.entries
 		var entriesSortedByPlace = [String: [CostSheetEntry]]()
 		for entry in costSheetEntries {
 			if !entry.hasPlace {
@@ -291,13 +291,13 @@ class CostSheetViewController: UIViewController {
 		// Delta
 		var deltaComps = [DocumentContentOperation.Component]()
 		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.selectedCostSheetId, document: dataSource.document)
-		deltaComps.append(deleteEntryComp)
+		deltaComps.append(deleteEntryComp!)
 
 		// Deleting transferEntry if any
-		let entryToDelete = document.costSheetWithId(dataSource.selectedCostSheetId).entryWithId(deleteEntryId)
-		if entryToDelete.hasTransferCostSheetID {
+		let entryToDelete = document.costSheetWithId(dataSource.selectedCostSheetId)!.entryWithId(deleteEntryId)
+		if entryToDelete.category.name == "Transfer" {
 			let deleteTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(entryToDelete.transferEntryID, inCostSheetWithId: entryToDelete.transferCostSheetID, document: document)
-			deltaComps.append(deleteTransferEntryComp)
+			deltaComps.append(deleteTransferEntryComp!)
 		}
 
 		deltaDelegate.sendDeltaComponents(deltaComps)
@@ -399,7 +399,7 @@ extension CostSheetViewController: UITableViewDelegate {
 			}
 
 			guard let entryToTransfer = self.entry(at: indexPath),
-				!entryToTransfer.hasTransferCostSheetID else {
+				entryToTransfer.category.name != "Transfer" else {
 					self.showAlertSaying("Cannot move transfer entries.")
 					return
 			}

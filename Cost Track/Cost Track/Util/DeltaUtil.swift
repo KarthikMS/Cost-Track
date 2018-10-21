@@ -148,15 +148,13 @@ class DeltaUtil {
 		)
 	}
 
-	static func getComponentToDeleteEntryWithId(_ entryId: String, inCostSheetWithId costSheetId: String, document: Document) -> DocumentContentOperation.Component {
+	static func getComponentToDeleteEntryWithId(_ entryId: String, inCostSheetWithId costSheetId: String, document: Document) -> DocumentContentOperation.Component? {
 		guard let costSheetIndex = document.indexOfCostSheetWithId(costSheetId) else {
-			assertionFailure("Could not get costSheetIndex")
-			return DocumentContentOperation.Component()
+			return nil
 		}
 		let costSheet = document.costSheets[costSheetIndex]
 		guard let entryIndex = costSheet.indexOfEntryWithId(entryId) else {
-			assertionFailure("Could not get entryIndex")
-			return DocumentContentOperation.Component()
+			return nil
 		}
 		let oldEntry = costSheet.entries[entryIndex]
 		let fieldString = "1,arr:\(costSheetIndex),5,arr:\(entryIndex)"

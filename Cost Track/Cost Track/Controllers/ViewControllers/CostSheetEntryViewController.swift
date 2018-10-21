@@ -285,6 +285,24 @@ class CostSheetEntryViewController: UIViewController {
 		present(alertController, animated: true)
 	}
 
+	private func segueToTransferAmountViewController() {
+		guard let dataSource = dataSource,
+			dataSource.document.costSheets.count > 1 else {
+				showAlertForInsufficientCostSheets()
+				return
+		}
+		performSegue(withIdentifier: TransferAmountSegue, sender: nil)
+	}
+
+	private func showAlertForInsufficientCostSheets() {
+		let alertController = UIAlertController(title: nil, message: "No other cost sheets to move entry to. Create more cost sheets.", preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Ok", style: .default) { (_) in
+			alertController.dismiss(animated: true)
+		}
+		alertController.addAction(okAction)
+		present(alertController, animated: true)
+	}
+
 }
 
 // MARK: IBActions
@@ -293,7 +311,7 @@ private extension CostSheetEntryViewController {
 	@IBAction func navigationBarTitleButtonPressed(_ sender: UIButton) {
 		var oldSelectedCategory: Category?
 		// Once an entry has transferCostSheetId, it's category cannot be changed
-		if (transferCostSheet == nil) && (oldEntry != nil && oldEntry!.hasTransferCostSheetID) {
+		if (transferCostSheet == nil) && (oldEntry != nil && oldEntry!.category.name == "Transfer") {
 			oldSelectedCategory = entryCategoryPicker.selectedCategory
 		}
 
@@ -305,7 +323,7 @@ private extension CostSheetEntryViewController {
 		}
 		updateViewsBasedOnEntryType()
 
-		if (transferCostSheet == nil) && (oldEntry != nil && oldEntry!.hasTransferCostSheetID) {
+		if (transferCostSheet == nil) && (oldEntry != nil && oldEntry!.category.name == "Transfer") {
 			// If the oldSelectedCategory does not belong to both entry types, the first category is selected. If it does, the correct row is selected.
 			entryCategoryPicker.categoryPickerView.reloadComponent(0)
 			guard let oldSelectedCategory = oldSelectedCategory else {
@@ -332,6 +350,11 @@ private extension CostSheetEntryViewController {
 
 		guard transferCostSheet == nil else {
 			performSegue(withIdentifier: TransferAmountSegue, sender: nil)
+			return
+		}
+		if let oldEntry = oldEntry,
+			oldEntry.category.name == "Transfer" {
+			segueToTransferAmountViewController()
 			return
 		}
 
@@ -429,20 +452,23 @@ private extension CostSheetEntryViewController {
 				newTransferEntry.transferCostSheetID = dataSource.costSheetId
 				newTransferEntry.transferEntryID = oldEntry.id
 
-				if oldEntry.hasTransferCostSheetID {
+				if oldEntry.category.name == "Transfer" {
 					if oldEntry.transferCostSheetID == transferCostSheet.id {
-						// Old entry has same trasferCostSheetId
+						// Old entry has same transferCostSheetId
 						let updateTransferEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.transferEntryID, with: newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, document: dataSource.document)
 						deltaComps.append(updateTransferEntryComp)
 					} else {
-						// Old entry has different trasferCostSheetId
-						let deleteOldTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(oldEntry.transferEntryID, inCostSheetWithId: oldEntry.transferCostSheetID, document: dataSource.document)
+						// Old entry has different transferCostSheetId
+						if let deleteOldTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(oldEntry.transferEntryID, inCostSheetWithId: oldEntry.transferCostSheetID, document: dataSource.document) {
+							deltaComps.append(deleteOldTransferEntryComp)
+						} else {
+							newTransferEntry.id = UUID().uuidString
+						}
 						let insertNewTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: dataSource.document)
-						deltaComps.append(deleteOldTransferEntryComp)
 						deltaComps.append(insertNewTransferEntryComp)
 					}
 				} else {
-					// Old entry does not have trasferCostSheetId
+					// Old entry does not have transferCostSheetId
 					newTransferEntry.id = UUID().uuidString
 
 					let insertNewTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: dataSource.document)
@@ -455,8 +481,8 @@ private extension CostSheetEntryViewController {
 			} else {
 				// Old entry had a transferCostSheetId and entry details were changed without going to TransferAmountViewController
 				oldEntry.category = category
-				if oldEntry.hasTransferCostSheetID {
-					var newTransferEntry = dataSource.document.costSheetWithId(oldEntry.transferCostSheetID).entryWithId(oldEntry.transferEntryID)
+				if oldEntry.category.name == "Transfer" {
+					var newTransferEntry = dataSource.document.costSheetWithId(oldEntry.transferCostSheetID)!.entryWithId(oldEntry.transferEntryID)
 					newTransferEntry.type = entryType == .income ? .expense : .income
 					newTransferEntry.amount = amount
 					newTransferEntry.category = TransferCategory
@@ -470,7 +496,6 @@ private extension CostSheetEntryViewController {
 					deltaComps.append(updateTransferEntryComp)
 				}
 			}
-
 
 			let updateEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.id, with: oldEntry, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
 			deltaComps.append(updateEntryComp)
@@ -549,7 +574,7 @@ extension CostSheetEntryViewController: EntryCategoryPickerDelegate {
 
 	func categoryChanged(to category: Category) {
 		if category.name == "Transfer" {
-			performSegue(withIdentifier: TransferAmountSegue, sender: nil)
+			segueToTransferAmountViewController()
 			return
 		}
 
