@@ -57,22 +57,37 @@ class NewCostSheetViewController: UIViewController {
 		}
 	}
 
+	// MARK: View functions
+	private func showAlertSaying(_ message: String) {
+		let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Ok", style: .default) { (_) in
+			alertController.dismiss(animated: true)
+		}
+		alertController.addAction(okAction)
+		present(alertController, animated: true)
+	}
+
 }
 
 // MARK: IBActions
 private extension NewCostSheetViewController {
 
 	@IBAction func createButtonPressed(_ sender: Any) {
-		settingsTableView.updateCostSheet()
-		var costSheet = settingsTableView.costSheet
-		guard costSheet.name != "" else {
-			// Show dialog to enter costSheet name
-			return
-		}
 		guard let deltaDelegate = deltaDelegate,
 			let document = dataSource?.document else {
 				assertionFailure()
 				return
+		}
+
+		settingsTableView.updateCostSheet()
+		var costSheet = settingsTableView.costSheet
+		guard costSheet.name != "" else {
+			showAlertSaying("Please enter a name for the cost sheet.")
+			return
+		}
+		guard document.isCostSheetNameNew(costSheet.name) else {
+			showAlertSaying("\'\(costSheet.name)\' already exists. Please enter a different name.")
+			return
 		}
 
 		costSheet.createdOnDate = Date().data

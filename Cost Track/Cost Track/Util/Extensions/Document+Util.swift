@@ -82,6 +82,13 @@ extension Document {
 		return "Cost Sheet \(costSheets.count + 1)"
 	}
 
+	func isCostSheetNameNew(_ name: String) -> Bool {
+		for costSheet in costSheets where costSheet.name == name {
+			return false
+		}
+		return true
+	}
+
 	func indexOfCostSheetWithId(_ id: String) -> Int? {
 		for i in 0..<costSheets.count {
 			if costSheets[i].id == id {
