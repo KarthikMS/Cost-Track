@@ -101,6 +101,14 @@ extension CostSheet {
 		return nil
 	}
 
+	func entryWithId(_ id: String) -> CostSheetEntry {
+		guard let index = indexOfEntryWithId(id) else {
+			assertionFailure()
+			return CostSheetEntry()
+		}
+		return entries[index]
+	}
+
 	mutating func updateEntry(at index: Int, with updatedEntry: CostSheetEntry) {
 		entries[index] = updatedEntry
 	}

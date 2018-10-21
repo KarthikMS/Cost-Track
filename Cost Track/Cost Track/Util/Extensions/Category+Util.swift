@@ -76,6 +76,8 @@ extension Category {
 		transfer.iconType = .transfer
 		transfer.entryTypes.append(contentsOf: [EntryType.income, EntryType.expense])
 
+		TransferCategory = transfer
+
 		var lend = Category()
 		lend.name = "Lend"
 		lend.iconType = .lend

@@ -15,5 +15,7 @@ message CostSheetEntry {
   required bytes date = 5;
   optional string description = 6;
   required string id = 7;
+  optional string transferCostSheetId = 8;
+  optional string transferEntryId = 9;
 
 }

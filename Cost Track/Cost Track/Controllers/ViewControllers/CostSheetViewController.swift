@@ -8,7 +8,9 @@
 
 import UIKit
 
-protocol CostSheetViewControllerDataSource: TransferAmountViewControllerDataSource {
+protocol CostSheetViewControllerDataSource: class {
+	var document: Document { get }
+	var selectedCostSheetId: String { get }
 }
 
 enum TransactionClassificationMode {
@@ -83,11 +85,16 @@ class CostSheetViewController: UIViewController {
 			if let oldEntry = sender["oldEntry"] as? CostSheetEntry {
 				costSheetEntryViewController.oldEntry = oldEntry
 			} else {
-				guard let entryType = sender["entryType"] as? EntryType else {
-					assertionFailure()
-					return
+				if let _ = sender["isAmountTransfer"] {
+					costSheetEntryViewController.entryType = .expense
+					costSheetEntryViewController.isDirectAmountTransfer = true
+				} else {
+					guard let entryType = sender["entryType"] as? EntryType else {
+						assertionFailure()
+						return
+					}
+					costSheetEntryViewController.entryType = entryType
 				}
-				costSheetEntryViewController.entryType = entryType
 			}
 		case TransferEntrySegue:
 			guard let transferEntryTableViewController = (segue.destination as? UINavigationController)?.topViewController as? TransferEntryTableViewController else {
@@ -96,13 +103,6 @@ class CostSheetViewController: UIViewController {
 			}
 			transferEntryTableViewController.dataSource = self
 			transferEntryTableViewController.deltaDelegate = self
-		case DirectAmountTransferSegue:
-			guard let transferAmountViewController = segue.destination as? TransferAmountViewController,
-				let dataSource = dataSource else {
-					assertionFailure()
-					return
-			}
-			transferAmountViewController.dataSource = dataSource
 		default:
 			break
 		}
@@ -289,8 +289,18 @@ class CostSheetViewController: UIViewController {
 		}
 
 		// Delta
+		var deltaComps = [DocumentContentOperation.Component]()
 		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.selectedCostSheetId, document: dataSource.document)
-		deltaDelegate.sendDeltaComponents([deleteEntryComp])
+		deltaComps.append(deleteEntryComp)
+
+		// Deleting transferEntry if any
+		let entryToDelete = document.costSheetWithId(dataSource.selectedCostSheetId).entryWithId(deleteEntryId)
+		if entryToDelete.hasTransferCostSheetID {
+			let deleteTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(entryToDelete.transferEntryID, inCostSheetWithId: entryToDelete.transferCostSheetID, document: document)
+			deltaComps.append(deleteTransferEntryComp)
+		}
+
+		deltaDelegate.sendDeltaComponents(deltaComps)
 
 		if self.classificationMode != .date {
 			sortEntriesByDate()
@@ -306,6 +316,24 @@ class CostSheetViewController: UIViewController {
 
 		updateAmountLabel()
 	}
+
+	private func showAlertSaying(_ message: String) {
+		let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Ok", style: .default) { (_) in
+			alertController.dismiss(animated: true)
+		}
+		alertController.addAction(okAction)
+		present(alertController, animated: true)
+	}
+
+	// MARK: Util funtions
+	private func entry(at indexPath: IndexPath) -> CostSheetEntry? {
+		if let entryToTransfer = getSortedEntry(at: indexPath) {
+			return entryToTransfer
+		}
+		return nil
+	}
+
 }
 
 // MARK: IBActions
@@ -334,7 +362,7 @@ private extension CostSheetViewController {
 	}
 
 	@IBAction func transferAmountButtonPressed(_ sender: Any) {
-		performSegue(withIdentifier: DirectAmountTransferSegue, sender: nil)
+		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["isAmountTransfer": true])
 	}
 
 	@IBAction func settingsButtonPressed(_ sender: Any) {
@@ -365,9 +393,15 @@ extension CostSheetViewController: UITableViewDelegate {
 		}
 		let transferEntryAction = UITableViewRowAction(style: .normal, title: "Transfer") { (action, indexPath) in
 			// Checking cost sheets count
-			if dataSource.document.costSheets.count == 1 {
-				// Show alert
+			guard dataSource.document.costSheets.count > 1 else {
+				self.showAlertSaying("No other cost sheets to move entry to. Create more cost sheets.")
 				return
+			}
+
+			guard let entryToTransfer = self.entry(at: indexPath),
+				!entryToTransfer.hasTransferCostSheetID else {
+					self.showAlertSaying("Cannot move transfer entries.")
+					return
 			}
 
 			self.transferEntryIndexPath = indexPath
@@ -443,7 +477,7 @@ extension CostSheetViewController: TransferEntryTableViewControllerDataSource {
 
 	var entryToTransferId: String {
 		guard let transferEntryIndexPath = transferEntryIndexPath,
-			let entryToTransfer = getSortedEntry(at: transferEntryIndexPath) else {
+			let entryToTransfer = entry(at: transferEntryIndexPath) else {
 				assertionFailure("transferEntryIndexPath not set")
 				return ""
 		}

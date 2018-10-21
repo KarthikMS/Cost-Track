@@ -271,7 +271,7 @@ extension MyCostSheetsViewController: DeltaDelegate {
 				try document.decodeMessage(decoder: &decoder)
 				shouldUpdateViews = true
 			} catch {
-				assertionFailure()
+				assertionFailure(error.localizedDescription)
 			}
 		}
 		CTFileManager.saveDocument(document)

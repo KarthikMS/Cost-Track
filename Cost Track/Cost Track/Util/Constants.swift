@@ -9,6 +9,7 @@
 import UIKit
 
 var NotSetGroup = CostSheetGroup()
+var TransferCategory = Category()
 
 // MARK: Colors
 let DarkIncomeColor = UIColor(red: 0/255.0, green: 128/255.0, blue: 0/255.0, alpha: 1)
@@ -23,5 +24,5 @@ let CostSheetEntrySegue = "CostSheetEntrySegue"
 let NewCostSheetSegue = "NewCostSheetSegue"
 let SettingsSegue = "SettingsSegue"
 let TransferEntrySegue = "TransferEntrySegue"
-let DirectAmountTransferSegue = "DirectAmountTransferSegue"
 let GroupSelectSegue = "GroupSelectSegue"
+let TransferAmountSegue = "TransferAmountSegue"

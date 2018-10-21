@@ -26,6 +26,9 @@ class EntryCategoryPicker: UIView {
 	weak var dataSource: EntryCategoryPickerDataSource?
 	weak var delegate: EntryCategoryPickerDelegate?
 
+	// This will contain the last 2 selected rows. Used to get previous selected category.
+	private var selectedRows = [0, 0]
+
 	// MARK: Initializers
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -67,6 +70,10 @@ class EntryCategoryPicker: UIView {
 		assertionFailure()
 	}
 
+	func selectPreviousCategory() {
+		categoryPickerView.selectRow(selectedRows[0], inComponent: 0, animated: false)
+	}
+
 }
 
 // MARK: UIPickerViewDataSource
@@ -102,6 +109,8 @@ extension EntryCategoryPicker: UIPickerViewDelegate {
 			assertionFailure()
 			return
 		}
+		selectedRows.removeFirst()
+		selectedRows.append(row)
 		delegate?.categoryChanged(to: categories[row])
 	}
 

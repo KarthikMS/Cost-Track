@@ -87,6 +87,24 @@ struct CostSheetEntry {
   /// Clears the value of `id`. Subsequent reads from it will return its default value.
   mutating func clearID() {_uniqueStorage()._id = nil}
 
+  var transferCostSheetID: String {
+    get {return _storage._transferCostSheetID ?? String()}
+    set {_uniqueStorage()._transferCostSheetID = newValue}
+  }
+  /// Returns true if `transferCostSheetID` has been explicitly set.
+  var hasTransferCostSheetID: Bool {return _storage._transferCostSheetID != nil}
+  /// Clears the value of `transferCostSheetID`. Subsequent reads from it will return its default value.
+  mutating func clearTransferCostSheetID() {_uniqueStorage()._transferCostSheetID = nil}
+
+  var transferEntryID: String {
+    get {return _storage._transferEntryID ?? String()}
+    set {_uniqueStorage()._transferEntryID = newValue}
+  }
+  /// Returns true if `transferEntryID` has been explicitly set.
+  var hasTransferEntryID: Bool {return _storage._transferEntryID != nil}
+  /// Clears the value of `transferEntryID`. Subsequent reads from it will return its default value.
+  mutating func clearTransferEntryID() {_uniqueStorage()._transferEntryID = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -106,6 +124,8 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     5: .same(proto: "date"),
     6: .same(proto: "description"),
     7: .same(proto: "id"),
+    8: .same(proto: "transferCostSheetId"),
+    9: .same(proto: "transferEntryId"),
   ]
 
   fileprivate class _StorageClass {
@@ -116,6 +136,8 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     var _date: Data? = nil
     var _description_p: String? = nil
     var _id: String? = nil
+    var _transferCostSheetID: String? = nil
+    var _transferEntryID: String? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -129,6 +151,8 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       _date = source._date
       _description_p = source._description_p
       _id = source._id
+      _transferCostSheetID = source._transferCostSheetID
+      _transferEntryID = source._transferEntryID
     }
   }
 
@@ -164,6 +188,8 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
         case 5: try decoder.decodeSingularBytesField(value: &_storage._date)
         case 6: try decoder.decodeSingularStringField(value: &_storage._description_p)
         case 7: try decoder.decodeSingularStringField(value: &_storage._id)
+        case 8: try decoder.decodeSingularStringField(value: &_storage._transferCostSheetID)
+        case 9: try decoder.decodeSingularStringField(value: &_storage._transferEntryID)
         default: break
         }
       }
@@ -193,6 +219,12 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       if let v = _storage._id {
         try visitor.visitSingularStringField(value: v, fieldNumber: 7)
       }
+      if let v = _storage._transferCostSheetID {
+        try visitor.visitSingularStringField(value: v, fieldNumber: 8)
+      }
+      if let v = _storage._transferEntryID {
+        try visitor.visitSingularStringField(value: v, fieldNumber: 9)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -209,6 +241,8 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
         if _storage._date != other_storage._date {return false}
         if _storage._description_p != other_storage._description_p {return false}
         if _storage._id != other_storage._id {return false}
+        if _storage._transferCostSheetID != other_storage._transferCostSheetID {return false}
+        if _storage._transferEntryID != other_storage._transferEntryID {return false}
         return true
       }
       if !storagesAreEqual {return false}

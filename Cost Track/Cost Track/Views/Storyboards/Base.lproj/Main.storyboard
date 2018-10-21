@@ -140,7 +140,6 @@
                     <connections>
                         <segue destination="VJY-cq-tDL" kind="show" identifier="CostSheetEntrySegue" id="pWF-n5-Vqd"/>
                         <segue destination="e0M-uA-qqC" kind="presentation" identifier="TransferEntrySegue" id="UfP-jf-kuQ"/>
-                        <segue destination="DT4-xC-FO1" kind="show" identifier="DirectAmountTransferSegue" id="dQC-iJ-4SH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pIF-24-eZY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -307,7 +306,4 @@
             <point key="canvasLocation" x="1238" y="-652"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="dQC-iJ-4SH"/>
-    </inferredMetricsTieBreakers>
 </document>

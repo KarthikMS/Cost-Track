@@ -14,10 +14,10 @@
             <connections>
                 <outlet property="amountInLabel" destination="KcI-hJ-vkK" id="k9v-tg-lfR"/>
                 <outlet property="amountTextView" destination="QWb-vj-bcA" id="9UX-i7-1xC"/>
-                <outlet property="costSheetPickerView" destination="RGi-tr-376" id="sro-3c-xOA"/>
                 <outlet property="receiveFromLabel" destination="tmw-7G-10l" id="vRC-gU-Kuu"/>
-                <outlet property="sourceCostSheetBalanceLabel" destination="gln-n8-UHv" id="YfQ-Om-mcK"/>
-                <outlet property="sourceCostSheetLabel" destination="HGq-5E-AXP" id="6ce-Nt-Ys0"/>
+                <outlet property="transferCostSheetBalanceLabel" destination="gln-n8-UHv" id="YfQ-Om-mcK"/>
+                <outlet property="transferCostSheetLabel" destination="HGq-5E-AXP" id="6ce-Nt-Ys0"/>
+                <outlet property="transferCostSheetPickerView" destination="RGi-tr-376" id="sro-3c-xOA"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -45,7 +45,7 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xZX-0i-2Ik" userLabel="Cost Sheet Container">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xZX-0i-2Ik" userLabel="Transfer Cost Sheet Container">
                     <rect key="frame" x="177.5" y="194" width="167.5" height="40"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cost Sheet 1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HGq-5E-AXP">
@@ -53,6 +53,11 @@
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                    <integer key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </label>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -62,14 +67,6 @@
                         <constraint firstItem="HGq-5E-AXP" firstAttribute="height" secondItem="xZX-0i-2Ik" secondAttribute="height" id="xII-xR-PVS"/>
                         <constraint firstItem="HGq-5E-AXP" firstAttribute="centerY" secondItem="xZX-0i-2Ik" secondAttribute="centerY" id="zzM-x2-Jdk"/>
                     </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                            <integer key="value" value="2"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor">
-                            <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KcI-hJ-vkK">
                     <rect key="frame" x="35" y="284" width="112.5" height="80"/>

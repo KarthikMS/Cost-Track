@@ -36,6 +36,11 @@ class CTFileManager {
 				NotSetGroup = group
 			}
 
+			// Setting TransferCategory
+			for category in loadedDoc.categories where category.name == "Transfer" {
+				TransferCategory = category
+			}
+
 			return (loadedDoc, false)
 		} catch {
 			let newDoc = Document.new

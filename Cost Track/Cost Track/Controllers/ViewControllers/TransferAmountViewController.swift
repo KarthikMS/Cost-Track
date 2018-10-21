@@ -8,9 +8,15 @@
 
 import UIKit
 
-protocol TransferAmountViewControllerDataSource: class {
-	var document: Document { get }
-	var selectedCostSheetId: String { get }
+struct TransferAmountInfo {
+	let amount: Float
+	let transferCostSheet: CostSheet
+	let entryTye: EntryType
+}
+
+protocol TransferAmountViewControllerDelegate: class {
+	func transferSaved(transferAmountInfo: TransferAmountInfo)
+	func transferCancelled()
 }
 
 class TransferAmountViewController: UIViewController {
@@ -18,24 +24,28 @@ class TransferAmountViewController: UIViewController {
 	// MARK: IBOutlets
 	@IBOutlet private weak var amountTextView: UITextView!
 	@IBOutlet private weak var receiveFromLabel: UILabel!
-	@IBOutlet private weak var sourceCostSheetLabel: UILabel!
+	@IBOutlet private weak var transferCostSheetLabel: UILabel!
 	@IBOutlet private weak var amountInLabel: UILabel!
-	@IBOutlet private weak var sourceCostSheetBalanceLabel: UILabel!
-	@IBOutlet weak var costSheetPickerView: UIPickerView!
+	@IBOutlet private weak var transferCostSheetBalanceLabel: UILabel!
+	@IBOutlet weak var transferCostSheetPickerView: UIPickerView!
 
 	// MARK: Properties
-	weak var dataSource: TransferAmountViewControllerDataSource?
-	weak var deltaDelegate: DeltaDelegate?
-	private var entryType = EntryType.expense
-	private var sourceCostSheet = CostSheet()
-	private var destinationCostSheetId = ""
-	private var sourceCostSheets = [CostSheet]()
+	weak var delegate: TransferAmountViewControllerDelegate?
+
+	var document: Document?
+	var costSheetId: String?
+	var entryType = EntryType.expense
+	var amount: Float = 0
+
+	private var transferCostSheet = CostSheet()
+	private var transferCostSheets = [CostSheet]()
 
     override func viewDidLoad() {
-        super.viewDidLoad()
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return
+		super.viewDidLoad()
+		guard let document = document,
+			let costSheetId = costSheetId else {
+				assertionFailure()
+				return
 		}
 
 		switch entryType {
@@ -45,16 +55,27 @@ class TransferAmountViewController: UIViewController {
 			break
 		}
 
-		sourceCostSheets = dataSource.document.costSheets.filter{ $0.id != dataSource.selectedCostSheetId }
-		sourceCostSheet = sourceCostSheets[0]
+		transferCostSheets = document.costSheets.filter{ $0.id != costSheetId }
+		transferCostSheet = transferCostSheets[0]
 		updateViews()
+		transferCostSheetLabel.layer.borderColor = UIColor.white.cgColor
+		amountTextView.text = String(amount)
     }
 
 	// MARK: View functions
 	private func updateViews() {
-		sourceCostSheetLabel.text = sourceCostSheet.name
-		amountInLabel.text = "Amount in \(sourceCostSheet.name)"
-		sourceCostSheetBalanceLabel.text = String(sourceCostSheet.balance)
+		transferCostSheetLabel.text = transferCostSheet.name
+		amountInLabel.text = "Amount in \(transferCostSheet.name)"
+		transferCostSheetBalanceLabel.text = String(transferCostSheet.balance)
+	}
+
+	private func showAlertForInvalidAmount() {
+		let alertController = UIAlertController(title: nil, message: "Please enter an amount greater than 0", preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Ok", style: .default) { (_) in
+			alertController.dismiss(animated: true)
+		}
+		alertController.addAction(okAction)
+		present(alertController, animated: true)
 	}
 
 }
@@ -63,16 +84,20 @@ class TransferAmountViewController: UIViewController {
 private extension TransferAmountViewController {
 
 	@IBAction func cancelButtonPressed(_ sender: Any) {
+		delegate?.transferCancelled()
 		navigationController?.popViewController(animated: true)
 	}
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
 		guard let amount = Float(amountTextView.text),
-			amount > 0 else {
-				// TODO: Show alert to enter amount > 0
+			amount > 0,
+			let delegate = delegate else {
+				showAlertForInvalidAmount()
 				return
 		}
-		
+
+		let transferAmountInfo = TransferAmountInfo(amount: amount, transferCostSheet: transferCostSheet, entryTye: entryType)
+		delegate.transferSaved(transferAmountInfo: transferAmountInfo)
 		navigationController?.popViewController(animated: true)
 	}
 
@@ -86,7 +111,7 @@ extension TransferAmountViewController: UIPickerViewDataSource {
 	}
 
 	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return sourceCostSheets.count
+		return transferCostSheets.count
 	}
 
 }
@@ -95,11 +120,11 @@ extension TransferAmountViewController: UIPickerViewDataSource {
 extension TransferAmountViewController: UIPickerViewDelegate {
 
 	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return sourceCostSheets[row].name
+		return transferCostSheets[row].name
 	}
 
 	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		sourceCostSheet = sourceCostSheets[row]
+		transferCostSheet = transferCostSheets[row]
 		updateViews()
 	}
 
