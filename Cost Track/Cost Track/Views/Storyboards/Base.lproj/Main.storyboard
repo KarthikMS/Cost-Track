@@ -156,7 +156,7 @@
                             <rect key="frame" x="123.5" y="7" width="128" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Income">
-                                <color key="titleColor" red="0.40000000000000002" green="1" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleColor" red="0.0" green="0.50196078431372548" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </state>
                             <connections>
                                 <action selector="navigationBarTitleButtonPressed:" destination="VJY-cq-tDL" eventType="touchUpInside" id="Frm-71-g8c"/>
@@ -256,22 +256,35 @@
             </objects>
             <point key="canvasLocation" x="1990" y="842"/>
         </scene>
-        <!--Incoming-->
+        <!--Transfer Amount View Controller-->
         <scene sceneID="LNh-1A-w5o">
             <objects>
                 <viewController id="DT4-xC-FO1" customClass="TransferAmountViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" title="Incoming" id="g8x-t1-NGB">
+                    <navigationItem key="navigationItem" id="g8x-t1-NGB">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="dbx-LD-meS">
                             <connections>
                                 <action selector="cancelButtonPressed:" destination="DT4-xC-FO1" id="hHT-Mm-jKo"/>
                             </connections>
                         </barButtonItem>
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="VWV-ph-J3I">
+                            <rect key="frame" x="156" y="7" width="63" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="Incoming">
+                                <color key="titleColor" red="0.0" green="0.50196078431372548" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="navigationBarTitleButtonPressed:" destination="DT4-xC-FO1" eventType="touchUpInside" id="OvZ-8J-fTB"/>
+                            </connections>
+                        </button>
                         <barButtonItem key="rightBarButtonItem" title="Save" id="DOj-sJ-uV3">
                             <connections>
                                 <action selector="saveButtonPressed:" destination="DT4-xC-FO1" id="aii-rV-MXb"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="navigationBarTitleButton" destination="VWV-ph-J3I" id="W7N-WD-lEI"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KEk-k8-55Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

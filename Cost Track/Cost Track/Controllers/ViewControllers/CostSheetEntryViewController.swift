@@ -156,11 +156,11 @@ class CostSheetEntryViewController: UIViewController {
 		switch entryType {
 		case .expense:
 			navigationBarTitleButton.setTitle("Expense", for: .normal)
-			navigationBarTitleButton.setTitleColor(LightExpenseColor, for: .normal)
+			navigationBarTitleButton.setTitleColor(DarkExpenseColor, for: .normal)
 			amountBarView.backgroundColor = LightExpenseColor
 		case .income:
 			navigationBarTitleButton.setTitle("Income", for: .normal)
-			navigationBarTitleButton.setTitleColor(LightIncomeColor, for: .normal)
+			navigationBarTitleButton.setTitleColor(DarkIncomeColor, for: .normal)
 			amountBarView.backgroundColor = LightIncomeColor
 		}
 	}
@@ -455,12 +455,14 @@ private extension CostSheetEntryViewController {
 				if oldEntry.category.name == "Transfer" {
 					if oldEntry.transferCostSheetID == transferCostSheet.id {
 						// Old entry has same transferCostSheetId
+						newTransferEntry.id = oldEntry.transferEntryID
 						let updateTransferEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.transferEntryID, with: newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, document: dataSource.document)
 						deltaComps.append(updateTransferEntryComp)
 					} else {
 						// Old entry has different transferCostSheetId
 						if let deleteOldTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(oldEntry.transferEntryID, inCostSheetWithId: oldEntry.transferCostSheetID, document: dataSource.document) {
 							deltaComps.append(deleteOldTransferEntryComp)
+							newTransferEntry.id = oldEntry.transferEntryID
 						} else {
 							newTransferEntry.id = UUID().uuidString
 						}

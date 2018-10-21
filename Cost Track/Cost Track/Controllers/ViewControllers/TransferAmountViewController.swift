@@ -22,6 +22,7 @@ protocol TransferAmountViewControllerDelegate: class {
 class TransferAmountViewController: UIViewController {
 
 	// MARK: IBOutlets
+	@IBOutlet weak var navigationBarTitleButton: UIButton!
 	@IBOutlet private weak var amountTextView: UITextView!
 	@IBOutlet private weak var receiveFromLabel: UILabel!
 	@IBOutlet private weak var transferCostSheetLabel: UILabel!
@@ -48,16 +49,10 @@ class TransferAmountViewController: UIViewController {
 				return
 		}
 
-		switch entryType {
-		case .expense:
-			break
-		case .income:
-			break
-		}
-
 		transferCostSheets = document.costSheets.filter{ $0.id != costSheetId }
 		transferCostSheet = transferCostSheets[0]
 		updateViews()
+		updateViewsBasedOnEntryType()
 		transferCostSheetLabel.layer.borderColor = UIColor.white.cgColor
 		amountTextView.text = String(amount)
     }
@@ -67,6 +62,21 @@ class TransferAmountViewController: UIViewController {
 		transferCostSheetLabel.text = transferCostSheet.name
 		amountInLabel.text = "Amount in \(transferCostSheet.name)"
 		transferCostSheetBalanceLabel.text = String(transferCostSheet.balance)
+	}
+
+	private func updateViewsBasedOnEntryType() {
+		switch entryType {
+		case .expense:
+			navigationBarTitleButton.setTitle("Outgoing", for: .normal)
+			navigationBarTitleButton.setTitleColor(DarkExpenseColor, for: .normal)
+			amountTextView.backgroundColor = LightExpenseColor
+			receiveFromLabel.text = "Send to:"
+		case .income:
+			navigationBarTitleButton.setTitle("Incoming", for: .normal)
+			navigationBarTitleButton.setTitleColor(DarkIncomeColor, for: .normal)
+			amountTextView.backgroundColor = LightIncomeColor
+			receiveFromLabel.text = "Receive from:"
+		}
 	}
 
 	private func showAlertForInvalidAmount() {
@@ -82,6 +92,16 @@ class TransferAmountViewController: UIViewController {
 
 // MARK: IBActions
 private extension TransferAmountViewController {
+
+	@IBAction func navigationBarTitleButtonPressed(_ sender: Any) {
+		switch entryType {
+		case .income:
+			entryType = .expense
+		case .expense:
+			entryType = .income
+		}
+		updateViewsBasedOnEntryType()
+	}
 
 	@IBAction func cancelButtonPressed(_ sender: Any) {
 		delegate?.transferCancelled()
