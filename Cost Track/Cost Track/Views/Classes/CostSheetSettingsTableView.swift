@@ -33,6 +33,7 @@ class CostSheetSettingsTableView: UITableView {
 		self.mode = mode
 
 		costSheet.id = UUID().uuidString
+		costSheet.includeInOverallTotal = true
 		footerTextsAndHeights = getTextAndHeightsForFooterViews()
 		separatorInset.left = 0
 		register(UITableViewCell.self, forCellReuseIdentifier: "CostSheetSettingsTableViewCell")
@@ -69,6 +70,14 @@ class CostSheetSettingsTableView: UITableView {
 
 		textView.removeFromSuperview()
 		return textsAndHeights
+	}
+
+	@objc
+	private func includeInTotalSwitchTapped(sender: Any) {
+		guard let sender = sender as? UISwitch else {
+			return
+		}
+		costSheet.includeInOverallTotal = sender.isOn
 	}
 }
 
@@ -108,7 +117,13 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 			cell.selectionStyle = .none
 			initalBalanceTextView.text = String(costSheet.initialBalance)
 		case 3:
-			cell.textLabel?.text = "Overall Total"
+			cell.textLabel?.text = "Include in overall total"
+
+			// Adding UISwitch as accessoryView
+			let switchView = UISwitch(frame: CGRect.zero)
+			switchView.isOn = true
+			switchView.addTarget(self, action: #selector(includeInTotalSwitchTapped(sender:)), for: .valueChanged)
+			cell.accessoryView = switchView
 		case 4:
 			cell.textLabel?.text = "Group"
 			cell.addAccessoryLabel(text: costSheet.group.name)

@@ -82,8 +82,6 @@ private extension NewCostSheetViewController {
 
 		costSheet.createdOnDate = Date().data
 		costSheet.lastModifiedDate = costSheet.createdOnDate
-		// TODO: includeInOverallTotal
-		costSheet.includeInOverallTotal = true
 
 		// Delta
 		let insertCostSheetComp = DeltaUtil.getComponentToInsertCostSheet(costSheet, in: document)
