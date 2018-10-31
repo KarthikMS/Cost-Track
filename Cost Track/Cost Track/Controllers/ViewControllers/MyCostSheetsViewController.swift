@@ -86,7 +86,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 
 	// MARK: View functions
 	private func updateTopBar() {
-		var totalAmount = document.totalAmount
+		var totalAmount = document.totalDisplayAmount
 		if totalAmount < 0 {
 			topBar.backgroundColor = DarkExpenseColor
 			totalAmount *= -1

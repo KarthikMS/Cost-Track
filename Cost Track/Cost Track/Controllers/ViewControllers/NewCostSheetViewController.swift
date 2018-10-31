@@ -36,6 +36,7 @@ class NewCostSheetViewController: UIViewController {
 		var newCostSheet = CostSheet()
 		newCostSheet.name = dataSource.document.defaultNewCostSheetName
 		newCostSheet.initialBalance = 0
+		newCostSheet.includeInOverallTotal = true
 		newCostSheet.id = UUID().uuidString
 		newCostSheet.group = CostSheetGroup()
 		newCostSheet.group.name = NotSetGroup.name
