@@ -19,7 +19,10 @@ private let ClearDataSection = 0
 class SettingsTableViewController: UITableViewController {
 
 	// MARK: Properties
-	weak var settingsTableViewControllerDelegate: SettingsTableViewControllerDelegate?
+	private weak var settingsTableViewControllerDelegate: SettingsTableViewControllerDelegate!
+	func setup(delegate: SettingsTableViewControllerDelegate) {
+		self.settingsTableViewControllerDelegate = delegate
+	}
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -32,7 +35,7 @@ class SettingsTableViewController: UITableViewController {
 		let actionSheet = UIAlertController(title: nil, message: "Are you sure you want to clear all data?", preferredStyle: .actionSheet)
 		let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (deletAction) in
 			CTFileManager.deleteDocument()
-			self.settingsTableViewControllerDelegate?.refreshView()
+			self.settingsTableViewControllerDelegate.refreshView()
 		}
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (cancelAction) in
 			actionSheet.dismiss(animated: true)

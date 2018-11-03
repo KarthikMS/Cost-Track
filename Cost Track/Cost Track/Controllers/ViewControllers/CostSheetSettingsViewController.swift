@@ -14,8 +14,8 @@ class CostSheetSettingsViewController: UIViewController {
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
 
 	// MARK: Properties
-	var dataSource: CostSheetViewControllerDataSource!
-	weak var deltaDelegate: DeltaDelegate!
+	private weak var dataSource: CostSheetViewControllerDataSource!
+	private weak var deltaDelegate: DeltaDelegate!
 	func setup(dataSource: CostSheetViewControllerDataSource, deltaDelegate: DeltaDelegate) {
 		self.dataSource = dataSource
 		self.deltaDelegate = deltaDelegate
@@ -45,9 +45,7 @@ class CostSheetSettingsViewController: UIViewController {
 				return
 			}
 			groupSelectTableViewController.selectedGroupID = selectedGroupId
-			groupSelectTableViewController.groupSelectTableViewControllerDataSource = self
-			groupSelectTableViewController.groupSelectTableViewControllerDelegate = self
-			groupSelectTableViewController.deltaDelegate = deltaDelegate
+			groupSelectTableViewController.setup(dataSource: self, delegate: self, deltaDelegate: deltaDelegate)
 		}
 	}
 	

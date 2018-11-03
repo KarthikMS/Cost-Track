@@ -20,18 +20,18 @@ class TransferEntryTableViewController: UITableViewController {
 	@IBOutlet weak var transferButton: UIBarButtonItem!
 
 	// MARK: Properties
-	weak var dataSource: TransferEntryTableViewControllerDataSource?
-	weak var deltaDelegate: DeltaDelegate?
+	private weak var dataSource: TransferEntryTableViewControllerDataSource!
+	private weak var deltaDelegate: DeltaDelegate!
+	func setup(dataSource: TransferEntryTableViewControllerDataSource, deltaDelegate: DeltaDelegate) {
+		self.dataSource = dataSource
+		self.deltaDelegate = deltaDelegate
+	}
 	private var filteredCostSheets = [CostSheet]()
 	private var selectedIndexPath: IndexPath?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return
-		}
 
 		// Getting filteredCostSheets
 		let fromCostSheetId = dataSource.fromCostSheetId
@@ -78,9 +78,7 @@ extension TransferEntryTableViewController {
 private extension TransferEntryTableViewController {
 
 	@IBAction func transferButtonPressed(_ sender: Any) {
-		guard let dataSource = dataSource,
-			let selectedIndexPath = selectedIndexPath,
-			let deltaDelegate = deltaDelegate else {
+		guard let selectedIndexPath = selectedIndexPath else {
 				assertionFailure()
 				return
 		}

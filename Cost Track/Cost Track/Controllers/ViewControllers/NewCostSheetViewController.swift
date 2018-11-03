@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol NewCostSheetViewControllerDataSource {
+protocol NewCostSheetViewControllerDataSource: class {
 	var document: Document { get }
 }
 
@@ -18,17 +18,17 @@ class NewCostSheetViewController: UIViewController {
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
 
 	// MARK: Properties
-	weak var deltaDelegate: DeltaDelegate?
-	var dataSource: NewCostSheetViewControllerDataSource?
+	private weak var dataSource: NewCostSheetViewControllerDataSource!
+	private weak var deltaDelegate: DeltaDelegate!
+	func setup(dataSource: NewCostSheetViewControllerDataSource, deltaDelegate: DeltaDelegate) {
+		self.dataSource = dataSource
+		self.deltaDelegate = deltaDelegate
+	}
 	var selectedGroupId = NotSetGroup.id
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return
-		}
 
 		settingsTableView.setMode(.newCostSheet)
 		settingsTableView.costSheetSettingsTableViewDelegate = self
@@ -52,9 +52,7 @@ class NewCostSheetViewController: UIViewController {
 				return
 			}
 			groupSelectTableViewController.selectedGroupID = selectedGroupId
-			groupSelectTableViewController.groupSelectTableViewControllerDataSource = self
-			groupSelectTableViewController.groupSelectTableViewControllerDelegate = self
-			groupSelectTableViewController.deltaDelegate = deltaDelegate
+			groupSelectTableViewController.setup(dataSource: self, delegate: self, deltaDelegate: deltaDelegate)
 		}
 	}
 
@@ -64,11 +62,7 @@ class NewCostSheetViewController: UIViewController {
 private extension NewCostSheetViewController {
 
 	@IBAction func createButtonPressed(_ sender: Any) {
-		guard let deltaDelegate = deltaDelegate,
-			let document = dataSource?.document else {
-				assertionFailure()
-				return
-		}
+		let document = dataSource.document
 
 		settingsTableView.updateCostSheet()
 		var costSheet = settingsTableView.costSheet
@@ -106,11 +100,7 @@ extension NewCostSheetViewController: CostSheetSettingsTableViewDelegate {
 extension NewCostSheetViewController: GroupSelectTableViewControllerDataSource {
 
 	var document: Document {
-		guard let document = dataSource?.document else {
-			assertionFailure()
-			return Document()
-		}
-		return document
+		return dataSource.document
 	}
 
 }
@@ -119,7 +109,7 @@ extension NewCostSheetViewController: GroupSelectTableViewControllerDataSource {
 extension NewCostSheetViewController: GroupSelectTableViewControllerDelegate {
 
 	func didSelectGroup(id: String) {
-		guard let group = dataSource?.document.getGroup(withId: id) else {
+		guard let group = dataSource.document.getGroup(withId: id) else {
 			assertionFailure()
 			return
 		}

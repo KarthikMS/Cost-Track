@@ -45,8 +45,12 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var placeEditorShowTopConstraint: NSLayoutConstraint!
 
 	// MARK: Properties
-	weak var dataSource: CostSheetEntryViewControllerDataSource?
-	weak var deltaDelegate: DeltaDelegate?
+	private weak var dataSource: CostSheetEntryViewControllerDataSource!
+	private weak var deltaDelegate: DeltaDelegate!
+	func setup(dataSource: CostSheetEntryViewControllerDataSource, deltaDelegate: DeltaDelegate) {
+		self.dataSource = dataSource
+		self.deltaDelegate = deltaDelegate
+	}
 	var entryType = EntryType.income
 	var oldEntry: CostSheetEntry?
 	private let locationManager = CLLocationManager()
@@ -88,16 +92,18 @@ class CostSheetEntryViewController: UIViewController {
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == TransferAmountSegue {
-			guard let dataSource = dataSource,
+			guard let amount = Float(amountTextView.text),
 				let transferAmountViewController = segue.destination as? TransferAmountViewController else {
 					assertionFailure()
 					return
 			}
-			transferAmountViewController.document = dataSource.document
-			transferAmountViewController.costSheetId = dataSource.costSheetId
-			transferAmountViewController.entryType = entryType
-			transferAmountViewController.amount = Float(amountTextView.text)!
-			transferAmountViewController.delegate = self
+			transferAmountViewController.setup(
+				delegate: self,
+				document: dataSource.document,
+				costSheetId: dataSource.costSheetId,
+				entryType: entryType,
+				amount: amount
+			)
 		}
 	}
 
@@ -286,10 +292,9 @@ class CostSheetEntryViewController: UIViewController {
 	}
 
 	private func segueToTransferAmountViewController() {
-		guard let dataSource = dataSource,
-			dataSource.document.costSheets.count > 1 else {
-				showAlertForInsufficientCostSheets()
-				return
+		guard dataSource.document.costSheets.count > 1 else {
+			showAlertForInsufficientCostSheets()
+			return
 		}
 		performSegue(withIdentifier: TransferAmountSegue, sender: nil)
 	}
@@ -402,12 +407,6 @@ private extension CostSheetEntryViewController {
 	}
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
-		guard let dataSource = dataSource,
-			let deltaDelegate = deltaDelegate else {
-				assertionFailure()
-				return
-		}
-
 		// Getting data for entry
 		let amount = Float(amountTextView.text)!
 		let category: Category
@@ -562,10 +561,7 @@ extension CostSheetEntryViewController: EntryDatePickerDelegate {
 extension CostSheetEntryViewController: EntryCategoryPickerDataSource {
 
 	var categoriesFilteredByEntryType: [Category] {
-		guard let categories = dataSource?.document.categories else {
-			assertionFailure()
-			return []
-		}
+		let categories = dataSource.document.categories
 		return categories.filter { $0.entryTypes.contains(entryType) }
 	}
 

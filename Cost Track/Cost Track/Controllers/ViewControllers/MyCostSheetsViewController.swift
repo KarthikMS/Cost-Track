@@ -66,19 +66,17 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 			guard let costSheetViewController = segue.destination as? CostSheetViewController else {
 				return
 			}
-			costSheetViewController.dataSource = self
-			costSheetViewController.deltaDelegate = self
+			costSheetViewController.setup(dataSource: self, deltaDelegate: self)
 		case NewCostSheetSegue:
 			guard let newCostSheetViewController = segue.destination as? NewCostSheetViewController else {
 				return
 			}
-			newCostSheetViewController.dataSource = self
-			newCostSheetViewController.deltaDelegate = self
+			newCostSheetViewController.setup(dataSource: self, deltaDelegate: self)
 		case SettingsSegue:
 			guard let settingsTableViewController = segue.destination as? SettingsTableViewController else {
 				return
 			}
-			settingsTableViewController.settingsTableViewControllerDelegate = self
+			settingsTableViewController.setup(delegate: self)
 		default:
 			break
 		}

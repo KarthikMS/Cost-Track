@@ -31,23 +31,24 @@ class TransferAmountViewController: UIViewController {
 	@IBOutlet weak var transferCostSheetPickerView: UIPickerView!
 
 	// MARK: Properties
-	weak var delegate: TransferAmountViewControllerDelegate?
-
-	var document: Document?
-	var costSheetId: String?
-	var entryType = EntryType.expense
-	var amount: Float = 0
+	private weak var delegate: TransferAmountViewControllerDelegate!
+	private var document: Document!
+	private var costSheetId: String!
+	private var entryType: EntryType!
+	private var amount: Float!
+	func setup(delegate: TransferAmountViewControllerDelegate, document: Document, costSheetId: String, entryType: EntryType, amount: Float) {
+		self.delegate = delegate
+		self.document = document
+		self.costSheetId = costSheetId
+		self.entryType = entryType
+		self.amount = amount
+	}
 
 	private var transferCostSheet = CostSheet()
 	private var transferCostSheets = [CostSheet]()
 
     override func viewDidLoad() {
 		super.viewDidLoad()
-		guard let document = document,
-			let costSheetId = costSheetId else {
-				assertionFailure()
-				return
-		}
 
 		transferCostSheets = document.costSheets.filter{ $0.id != costSheetId }
 		transferCostSheet = transferCostSheets[0]
@@ -65,7 +66,7 @@ class TransferAmountViewController: UIViewController {
 	}
 
 	private func updateViewsBasedOnEntryType() {
-		switch entryType {
+		switch entryType! {
 		case .expense:
 			navigationBarTitleButton.setTitle("Outgoing", for: .normal)
 			navigationBarTitleButton.setTitleColor(DarkExpenseColor, for: .normal)
@@ -94,7 +95,7 @@ class TransferAmountViewController: UIViewController {
 private extension TransferAmountViewController {
 
 	@IBAction func navigationBarTitleButtonPressed(_ sender: Any) {
-		switch entryType {
+		switch entryType! {
 		case .income:
 			entryType = .expense
 		case .expense:
@@ -110,8 +111,7 @@ private extension TransferAmountViewController {
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
 		guard let amount = Float(amountTextView.text),
-			amount > 0,
-			let delegate = delegate else {
+			amount > 0 else {
 				showAlertForInvalidAmount()
 				return
 		}

@@ -27,8 +27,12 @@ class CostSheetViewController: UIViewController {
 	@IBOutlet weak var noEntriesTextView: UITextView!
 	
 	// MARK: Properties
-	weak var dataSource: CostSheetViewControllerDataSource?
-	weak var deltaDelegate: DeltaDelegate?
+	private weak var dataSource: CostSheetViewControllerDataSource!
+	private weak var deltaDelegate: DeltaDelegate!
+	func setup(dataSource: CostSheetViewControllerDataSource, deltaDelegate: DeltaDelegate) {
+		self.dataSource = dataSource
+		self.deltaDelegate = deltaDelegate
+	}
 
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
 	var classificationMode = TransactionClassificationMode.date
@@ -44,10 +48,6 @@ class CostSheetViewController: UIViewController {
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return
-		}
 		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
 
 		navigationItem.title = costSheet!.name
@@ -76,12 +76,11 @@ class CostSheetViewController: UIViewController {
 		switch segue.identifier {
 		case CostSheetEntrySegue:
 			guard let costSheetEntryViewController = segue.destination as? CostSheetEntryViewController,
-			let sender = sender as? [String: Any] else {
+				let sender = sender as? [String: Any] else {
 					assertionFailure()
 					return
 			}
-			costSheetEntryViewController.dataSource = self
-			costSheetEntryViewController.deltaDelegate = self
+			costSheetEntryViewController.setup(dataSource: self, deltaDelegate: self)
 			if let oldEntry = sender["oldEntry"] as? CostSheetEntry {
 				costSheetEntryViewController.oldEntry = oldEntry
 			} else {
@@ -101,14 +100,13 @@ class CostSheetViewController: UIViewController {
 				assertionFailure()
 				return
 			}
-			transferEntryTableViewController.dataSource = self
-			transferEntryTableViewController.deltaDelegate = self
+			transferEntryTableViewController.setup(dataSource: self, deltaDelegate: self)
 		case CostSheetSettingsSegue:
 			guard let costSheetSettingsViewController = segue.destination as? CostSheetSettingsViewController else {
 				assertionFailure()
 				return
 			}
-			costSheetSettingsViewController.setup(dataSource: self.dataSource!, deltaDelegate: self)
+			costSheetSettingsViewController.setup(dataSource: self.dataSource, deltaDelegate: self)
 		default:
 			break
 		}
@@ -116,17 +114,16 @@ class CostSheetViewController: UIViewController {
 
 	// MARK: View functions
 	private func reloadAfterEntryModification() {
-		guard let dataSource = dataSource else {
-			assertionFailure()
+		guard let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId) else {
+			assertionFailure("Could not get costSheet")
 			return
 		}
-		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
 
 		if classificationMode != .date {
 			sortEntriesByDate()
 		}
 
-		if costSheet!.entries.isEmpty {
+		if costSheet.entries.isEmpty {
 			noEntriesTextView.isHidden = false
 		} else {
 			noEntriesTextView.isHidden = true
@@ -137,13 +134,12 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func updateAmountLabel() {
-		guard let dataSource = dataSource else {
-			assertionFailure()
+		guard let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId) else {
+			assertionFailure("Could not get costSheet")
 			return
 		}
-		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
 
-		var balance = costSheet!.balance
+		var balance = costSheet.balance
 		if balance < 0 {
 			amountLabel.backgroundColor = DarkExpenseColor
 			balance *= -1
@@ -167,11 +163,10 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByDate() {
-		guard let dataSource = dataSource else {
-			assertionFailure()
+		guard let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId) else {
+			assertionFailure("Could not get costSheet")
 			return
 		}
-		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)!
 
 		let entries = costSheet.entries.sorted(by: { (entry1, entry2) -> Bool in
 			guard let date1 = entry1.date.date,
@@ -216,10 +211,6 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByCategory() {
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return
-		}
 		var entriesSortedByCategory = [String: [CostSheetEntry]]()
 		for category in dataSource.document.categories {
 			entriesSortedByCategory[category.name] = [CostSheetEntry]()
@@ -242,10 +233,10 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByPlace() {
-		guard let dataSource = dataSource else {
+		guard let costSheetEntries = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)?.entries else {
+			assertionFailure("Could not get costSheet")
 			return
 		}
-		let costSheetEntries = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)!.entries
 		var entriesSortedByPlace = [String: [CostSheetEntry]]()
 		for entry in costSheetEntries {
 			if !entry.hasPlace {
@@ -287,11 +278,9 @@ class CostSheetViewController: UIViewController {
 
 	// Misc. functions
 	private func deleteEntry(at indexPath: IndexPath) {
-		guard let dataSource = dataSource,
-			let deltaDelegate = deltaDelegate,
-			let deleteEntryId = getSortedEntry(at: indexPath)?.id else {
-				assertionFailure()
-				return
+		guard let deleteEntryId = getSortedEntry(at: indexPath)?.id else {
+			assertionFailure()
+			return
 		}
 
 		// Delta
@@ -381,13 +370,9 @@ extension CostSheetViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return nil
-		}
 		let transferEntryAction = UITableViewRowAction(style: .normal, title: "Transfer") { (action, indexPath) in
 			// Checking cost sheets count
-			guard dataSource.document.costSheets.count > 1 else {
+			guard self.dataSource.document.costSheets.count > 1 else {
 				self.showAlertSaying("No other cost sheets to move entry to. Create more cost sheets.")
 				return
 			}
@@ -445,18 +430,10 @@ extension CostSheetViewController: TableViewSectionHeaderViewDelegate {
 extension CostSheetViewController: CostSheetEntryViewControllerDataSource {
 
 	var document: Document {
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return Document()
-		}
 		return dataSource.document
 	}
 
 	var costSheetId: String {
-		guard let dataSource = dataSource else {
-			assertionFailure()
-			return ""
-		}
 		return dataSource.selectedCostSheetId
 	}
 
@@ -484,10 +461,6 @@ extension CostSheetViewController: TransferEntryTableViewControllerDataSource {
 extension CostSheetViewController: DeltaDelegate {
 
 	func sendDeltaComponents(_ components: [DocumentContentOperation.Component]) {
-		guard let deltaDelegate = deltaDelegate else {
-			assertionFailure()
-			return
-		}
 		deltaDelegate.sendDeltaComponents(components)
 		reloadAfterEntryModification()
 	}
