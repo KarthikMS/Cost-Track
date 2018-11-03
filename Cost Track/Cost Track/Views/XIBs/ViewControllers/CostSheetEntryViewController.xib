@@ -100,6 +100,11 @@
                                 <constraint firstItem="aEQ-39-8kr" firstAttribute="centerX" secondItem="voL-ZN-s1i" secondAttribute="centerX" id="2oC-3n-Mif"/>
                                 <constraint firstAttribute="bottom" secondItem="aEQ-39-8kr" secondAttribute="bottom" id="h8Y-Iz-4Xw"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <outletCollection property="gestureRecognizers" destination="9YS-sz-A54" appends="YES" id="xVn-8y-aDr"/>
                             </connections>
@@ -107,6 +112,11 @@
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dcN-rk-Cgy">
                             <rect key="frame" x="67.5" y="0.0" width="67.5" height="80"/>
                             <state key="normal" title="Img"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="imageButtonPressed:" destination="-1" eventType="touchUpInside" id="L0b-9c-Fg5"/>
                             </connections>
@@ -140,6 +150,11 @@
                                 <constraint firstItem="Ve7-zM-T7i" firstAttribute="centerY" secondItem="SkO-qq-w0O" secondAttribute="centerY" id="aBd-vr-mTn"/>
                                 <constraint firstItem="Ve7-zM-T7i" firstAttribute="centerX" secondItem="SkO-qq-w0O" secondAttribute="centerX" id="oPD-jh-0KK"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <outletCollection property="gestureRecognizers" destination="Wq4-65-bNT" appends="YES" id="7JG-Cn-MNd"/>
                             </connections>
@@ -184,6 +199,11 @@
                                 <constraint firstItem="urL-87-6cr" firstAttribute="centerY" secondItem="QVv-pg-RKz" secondAttribute="centerY" id="ofP-Tq-7Y4"/>
                                 <constraint firstItem="urL-87-6cr" firstAttribute="height" secondItem="QVv-pg-RKz" secondAttribute="height" id="ymE-Hl-pv1"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <outletCollection property="gestureRecognizers" destination="syi-OX-kcm" appends="YES" id="exp-5X-Lqf"/>
                             </connections>
