@@ -89,6 +89,77 @@ class DeltaUtil {
 		return getComponentToDeleteCostSheet(at: index, in: document)
 	}
 
+	static func getComponentToUpdateCostSheet(withId costSheetId: String, with updatedCostSheet: CostSheet, in document: Document) -> DocumentContentOperation.Component {
+		guard let index = document.indexOfCostSheetWithId(costSheetId) else {
+			assertionFailure()
+			return DocumentContentOperation.Component()
+		}
+		let oldCostSheet = document.costSheets[index]
+		let fieldString = "1,arr:\(index)"
+		let comp = getComponent(
+			opType: .update,
+			fieldString: fieldString,
+			oldValue: oldCostSheet.safeSerializedData,
+			newValue: updatedCostSheet.safeSerializedData
+		)
+		return comp
+	}
+
+	// TODO: Fix this
+	static func getComponentsToUpdatePropertiesOfCostSheet(withId costSheetId: String, in document: Document, name: String?, initialBalance: Float?, includeInOverallTotal: Bool?, group: CostSheetGroup?, lastModifiedData: Data) -> [DocumentContentOperation.Component] {
+		guard let index = document.indexOfCostSheetWithId(costSheetId) else {
+			assertionFailure()
+			return []
+		}
+		let oldCostSheet = document.costSheets[index]
+		let costSheetFieldString = "1,arr:\(index)"
+		var deltaComps = [DocumentContentOperation.Component]()
+		if let name = name {
+			let updateNameComp = getComponent(
+				opType: .update,
+				fieldString: costSheetFieldString + ",1",
+				oldValue: oldCostSheet.name.data(using: String.Encoding.utf8),
+				newValue: name.data(using: String.Encoding.utf8)
+			)
+			deltaComps.append(updateNameComp)
+		}
+		if let initialBalance = initialBalance {
+			let updateInitialBalanceComp = getComponent(
+				opType: .update,
+				fieldString: costSheetFieldString + ",2",
+				oldValue: oldCostSheet.initialBalance.data,
+				newValue: initialBalance.data
+			)
+			deltaComps.append(updateInitialBalanceComp)
+		}
+		if let includeInOverallTotal = includeInOverallTotal {
+			let updateIncludeInOverallTotal = getComponent(
+				opType: .update,
+				fieldString: costSheetFieldString + ",3",
+				oldValue: oldCostSheet.includeInOverallTotal.data,
+				newValue: includeInOverallTotal.data
+			)
+			deltaComps.append(updateIncludeInOverallTotal)
+		}
+		if let group = group {
+			let updateIncludeInOverallTotal = getComponent(
+				opType: .update,
+				fieldString: costSheetFieldString + ",4",
+				oldValue: oldCostSheet.group.safeSerializedData,
+				newValue: group.safeSerializedData
+			)
+			deltaComps.append(updateIncludeInOverallTotal)
+		}
+		let updateLastModifiedDateComp = getComponent(
+			opType: .update,
+			fieldString: costSheetFieldString + ",6",
+			oldValue: oldCostSheet.lastModifiedDate,
+			newValue: lastModifiedData
+		)
+		deltaComps.append(updateLastModifiedDateComp)
+		return deltaComps
+	}
+
 	static func getComponentToUpdateGroupOfCostSheet(at index: Int, from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in document: Document) -> DocumentContentOperation.Component {
 		let fieldString = "1,arr:\(index),4"
 		return getComponent(

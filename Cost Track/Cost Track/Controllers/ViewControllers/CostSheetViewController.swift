@@ -103,6 +103,12 @@ class CostSheetViewController: UIViewController {
 			}
 			transferEntryTableViewController.dataSource = self
 			transferEntryTableViewController.deltaDelegate = self
+		case CostSheetSettingsSegue:
+			guard let costSheetSettingsViewController = segue.destination as? CostSheetSettingsViewController else {
+				assertionFailure()
+				return
+			}
+			costSheetSettingsViewController.setup(dataSource: self.dataSource!, deltaDelegate: self)
 		default:
 			break
 		}
@@ -354,9 +360,6 @@ private extension CostSheetViewController {
 
 	@IBAction func transferAmountButtonPressed(_ sender: Any) {
 		performSegue(withIdentifier: CostSheetEntrySegue, sender: ["isAmountTransfer": true])
-	}
-
-	@IBAction func settingsButtonPressed(_ sender: Any) {
 	}
 
 }

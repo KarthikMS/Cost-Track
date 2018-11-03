@@ -1,8 +1,8 @@
 //
-//  UIViewControllerExtensions.swift
+//  CommonUtil.swift
 //  Cost Track
 //
-//  Created by Karthik M S on 21/10/18.
+//  Created by Karthik M S on 03/11/18.
 //  Copyright © 2018 Karthik M S. All rights reserved.
 //
 
@@ -20,3 +20,23 @@ extension UIViewController {
 	}
 
 }
+
+protocol DataConvertible {
+	init?(data: Data)
+	var data: Data { get }
+}
+
+extension DataConvertible {
+
+	init?(data: Data) {
+		guard data.count == MemoryLayout<Self>.size else { return nil }
+		self = data.withUnsafeBytes { $0.pointee }
+	}
+
+	var data: Data {
+		return withUnsafeBytes(of: self) { Data($0) }
+	}
+}
+
+extension Float : DataConvertible { }
+extension Bool : DataConvertible { }

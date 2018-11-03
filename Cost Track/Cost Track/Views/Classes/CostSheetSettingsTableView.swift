@@ -121,7 +121,7 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 
 			// Adding UISwitch as accessoryView
 			let switchView = UISwitch(frame: CGRect.zero)
-			switchView.isOn = true
+			switchView.isOn = costSheet.includeInOverallTotal
 			switchView.addTarget(self, action: #selector(includeInTotalSwitchTapped(sender:)), for: .valueChanged)
 			cell.accessoryView = switchView
 		case 4:
