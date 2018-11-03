@@ -115,6 +115,7 @@ class CostSheetViewController: UIViewController {
 		}
 
 		if classificationMode != .date {
+			sortedEntriesForTableView.removeAll()
 			sortEntriesByDate()
 		}
 
