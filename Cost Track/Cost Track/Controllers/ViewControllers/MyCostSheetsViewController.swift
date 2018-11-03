@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource, CostSheetViewControllerDataSource {
+class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var topBar: UIView!
@@ -242,6 +242,14 @@ extension MyCostSheetsViewController: TableViewSectionHeaderViewDelegate {
 			sectionsToHide.insert(section)
 		}
 		tableView.reloadData()
+	}
+
+}
+
+extension MyCostSheetsViewController: CostSheetDataSource {
+
+	var costSheetId: String {
+		return selectedCostSheetId
 	}
 
 }

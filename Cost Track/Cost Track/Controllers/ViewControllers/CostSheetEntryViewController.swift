@@ -9,11 +9,6 @@
 import UIKit
 import GooglePlacePicker
 
-protocol CostSheetEntryViewControllerDataSource: class {
-	var document: Document { get }
-	var costSheetId: String { get }
-}
-
 class CostSheetEntryViewController: UIViewController {
 
 	// MARK: IBOutlets
@@ -45,9 +40,9 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var placeEditorShowTopConstraint: NSLayoutConstraint!
 
 	// MARK: Properties
-	private weak var dataSource: CostSheetEntryViewControllerDataSource!
+	private weak var dataSource: CostSheetDataSource!
 	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: CostSheetEntryViewControllerDataSource, deltaDelegate: DeltaDelegate) {
+	func setup(dataSource: CostSheetDataSource, deltaDelegate: DeltaDelegate) {
 		self.dataSource = dataSource
 		self.deltaDelegate = deltaDelegate
 	}

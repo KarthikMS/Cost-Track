@@ -8,11 +8,6 @@
 
 import UIKit
 
-protocol CostSheetViewControllerDataSource: class {
-	var document: Document { get }
-	var selectedCostSheetId: String { get }
-}
-
 enum TransactionClassificationMode {
 	case date
 	case category
@@ -27,9 +22,9 @@ class CostSheetViewController: UIViewController {
 	@IBOutlet weak var noEntriesTextView: UITextView!
 	
 	// MARK: Properties
-	private weak var dataSource: CostSheetViewControllerDataSource!
+	private weak var dataSource: CostSheetDataSource!
 	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: CostSheetViewControllerDataSource, deltaDelegate: DeltaDelegate) {
+	func setup(dataSource: CostSheetDataSource, deltaDelegate: DeltaDelegate) {
 		self.dataSource = dataSource
 		self.deltaDelegate = deltaDelegate
 	}
@@ -48,7 +43,7 @@ class CostSheetViewController: UIViewController {
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
-		let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)
+		let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId)
 
 		navigationItem.title = costSheet!.name
 
@@ -114,7 +109,7 @@ class CostSheetViewController: UIViewController {
 
 	// MARK: View functions
 	private func reloadAfterEntryModification() {
-		guard let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId) else {
+		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
 			assertionFailure("Could not get costSheet")
 			return
 		}
@@ -134,7 +129,7 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func updateAmountLabel() {
-		guard let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId) else {
+		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
 			assertionFailure("Could not get costSheet")
 			return
 		}
@@ -163,7 +158,7 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByDate() {
-		guard let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId) else {
+		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
 			assertionFailure("Could not get costSheet")
 			return
 		}
@@ -233,7 +228,7 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByPlace() {
-		guard let costSheetEntries = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId)?.entries else {
+		guard let costSheetEntries = dataSource.document.costSheetWithId(dataSource.costSheetId)?.entries else {
 			assertionFailure("Could not get costSheet")
 			return
 		}
@@ -285,11 +280,11 @@ class CostSheetViewController: UIViewController {
 
 		// Delta
 		var deltaComps = [DocumentContentOperation.Component]()
-		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.selectedCostSheetId, document: dataSource.document)
+		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
 		deltaComps.append(deleteEntryComp!)
 
 		// Deleting transferEntry if any
-		let entryToDelete = document.costSheetWithId(dataSource.selectedCostSheetId)!.entryWithId(deleteEntryId)
+		let entryToDelete = document.costSheetWithId(dataSource.costSheetId)!.entryWithId(deleteEntryId)
 		if entryToDelete.category.name == "Transfer" {
 			let deleteTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(entryToDelete.transferEntryID, inCostSheetWithId: entryToDelete.transferCostSheetID, document: document)
 			deltaComps.append(deleteTransferEntryComp!)
@@ -427,14 +422,14 @@ extension CostSheetViewController: TableViewSectionHeaderViewDelegate {
 }
 
 // MARK: CostSheetEntryViewControllerDataSource
-extension CostSheetViewController: CostSheetEntryViewControllerDataSource {
+extension CostSheetViewController: CostSheetDataSource {
 
 	var document: Document {
 		return dataSource.document
 	}
 
 	var costSheetId: String {
-		return dataSource.selectedCostSheetId
+		return dataSource.costSheetId
 	}
 
 }

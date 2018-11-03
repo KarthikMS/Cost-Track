@@ -14,9 +14,9 @@ class CostSheetSettingsViewController: UIViewController {
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
 
 	// MARK: Properties
-	private weak var dataSource: CostSheetViewControllerDataSource!
+	private weak var dataSource: CostSheetDataSource!
 	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: CostSheetViewControllerDataSource, deltaDelegate: DeltaDelegate) {
+	func setup(dataSource: CostSheetDataSource, deltaDelegate: DeltaDelegate) {
 		self.dataSource = dataSource
 		self.deltaDelegate = deltaDelegate
 	}
@@ -28,7 +28,7 @@ class CostSheetSettingsViewController: UIViewController {
 
 		settingsTableView.setMode(.costSheetSettings)
 		settingsTableView.costSheetSettingsTableViewDelegate = self
-		guard let costSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId) else {
+		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
 			assertionFailure()
 			return
 		}
@@ -90,7 +90,7 @@ private extension CostSheetSettingsViewController {
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
 		settingsTableView.updateCostSheet()
-//		guard let oldCostSheet = dataSource.document.costSheetWithId(dataSource.selectedCostSheetId) else {
+//		guard let oldCostSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
 //			assertionFailure()
 //			return
 //		}
@@ -105,7 +105,7 @@ private extension CostSheetSettingsViewController {
 		}
 
 		costSheet.lastModifiedDate = Date().data
-		let updateCostSheetComp = DeltaUtil.getComponentToUpdateCostSheet(withId: dataSource.selectedCostSheetId, with: costSheet, in: document)
+		let updateCostSheetComp = DeltaUtil.getComponentToUpdateCostSheet(withId: dataSource.costSheetId, with: costSheet, in: document)
 		deltaDelegate.sendDeltaComponents([updateCostSheetComp])
 		
 		// TODO: Fix this
