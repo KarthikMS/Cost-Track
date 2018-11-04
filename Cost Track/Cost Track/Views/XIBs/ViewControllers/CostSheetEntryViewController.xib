@@ -25,12 +25,18 @@
                 <outlet property="descriptionTextView" destination="OcW-2E-2Hg" id="EbO-99-0A2"/>
                 <outlet property="entryCategoryPicker" destination="Qvf-8Y-Tff" id="65F-2B-MuN"/>
                 <outlet property="entryDatePicker" destination="dVv-Mq-aOk" id="oTH-ZZ-FFt"/>
+                <outlet property="imageButton" destination="dcN-rk-Cgy" id="irE-N4-vSo"/>
+                <outlet property="imageEditorHeightConstraint" destination="BPp-a9-WWD" id="maS-jL-8bj"/>
+                <outlet property="imageEditorHideTopConstraint" destination="vDF-lZ-VP6" id="dcf-9b-qg8"/>
+                <outlet property="imageEditorShowTopConstraint" destination="WCO-vC-hGl" id="pRM-GI-g4B"/>
                 <outlet property="placeAddressLabel" destination="I5G-bK-4z3" id="gdp-Rh-IYa"/>
                 <outlet property="placeEditorHeightConstraint" destination="m5O-dJ-Mdr" id="PQ2-GN-Dw6"/>
                 <outlet property="placeEditorHideTopConstraint" destination="v70-a3-uXp" id="tnK-XA-3zN"/>
                 <outlet property="placeEditorShowTopConstraint" destination="n70-Uz-2KV" id="6Bi-5N-re1"/>
                 <outlet property="placeNameLabel" destination="hbj-2R-yBR" id="g8P-PC-adf"/>
+                <outlet property="selectFromGalleryButtonHeightConstraint" destination="bbE-3W-NQf" id="iSa-ep-km7"/>
                 <outlet property="selectPlaceLabel" destination="QVv-pg-RKz" id="0Dq-me-VHj"/>
+                <outlet property="takePhotoButtonHeightConstraint" destination="FZr-3O-Q3B" id="I9Z-d2-UWw"/>
                 <outlet property="timeLabel" destination="RWa-3S-V8V" id="5ke-E4-t1D"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -289,6 +295,37 @@
                         <constraint firstItem="hM5-4J-Vl9" firstAttribute="top" secondItem="66t-Vk-Jd0" secondAttribute="top" id="xne-UT-xjB"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hyg-Mh-PJw" userLabel="Image Editor">
+                    <rect key="frame" x="0.0" y="667" width="375" height="1"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mpz-YT-9ea">
+                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="1"/>
+                            <state key="normal" title="Select from gallery"/>
+                            <connections>
+                                <action selector="selectFromGalleryButtonPressed:" destination="-1" eventType="touchUpInside" id="jyk-xv-gbL"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eNM-XQ-r0Z">
+                            <rect key="frame" x="187.5" y="0.0" width="187.5" height="1"/>
+                            <state key="normal" title="Take photo"/>
+                            <connections>
+                                <action selector="takePhotoButtonPressed:" destination="-1" eventType="touchUpInside" id="9pY-xC-WOq"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="Mpz-YT-9ea" firstAttribute="leading" secondItem="Hyg-Mh-PJw" secondAttribute="leading" id="7ha-Wz-xXG"/>
+                        <constraint firstItem="Mpz-YT-9ea" firstAttribute="top" secondItem="Hyg-Mh-PJw" secondAttribute="top" id="9dn-Bs-d8y"/>
+                        <constraint firstAttribute="height" constant="1" id="BPp-a9-WWD"/>
+                        <constraint firstItem="eNM-XQ-r0Z" firstAttribute="top" secondItem="Hyg-Mh-PJw" secondAttribute="top" id="Can-w8-E1j"/>
+                        <constraint firstItem="eNM-XQ-r0Z" firstAttribute="height" secondItem="Hyg-Mh-PJw" secondAttribute="height" id="FZr-3O-Q3B"/>
+                        <constraint firstItem="Mpz-YT-9ea" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="VQG-Zq-ZnR"/>
+                        <constraint firstAttribute="trailing" secondItem="eNM-XQ-r0Z" secondAttribute="trailing" id="Xik-Lg-YUZ"/>
+                        <constraint firstItem="Mpz-YT-9ea" firstAttribute="height" secondItem="Hyg-Mh-PJw" secondAttribute="height" id="bbE-3W-NQf"/>
+                        <constraint firstItem="eNM-XQ-r0Z" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="g7h-01-5yK"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -304,15 +341,19 @@
                 <constraint firstItem="dVv-Mq-aOk" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="Qbd-HP-ym6"/>
                 <constraint firstItem="OcW-2E-2Hg" firstAttribute="top" secondItem="Geb-fA-wbP" secondAttribute="bottom" id="T2g-NP-XbA"/>
                 <constraint firstItem="Geb-fA-wbP" firstAttribute="top" secondItem="6au-o4-Src" secondAttribute="bottom" id="V22-4z-a9A"/>
+                <constraint firstItem="Hyg-Mh-PJw" firstAttribute="top" secondItem="OcW-2E-2Hg" secondAttribute="bottom" id="WCO-vC-hGl"/>
                 <constraint firstItem="66t-Vk-Jd0" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="WlQ-eF-oD1"/>
                 <constraint firstItem="OcW-2E-2Hg" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="YM5-UK-uCc"/>
                 <constraint firstItem="Geb-fA-wbP" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="ZOj-2i-urB"/>
                 <constraint firstItem="dVv-Mq-aOk" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="a6C-4L-9oY"/>
                 <constraint firstItem="Qvf-8Y-Tff" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="bGq-Y7-XOH"/>
+                <constraint firstItem="Hyg-Mh-PJw" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="heb-Ej-cu9"/>
                 <constraint firstItem="6au-o4-Src" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="icA-WI-itL"/>
                 <constraint firstItem="66t-Vk-Jd0" firstAttribute="top" secondItem="OcW-2E-2Hg" secondAttribute="bottom" id="n70-Uz-2KV"/>
                 <constraint firstItem="Qvf-8Y-Tff" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="q0Q-kJ-k21"/>
+                <constraint firstItem="Hyg-Mh-PJw" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="uce-rI-0v6"/>
                 <constraint firstItem="66t-Vk-Jd0" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="v70-a3-uXp"/>
+                <constraint firstItem="Hyg-Mh-PJw" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="vDF-lZ-VP6"/>
                 <constraint firstItem="Qvf-8Y-Tff" firstAttribute="top" secondItem="OcW-2E-2Hg" secondAttribute="bottom" id="xLN-RM-69P"/>
             </constraints>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -320,6 +361,7 @@
             <variation key="default">
                 <mask key="constraints">
                     <exclude reference="n70-Uz-2KV"/>
+                    <exclude reference="WCO-vC-hGl"/>
                     <exclude reference="xLN-RM-69P"/>
                     <exclude reference="BDq-z8-wTx"/>
                 </mask>

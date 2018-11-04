@@ -8,8 +8,15 @@
 
 import UIKit
 import GooglePlacePicker
+import AVKit
+import CoreServices
 
 class CostSheetEntryViewController: UIViewController {
+
+	private enum SettingsReason {
+		case location
+		case camera
+	}
 
 	// MARK: IBOutlets
 	// Views
@@ -17,6 +24,7 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var amountBarView: UIView!
 	@IBOutlet weak var amountTextView: UITextView!
 	@IBOutlet weak var categoryLabel: UILabel!
+	@IBOutlet weak var imageButton: UIButton!
 	@IBOutlet weak var dateLabel: UILabel!
 	@IBOutlet weak var timeLabel: UILabel!
 	@IBOutlet weak var selectPlaceLabel: UILabel!
@@ -39,6 +47,12 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var placeEditorHideTopConstraint: NSLayoutConstraint!
 	@IBOutlet weak var placeEditorShowTopConstraint: NSLayoutConstraint!
 
+	@IBOutlet weak var imageEditorHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var imageEditorHideTopConstraint: NSLayoutConstraint!
+	@IBOutlet weak var imageEditorShowTopConstraint: NSLayoutConstraint!
+	@IBOutlet weak var selectFromGalleryButtonHeightConstraint: NSLayoutConstraint!
+	@IBOutlet weak var takePhotoButtonHeightConstraint: NSLayoutConstraint!
+
 	// MARK: Properties
 	private weak var dataSource: CostSheetDataSource!
 	private weak var deltaDelegate: DeltaDelegate!
@@ -52,6 +66,8 @@ class CostSheetEntryViewController: UIViewController {
 	private var entryPlace: Place?
 	var isDirectAmountTransfer = false
 	private var transferCostSheet: CostSheet?
+	private let imagePicker = UIImagePickerController()
+	private var image: UIImage?
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -74,6 +90,8 @@ class CostSheetEntryViewController: UIViewController {
 		if isDirectAmountTransfer {
 			performSegue(withIdentifier: TransferAmountSegue, sender: nil)
 		}
+
+		initImagePicker()
     }
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -83,8 +101,10 @@ class CostSheetEntryViewController: UIViewController {
 		categoryPickerHeightConstraint.constant = view.frame.size.height - (descriptionTextView.frame.origin.y + descriptionTextView.frame.size.height)
 		datePickerHeightConstraint.constant = categoryPickerHeightConstraint.constant
 		placeEditorHeightConstraint.constant = categoryPickerHeightConstraint.constant
+		imageEditorHeightConstraint.constant = categoryPickerHeightConstraint.constant
 	}
 
+	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == TransferAmountSegue {
 			guard let amount = Float(amountTextView.text),
@@ -102,6 +122,21 @@ class CostSheetEntryViewController: UIViewController {
 		}
 	}
 
+	private func segueToTransferAmountViewController() {
+		guard dataSource.document.costSheets.count > 1 else {
+			showAlertForInsufficientCostSheets()
+			return
+		}
+		performSegue(withIdentifier: TransferAmountSegue, sender: nil)
+	}
+
+	// MARK: Initialization functions
+	private func initImagePicker() {
+		imagePicker.mediaTypes = [kUTTypeImage as String]
+		imagePicker.delegate = self
+	}
+
+	// MARK: Location functions
 	private func openPlacePicker() {
 		requestLocationServicesIfNecessary()
 		locationManager.startUpdatingLocation()
@@ -113,12 +148,12 @@ class CostSheetEntryViewController: UIViewController {
 			case .notDetermined:
 				locationManager.requestWhenInUseAuthorization()
 			case .denied:
-				showAlertToTakeUserToSettings()
+				showAlertToTakeUserToSettings(reason: .location)
 			default:
 				return
 			}
 		} else {
-			showAlertToTakeUserToSettings()
+			showAlertToTakeUserToSettings(reason: .location)
 		}
 	}
 
@@ -133,6 +168,11 @@ class CostSheetEntryViewController: UIViewController {
 		updateViewsBasedOnEntryType()
 		amountTextView.text = String(oldEntry.amount)
 		updateCategoryViews(category: oldEntry.category)
+		if oldEntry.hasImage {
+			image = UIImage(data: oldEntry.image)
+			imageButton.setTitle("", for: .normal)
+			imageButton.setBackgroundImage(image, for: .normal)
+		}
 		updateDateViews(date: oldEntryDate)
 		if oldEntry.hasPlace {
 			entryPlace = oldEntry.place
@@ -267,8 +307,41 @@ class CostSheetEntryViewController: UIViewController {
 		}
 	}
 
-	private func showAlertToTakeUserToSettings() {
-		let alertController = UIAlertController(title: "Location not detected", message: "Please go to settings and enable location services to use this feature.", preferredStyle: .alert)
+	private func showImageEditor() {
+		if imageEditorShowTopConstraint.isActive {
+			return
+		}
+
+		view.removeConstraint(imageEditorHideTopConstraint)
+		view.addConstraint(imageEditorShowTopConstraint)
+		UIView.animate(withDuration: 0.75) {
+			self.view.layoutIfNeeded()
+		}
+	}
+
+	private func hideImageEditor() {
+		if imageEditorHideTopConstraint.isActive {
+			return
+		}
+
+		view.removeConstraint(imageEditorShowTopConstraint)
+		view.addConstraint(imageEditorHideTopConstraint)
+		UIView.animate(withDuration: 0.75) {
+			self.view.layoutIfNeeded()
+		}
+	}
+
+	private func showAlertToTakeUserToSettings(reason: SettingsReason) {
+		let title: String!, message: String!
+		switch reason {
+		case .location:
+			title = "Location not detected"
+			message = "Please go to settings and enable location services to use this feature."
+		case .camera:
+			title = "Camera not enabled"
+			message = "Please go to settings and enable camera to use this feature."
+		}
+		let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
 		let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) in
 			guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
@@ -286,14 +359,6 @@ class CostSheetEntryViewController: UIViewController {
 		present(alertController, animated: true)
 	}
 
-	private func segueToTransferAmountViewController() {
-		guard dataSource.document.costSheets.count > 1 else {
-			showAlertForInsufficientCostSheets()
-			return
-		}
-		performSegue(withIdentifier: TransferAmountSegue, sender: nil)
-	}
-
 	private func showAlertForInsufficientCostSheets() {
 		let alertController = UIAlertController(title: nil, message: "No other cost sheets to move entry to. Create more cost sheets.", preferredStyle: .alert)
 		let okAction = UIAlertAction(title: "Ok", style: .default) { (_) in
@@ -303,10 +368,30 @@ class CostSheetEntryViewController: UIViewController {
 		present(alertController, animated: true)
 	}
 
+	private func showPhotoAlbum() {
+		guard let availableMediaTypes = UIImagePickerController.availableMediaTypes(for: .camera),
+			availableMediaTypes.contains(kUTTypeImage as String) else {
+				showAlertSaying("Image not supported")
+				return
+		}
+		imagePicker.sourceType = .photoLibrary
+		present(imagePicker, animated: true)
+	}
+
+	private func showCamera() {
+		guard let availableMediaTypes = UIImagePickerController.availableMediaTypes(for: .camera),
+			availableMediaTypes.contains(kUTTypeImage as String) else {
+				showAlertSaying("Image not supported")
+				return
+		}
+		imagePicker.sourceType = .camera
+		present(imagePicker, animated: true)
+	}
+
 }
 
 // MARK: IBActions
-private extension CostSheetEntryViewController {
+extension CostSheetEntryViewController {
 
 	@IBAction func navigationBarTitleButtonPressed(_ sender: UIButton) {
 		var oldSelectedCategory: Category?
@@ -360,6 +445,7 @@ private extension CostSheetEntryViewController {
 
 		hideDatePicker()
 		hidePlaceEditor()
+		hideImageEditor()
 		showCategoryPicker()
 	}
 
@@ -369,6 +455,7 @@ private extension CostSheetEntryViewController {
 
 		hideCategoryPicker()
 		hideDatePicker()
+		hideImageEditor()
 
 		if entryPlace == nil {
 			openPlacePicker()
@@ -390,6 +477,36 @@ private extension CostSheetEntryViewController {
 	@IBAction func imageButtonPressed(_ sender: Any) {
 		amountTextView.resignFirstResponder()
 		descriptionTextView.resignFirstResponder()
+
+		hideDatePicker()
+		hidePlaceEditor()
+		hideCategoryPicker()
+		showImageEditor()
+	}
+
+	@IBAction func selectFromGalleryButtonPressed(_ sender: Any) {
+		showPhotoAlbum()
+	}
+
+	@IBAction func takePhotoButtonPressed(_ sender: Any) {
+		guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+			return
+		}
+
+		switch AVCaptureDevice.authorizationStatus(for: .video) {
+		case .authorized:
+			showCamera()
+		case .notDetermined:
+			AVCaptureDevice.requestAccess(for: .video) { granted in
+				if granted {
+					self.showCamera()
+				}
+			}
+		case .denied:
+			showAlertToTakeUserToSettings(reason: .camera)
+		case .restricted:
+			return
+		}
 	}
 
 	@IBAction func dateViewTapped(_ sender: Any) {
@@ -398,6 +515,7 @@ private extension CostSheetEntryViewController {
 
 		hideCategoryPicker()
 		hidePlaceEditor()
+		hideImageEditor()
 		showDatePicker()
 	}
 
@@ -409,6 +527,10 @@ private extension CostSheetEntryViewController {
 			category = entryCategoryPicker.selectedCategory
 		} else {
 			category = TransferCategory
+		}
+		var imageData: Data?
+		if let image = image {
+			imageData = UIImagePNGRepresentation(image)
 		}
 		let dateData = NSKeyedArchiver.archivedData(withRootObject: entryDatePicker.datePicker.date)
 		let descriptionText: String
@@ -425,6 +547,9 @@ private extension CostSheetEntryViewController {
 			// Updating oldEntry
 			oldEntry.type = entryType
 			oldEntry.amount = amount
+			if let imageData = imageData {
+				oldEntry.image = imageData
+			}
 			if let place = entryPlace {
 				oldEntry.place = place
 			} else {
@@ -438,6 +563,9 @@ private extension CostSheetEntryViewController {
 				newTransferEntry.type = entryType == .income ? .expense : .income
 				newTransferEntry.amount = amount
 				newTransferEntry.category = TransferCategory
+				if let imageData = imageData {
+					newTransferEntry.image = imageData
+				}
 				if let place = entryPlace {
 					newTransferEntry.place = place
 				}
@@ -482,6 +610,9 @@ private extension CostSheetEntryViewController {
 					newTransferEntry.type = entryType == .income ? .expense : .income
 					newTransferEntry.amount = amount
 					newTransferEntry.category = TransferCategory
+					if let imageData = imageData {
+						newTransferEntry.image = imageData
+					}
 					if let place = entryPlace {
 						newTransferEntry.place = place
 					}
@@ -501,6 +632,9 @@ private extension CostSheetEntryViewController {
 			newEntry.id = UUID().uuidString
 			newEntry.type = entryType
 			newEntry.amount = amount
+			if let imageData = imageData {
+				newEntry.image = imageData
+			}
 			if let place = entryPlace {
 				newEntry.place = place
 			}
@@ -513,6 +647,9 @@ private extension CostSheetEntryViewController {
 				newTransferEntry.type = entryType == .income ? .expense : .income
 				newTransferEntry.amount = amount
 				newTransferEntry.category = TransferCategory
+				if let imageData = imageData {
+					newTransferEntry.image = imageData
+				}
 				if let place = entryPlace {
 					newTransferEntry.place = place
 				}
@@ -671,6 +808,36 @@ extension CostSheetEntryViewController: TransferAmountViewControllerDelegate {
 		if transferCostSheet == nil {
 			entryCategoryPicker.selectPreviousCategory()
 		}
+	}
+
+}
+
+extension CostSheetEntryViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+		image = info["UIImagePickerControllerOriginalImage"] as? UIImage
+		image = rotateImageToCorrectOrientation(image!)
+		imageButton.setTitle("", for: .normal)
+		imageButton.setBackgroundImage(image, for: .normal)
+
+		picker.dismiss(animated: true)
+	}
+
+	private func rotateImageToCorrectOrientation(_ image: UIImage) -> UIImage {
+		if (image.imageOrientation == .up ) {
+			return image
+		}
+
+		UIGraphicsBeginImageContext(image.size)
+
+		image.draw(in: CGRect(origin: CGPoint.zero, size: image.size))
+		guard let copy = UIGraphicsGetImageFromCurrentImageContext() else {
+			return image
+		}
+
+		UIGraphicsEndImageContext()
+
+		return copy
 	}
 
 }

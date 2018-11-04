@@ -57,6 +57,7 @@
 		D9D7F01D217214CC00749589 /* Place.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D7F01C217214CC00749589 /* Place.pb.swift */; };
 		D9F249FB218D782600D0C81A /* CostSheetSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F249FA218D782600D0C81A /* CostSheetSettingsViewController.swift */; };
 		D9F249FF218D927400D0C81A /* CommonUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F249FE218D927400D0C81A /* CommonUtil.swift */; };
+		D9F24A01218EC0DC00D0C81A /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F24A00218EC0DC00D0C81A /* CoreServices.framework */; };
 		D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */; };
 		D9F5E5F520FEF77300454FA9 /* CostSheetEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */; };
 /* End PBXBuildFile section */
@@ -139,6 +140,7 @@
 		D9D7F01C217214CC00749589 /* Place.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Place.pb.swift; sourceTree = "<group>"; };
 		D9F249FA218D782600D0C81A /* CostSheetSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetSettingsViewController.swift; sourceTree = "<group>"; };
 		D9F249FE218D927400D0C81A /* CommonUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUtil.swift; sourceTree = "<group>"; };
+		D9F24A00218EC0DC00D0C81A /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetEntryViewController.swift; sourceTree = "<group>"; };
 		D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSheetEntryViewController.xib; sourceTree = "<group>"; };
 		F245DB9B1362C7111170B109 /* Pods-Cost Track.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cost Track.release.xcconfig"; path = "Pods/Target Support Files/Pods-Cost Track/Pods-Cost Track.release.xcconfig"; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9F24A01218EC0DC00D0C81A /* CoreServices.framework in Frameworks */,
 				117B148510AF2FBBC09B5A7C /* Pods_Cost_Track.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -396,6 +399,7 @@
 		E1B81CC907D406379794B9A6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D9F24A00218EC0DC00D0C81A /* CoreServices.framework */,
 				FAB2BE677FA212D05F16B2A9 /* Pods_Cost_Track.framework */,
 				B16E8471E55CFD62A5B82FE0 /* Pods_Cost_TrackTests.framework */,
 				52EC24338E6DD4F56261180B /* Pods_Cost_TrackUITests.framework */,

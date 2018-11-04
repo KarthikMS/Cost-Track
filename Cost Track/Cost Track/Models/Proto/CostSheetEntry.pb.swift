@@ -51,6 +51,15 @@ struct CostSheetEntry {
   /// Clears the value of `category`. Subsequent reads from it will return its default value.
   mutating func clearCategory() {_uniqueStorage()._category = nil}
 
+  var image: Data {
+    get {return _storage._image ?? SwiftProtobuf.Internal.emptyData}
+    set {_uniqueStorage()._image = newValue}
+  }
+  /// Returns true if `image` has been explicitly set.
+  var hasImage: Bool {return _storage._image != nil}
+  /// Clears the value of `image`. Subsequent reads from it will return its default value.
+  mutating func clearImage() {_uniqueStorage()._image = nil}
+
   var place: Place {
     get {return _storage._place ?? Place()}
     set {_uniqueStorage()._place = newValue}
@@ -120,18 +129,20 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     1: .same(proto: "type"),
     2: .same(proto: "amount"),
     3: .same(proto: "category"),
-    4: .same(proto: "place"),
-    5: .same(proto: "date"),
-    6: .same(proto: "description"),
-    7: .same(proto: "id"),
-    8: .same(proto: "transferCostSheetId"),
-    9: .same(proto: "transferEntryId"),
+    4: .same(proto: "image"),
+    5: .same(proto: "place"),
+    6: .same(proto: "date"),
+    7: .same(proto: "description"),
+    8: .same(proto: "id"),
+    9: .same(proto: "transferCostSheetId"),
+    10: .same(proto: "transferEntryId"),
   ]
 
   fileprivate class _StorageClass {
     var _type: EntryType? = nil
     var _amount: Float? = nil
     var _category: Category? = nil
+    var _image: Data? = nil
     var _place: Place? = nil
     var _date: Data? = nil
     var _description_p: String? = nil
@@ -147,6 +158,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       _type = source._type
       _amount = source._amount
       _category = source._category
+      _image = source._image
       _place = source._place
       _date = source._date
       _description_p = source._description_p
@@ -184,12 +196,13 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
         case 1: try decoder.decodeSingularEnumField(value: &_storage._type)
         case 2: try decoder.decodeSingularFloatField(value: &_storage._amount)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._category)
-        case 4: try decoder.decodeSingularMessageField(value: &_storage._place)
-        case 5: try decoder.decodeSingularBytesField(value: &_storage._date)
-        case 6: try decoder.decodeSingularStringField(value: &_storage._description_p)
-        case 7: try decoder.decodeSingularStringField(value: &_storage._id)
-        case 8: try decoder.decodeSingularStringField(value: &_storage._transferCostSheetID)
-        case 9: try decoder.decodeSingularStringField(value: &_storage._transferEntryID)
+        case 4: try decoder.decodeSingularBytesField(value: &_storage._image)
+        case 5: try decoder.decodeSingularMessageField(value: &_storage._place)
+        case 6: try decoder.decodeSingularBytesField(value: &_storage._date)
+        case 7: try decoder.decodeSingularStringField(value: &_storage._description_p)
+        case 8: try decoder.decodeSingularStringField(value: &_storage._id)
+        case 9: try decoder.decodeSingularStringField(value: &_storage._transferCostSheetID)
+        case 10: try decoder.decodeSingularStringField(value: &_storage._transferEntryID)
         default: break
         }
       }
@@ -207,23 +220,26 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       if let v = _storage._category {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
+      if let v = _storage._image {
+        try visitor.visitSingularBytesField(value: v, fieldNumber: 4)
+      }
       if let v = _storage._place {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
       }
       if let v = _storage._date {
-        try visitor.visitSingularBytesField(value: v, fieldNumber: 5)
+        try visitor.visitSingularBytesField(value: v, fieldNumber: 6)
       }
       if let v = _storage._description_p {
-        try visitor.visitSingularStringField(value: v, fieldNumber: 6)
-      }
-      if let v = _storage._id {
         try visitor.visitSingularStringField(value: v, fieldNumber: 7)
       }
-      if let v = _storage._transferCostSheetID {
+      if let v = _storage._id {
         try visitor.visitSingularStringField(value: v, fieldNumber: 8)
       }
-      if let v = _storage._transferEntryID {
+      if let v = _storage._transferCostSheetID {
         try visitor.visitSingularStringField(value: v, fieldNumber: 9)
+      }
+      if let v = _storage._transferEntryID {
+        try visitor.visitSingularStringField(value: v, fieldNumber: 10)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -233,16 +249,17 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     if self._storage !== other._storage {
       let storagesAreEqual: Bool = withExtendedLifetime((self._storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
-        let other_storage = _args.1
-        if _storage._type != other_storage._type {return false}
-        if _storage._amount != other_storage._amount {return false}
-        if _storage._category != other_storage._category {return false}
-        if _storage._place != other_storage._place {return false}
-        if _storage._date != other_storage._date {return false}
-        if _storage._description_p != other_storage._description_p {return false}
-        if _storage._id != other_storage._id {return false}
-        if _storage._transferCostSheetID != other_storage._transferCostSheetID {return false}
-        if _storage._transferEntryID != other_storage._transferEntryID {return false}
+        let rhs_storage = _args.1
+        if _storage._type != rhs_storage._type {return false}
+        if _storage._amount != rhs_storage._amount {return false}
+        if _storage._category != rhs_storage._category {return false}
+        if _storage._image != rhs_storage._image {return false}
+        if _storage._place != rhs_storage._place {return false}
+        if _storage._date != rhs_storage._date {return false}
+        if _storage._description_p != rhs_storage._description_p {return false}
+        if _storage._id != rhs_storage._id {return false}
+        if _storage._transferCostSheetID != rhs_storage._transferCostSheetID {return false}
+        if _storage._transferEntryID != rhs_storage._transferEntryID {return false}
         return true
       }
       if !storagesAreEqual {return false}

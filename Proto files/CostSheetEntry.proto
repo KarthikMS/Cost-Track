@@ -11,11 +11,12 @@ message CostSheetEntry {
   required EntryType type = 1;
   required float amount = 2;
   required Category category = 3;
-  optional Place place = 4;
-  required bytes date = 5;
-  optional string description = 6;
-  required string id = 7;
-  optional string transferCostSheetId = 8;
-  optional string transferEntryId = 9;
+  optional bytes image = 4;
+  optional Place place = 5;
+  required bytes date = 6;
+  optional string description = 7;
+  required string id = 8;
+  optional string transferCostSheetId = 9;
+  optional string transferEntryId = 10;
 
 }
