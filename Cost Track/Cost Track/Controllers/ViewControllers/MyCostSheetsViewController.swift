@@ -15,12 +15,14 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	@IBOutlet weak var totalAmountLabel: UILabel!
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var noCostSheetsTextView: UITextView!
-
+	@IBOutlet weak var accountingPeriodLabel: UILabel!
+	
 	// MARK: Properties
 	var (document, isNewDocument) = CTFileManager.getDocument()
 	var selectedCostSheetId = ""
 	private var shouldUpdateViews = false
 	private var sectionsToHide = Set<Int>()
+	private let accountingPeriodViewController = AccountingPeriodViewController()
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
@@ -28,7 +30,11 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 
 		if isNewDocument {
 			CTFileManager.saveDocument(document)
+			UserDefaults.standard.setValue(true, forKey: BalanceCarryOver)
+			UserDefaults.standard.setValue(1, forKey: StartDayForMonthlyAccountingPeriod)
 		}
+
+		initAccountingPeriodViewController()
 
 		if document.costSheets.isEmpty {
 			noCostSheetsTextView.isHidden = false
@@ -94,6 +100,48 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		totalAmountLabel.text = String(totalAmount)
 	}
 
+	private func initAccountingPeriodViewController() {
+		var frame = CGRect()
+		frame.size.width = 0.95 * view.frame.size.width
+		frame.size.height = 0
+		frame.origin.x = (view.frame.size.width - frame.size.width) / 2
+		frame.origin.y = navigationController!.navigationBar.frame.origin.y + navigationController!.navigationBar.frame.size.height + 5
+		accountingPeriodViewController.view.frame = frame
+		view.addSubview(accountingPeriodViewController.view)
+		accountingPeriodViewController.view.isHidden = true
+		accountingPeriodViewController.delegate = self
+	}
+
+	private func showAccountingPeriodViewController() {
+		var frame = accountingPeriodViewController.view.frame
+		guard frame.size.height != 300 else {
+			return
+		}
+		frame.size.height = 300
+		UIView.animate(withDuration: 0.5, animations: {
+			self.accountingPeriodViewController.view.frame = frame
+		}) { (completed) in
+			if completed {
+				self.accountingPeriodViewController.view.isHidden = false
+			}
+		}
+	}
+
+	private func hideAccountingPeriodViewController() {
+		var frame = accountingPeriodViewController.view.frame
+		guard frame.size.height != 0 else {
+			return
+		}
+		frame.size.height = 0
+		UIView.animate(withDuration: 0.5, animations: {
+			self.accountingPeriodViewController.view.frame = frame
+		}) { (completed) in
+			if completed {
+				self.accountingPeriodViewController.view.isHidden = true
+			}
+		}
+	}
+
 	// MARK: Misc. functions
 	private func costSheetAtIndexPath(_ indexPath: IndexPath) -> CostSheet {
 		let groupsWithCostSheets = document.groupsWithCostSheets
@@ -138,6 +186,14 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 
 // MARK: IBActions
 private extension MyCostSheetsViewController {
+
+	@IBAction func navigationTitleViewTapped(_ sender: Any) {
+		if accountingPeriodViewController.view.frame.size.height == 0 {
+			showAccountingPeriodViewController()
+		} else {
+			hideAccountingPeriodViewController()
+		}
+	}
 
 	@IBAction func chartViewButtonPressed(_ sender: Any) {
 		// Finish this
@@ -261,6 +317,8 @@ extension MyCostSheetsViewController: SettingsTableViewControllerDelegate {
 		(document, isNewDocument) = CTFileManager.getDocument()
 		if isNewDocument {
 			CTFileManager.saveDocument(document)
+			UserDefaults.standard.setValue(true, forKey: BalanceCarryOver)
+			UserDefaults.standard.setValue(1, forKey: StartDayForMonthlyAccountingPeriod)
 		}
 		shouldUpdateViews = true
 	}
@@ -281,6 +339,20 @@ extension MyCostSheetsViewController: DeltaDelegate {
 			}
 		}
 		CTFileManager.saveDocument(document)
+	}
+
+}
+
+// MARK: AccountingPeriodViewControllerDelegate
+extension MyCostSheetsViewController: AccountingPeriodViewControllerDelegate {
+
+	func cancelButtonPressed() {
+		hideAccountingPeriodViewController()
+	}
+
+	func accountingPeriodChanged() {
+		tableView.reloadData()
+		hideAccountingPeriodViewController()
 	}
 
 }

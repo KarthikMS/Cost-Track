@@ -40,6 +40,8 @@
 		D989740E21173EA60051F809 /* EntryCategoryPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = D989740D21173EA60051F809 /* EntryCategoryPicker.xib */; };
 		D9982E69216374E90093B28C /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9982E68216374E90093B28C /* SettingsTableViewController.swift */; };
 		D9A42AC821915B8B0036D9AE /* EntryPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A42AC721915B8B0036D9AE /* EntryPhotoViewController.swift */; };
+		D9A42ACF219190FE0036D9AE /* AccountingPeriodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A42ACD219190FE0036D9AE /* AccountingPeriodViewController.swift */; };
+		D9A42AD0219190FE0036D9AE /* AccountingPeriodViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9A42ACE219190FE0036D9AE /* AccountingPeriodViewController.xib */; };
 		D9AC8183217AFD49002FCA94 /* CostSheetEntry.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC817E217AFD49002FCA94 /* CostSheetEntry.pb.swift */; };
 		D9AC8184217AFD49002FCA94 /* Category.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC817F217AFD49002FCA94 /* Category.pb.swift */; };
 		D9AC8185217AFD49002FCA94 /* CostSheet.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC8180217AFD49002FCA94 /* CostSheet.pb.swift */; };
@@ -124,6 +126,8 @@
 		D989740D21173EA60051F809 /* EntryCategoryPicker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EntryCategoryPicker.xib; sourceTree = "<group>"; };
 		D9982E68216374E90093B28C /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		D9A42AC721915B8B0036D9AE /* EntryPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryPhotoViewController.swift; sourceTree = "<group>"; };
+		D9A42ACD219190FE0036D9AE /* AccountingPeriodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountingPeriodViewController.swift; sourceTree = "<group>"; };
+		D9A42ACE219190FE0036D9AE /* AccountingPeriodViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountingPeriodViewController.xib; sourceTree = "<group>"; };
 		D9AC817E217AFD49002FCA94 /* CostSheetEntry.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheetEntry.pb.swift; sourceTree = "<group>"; };
 		D9AC817F217AFD49002FCA94 /* Category.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.pb.swift; sourceTree = "<group>"; };
 		D9AC8180217AFD49002FCA94 /* CostSheet.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheet.pb.swift; sourceTree = "<group>"; };
@@ -325,6 +329,7 @@
 				D97AB0FA212D90D200000D6F /* GroupSelectTableViewController.swift */,
 				D9C453FD21561C9D00890E60 /* TransferAmountViewController.swift */,
 				D9982E68216374E90093B28C /* SettingsTableViewController.swift */,
+				D9A42ACD219190FE0036D9AE /* AccountingPeriodViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -336,6 +341,7 @@
 				D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */,
 				D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */,
 				D9C453FE21561C9D00890E60 /* TransferAmountViewController.xib */,
+				D9A42ACE219190FE0036D9AE /* AccountingPeriodViewController.xib */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -522,6 +528,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9A42AD0219190FE0036D9AE /* AccountingPeriodViewController.xib in Resources */,
 				D9C4540021561C9D00890E60 /* TransferAmountViewController.xib in Resources */,
 				D989740E21173EA60051F809 /* EntryCategoryPicker.xib in Resources */,
 				D9F5E5F520FEF77300454FA9 /* CostSheetEntryViewController.xib in Resources */,
@@ -672,6 +679,7 @@
 				D9032EBD20FB75EC009EF5FC /* NewCostSheetViewController.swift in Sources */,
 				D9AC8186217AFD49002FCA94 /* CTEnums.pb.swift in Sources */,
 				D9D7F01D217214CC00749589 /* Place.pb.swift in Sources */,
+				D9A42ACF219190FE0036D9AE /* AccountingPeriodViewController.swift in Sources */,
 				D9B119B621516A670007CDA1 /* CTFileManager.swift in Sources */,
 				D9AC8184217AFD49002FCA94 /* Category.pb.swift in Sources */,
 				D989740C21173E9A0051F809 /* EntryCategoryPicker.swift in Sources */,

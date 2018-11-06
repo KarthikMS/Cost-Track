@@ -29,3 +29,7 @@ let GroupSelectSegue = "GroupSelectSegue"
 let TransferAmountSegue = "TransferAmountSegue"
 let CostSheetSettingsSegue = "CostSheetSettingsSegue"
 let GroupSelectFromCostSheetSettingsSegue = "GroupSelectFromCostSheetSettingsSegue"
+
+// MARK: Strings
+let BalanceCarryOver = "BalanceCarryOver"
+let StartDayForMonthlyAccountingPeriod = "StartDayForMonthlyAccountingPeriod"

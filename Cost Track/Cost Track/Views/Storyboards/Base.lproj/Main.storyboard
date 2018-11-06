@@ -10,11 +10,12 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--My Cost Sheets-->
+        <!--My Cost Sheets View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MyCostSheetsViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" title="My Cost Sheets" id="25B-TP-Vt6">
+                    <navigationItem key="navigationItem" id="25B-TP-Vt6">
+                        <nil key="title"/>
                         <barButtonItem key="backBarButtonItem" title="Back" id="x3A-nC-Xcx"/>
                         <barButtonItem key="leftBarButtonItem" title="Add" id="99u-Dh-FRo">
                             <connections>
@@ -22,6 +23,42 @@
                                 <segue destination="Zj1-Q9-6XZ" kind="show" identifier="NewCostSheetSegue" id="ZPf-NA-428"/>
                             </connections>
                         </barButtonItem>
+                        <view key="titleView" contentMode="scaleToFill" id="LJR-Tv-CMn" userLabel="Navigation Title View">
+                            <rect key="frame" x="187.5" y="22" width="0.0" height="0.0"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Cost Sheets" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6FG-Tb-bXs">
+                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="24" id="4mU-mM-Hgf"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="At all times" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ki5-Tl-I88">
+                                    <rect key="frame" x="0.0" y="24" width="0.0" height="17"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="17" id="IQm-BV-hLI"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstItem="6FG-Tb-bXs" firstAttribute="leading" secondItem="LJR-Tv-CMn" secondAttribute="leading" id="6uo-WT-VjU"/>
+                                <constraint firstAttribute="trailing" secondItem="6FG-Tb-bXs" secondAttribute="trailing" id="8wX-Az-OxD"/>
+                                <constraint firstAttribute="trailing" secondItem="Ki5-Tl-I88" secondAttribute="trailing" id="ELD-OH-SVd"/>
+                                <constraint firstItem="6FG-Tb-bXs" firstAttribute="top" secondItem="LJR-Tv-CMn" secondAttribute="top" id="OX9-eN-NcC"/>
+                                <constraint firstItem="Ki5-Tl-I88" firstAttribute="top" secondItem="6FG-Tb-bXs" secondAttribute="bottom" id="dyS-2y-hQ6"/>
+                                <constraint firstItem="Ki5-Tl-I88" firstAttribute="leading" secondItem="LJR-Tv-CMn" secondAttribute="leading" id="hbe-CF-dHN"/>
+                            </constraints>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="gn9-IG-Fj1" appends="YES" id="X2b-Vt-eny"/>
+                            </connections>
+                        </view>
                         <rightBarButtonItems>
                             <barButtonItem title="Set" id="E7o-6X-8ta">
                                 <connections>
@@ -37,10 +74,16 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="accountingPeriodLabel" destination="Ki5-Tl-I88" id="5BG-FR-5Cn"/>
                         <segue destination="egc-Yf-OgO" kind="show" identifier="CostSheetSegue" id="uG9-oT-zJz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="gn9-IG-Fj1">
+                    <connections>
+                        <action selector="navigationTitleViewTapped:" destination="BYZ-38-t0r" id="aI2-XM-6la"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="514" y="110"/>
         </scene>

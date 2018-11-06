@@ -45,3 +45,7 @@ extension DataConvertible {
 
 extension Float : DataConvertible { }
 extension Bool : DataConvertible { }
+
+var startDayForMonthlyAccountingPeriod: Int {
+	return UserDefaults.standard.value(forKey: StartDayForMonthlyAccountingPeriod) as! Int
+}
