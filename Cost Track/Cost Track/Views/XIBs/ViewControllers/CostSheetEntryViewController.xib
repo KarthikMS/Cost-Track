@@ -18,6 +18,7 @@
                 <outlet property="categoryPickerHeightConstraint" destination="aBL-DU-Hcg" id="zaX-Ob-m3y"/>
                 <outlet property="categoryPickerHideTopConstraint" destination="bGq-Y7-XOH" id="HAf-7m-K2X"/>
                 <outlet property="categoryPickerShowTopConstraint" destination="xLN-RM-69P" id="0Xf-Iz-lPe"/>
+                <outlet property="configurationBar" destination="Geb-fA-wbP" id="SqH-7D-xJQ"/>
                 <outlet property="dateLabel" destination="tfy-YN-Muo" id="K3W-ad-7P1"/>
                 <outlet property="datePickerHeightConstraint" destination="aVd-Pe-5Gl" id="dSD-RQ-T3G"/>
                 <outlet property="datePickerHideTopConstraint" destination="Qbd-HP-ym6" id="DPG-sj-9CD"/>
@@ -300,30 +301,74 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mpz-YT-9ea">
                             <rect key="frame" x="0.0" y="0.0" width="187.5" height="1"/>
+                            <color key="backgroundColor" red="1" green="0.031076394890000001" blue="0.16038954590000001" alpha="1" colorSpace="calibratedRGB"/>
                             <state key="normal" title="Select from gallery"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="selectFromGalleryButtonPressed:" destination="-1" eventType="touchUpInside" id="jyk-xv-gbL"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eNM-XQ-r0Z">
                             <rect key="frame" x="187.5" y="0.0" width="187.5" height="1"/>
+                            <color key="backgroundColor" red="1" green="0.031076394890000001" blue="0.16038954590000001" alpha="1" colorSpace="calibratedRGB"/>
                             <state key="normal" title="Take photo"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="takePhotoButtonPressed:" destination="-1" eventType="touchUpInside" id="9pY-xC-WOq"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dg9-PZ-I4c">
+                            <rect key="frame" x="0.0" y="1" width="187.5" height="0.5"/>
+                            <state key="normal" title="Delete photo"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="deletePhotoButtonPressed:" destination="-1" eventType="touchUpInside" id="fyG-nZ-1vW"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="caW-QL-ApI">
+                            <rect key="frame" x="187.5" y="1" width="187.5" height="0.5"/>
+                            <state key="normal" title="View photo"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="viewPhotoButtonPressed:" destination="-1" eventType="touchUpInside" id="Byc-cv-pYt"/>
                             </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
+                        <constraint firstItem="dg9-PZ-I4c" firstAttribute="height" secondItem="Hyg-Mh-PJw" secondAttribute="height" multiplier="0.5" id="2Qy-vr-JjT"/>
                         <constraint firstItem="Mpz-YT-9ea" firstAttribute="leading" secondItem="Hyg-Mh-PJw" secondAttribute="leading" id="7ha-Wz-xXG"/>
                         <constraint firstItem="Mpz-YT-9ea" firstAttribute="top" secondItem="Hyg-Mh-PJw" secondAttribute="top" id="9dn-Bs-d8y"/>
                         <constraint firstAttribute="height" constant="1" id="BPp-a9-WWD"/>
                         <constraint firstItem="eNM-XQ-r0Z" firstAttribute="top" secondItem="Hyg-Mh-PJw" secondAttribute="top" id="Can-w8-E1j"/>
+                        <constraint firstItem="dg9-PZ-I4c" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="Dck-JU-KjZ"/>
                         <constraint firstItem="eNM-XQ-r0Z" firstAttribute="height" secondItem="Hyg-Mh-PJw" secondAttribute="height" id="FZr-3O-Q3B"/>
+                        <constraint firstItem="dg9-PZ-I4c" firstAttribute="top" secondItem="Mpz-YT-9ea" secondAttribute="bottom" id="S5J-gG-nQm"/>
+                        <constraint firstItem="caW-QL-ApI" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="UB5-WX-pgh"/>
                         <constraint firstItem="Mpz-YT-9ea" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="VQG-Zq-ZnR"/>
                         <constraint firstAttribute="trailing" secondItem="eNM-XQ-r0Z" secondAttribute="trailing" id="Xik-Lg-YUZ"/>
                         <constraint firstItem="Mpz-YT-9ea" firstAttribute="height" secondItem="Hyg-Mh-PJw" secondAttribute="height" id="bbE-3W-NQf"/>
+                        <constraint firstItem="caW-QL-ApI" firstAttribute="top" secondItem="eNM-XQ-r0Z" secondAttribute="bottom" id="cbw-NA-5fF"/>
+                        <constraint firstItem="caW-QL-ApI" firstAttribute="height" secondItem="Hyg-Mh-PJw" secondAttribute="height" multiplier="0.5" id="eXt-Ex-0kA"/>
                         <constraint firstItem="eNM-XQ-r0Z" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="g7h-01-5yK"/>
+                        <constraint firstItem="dg9-PZ-I4c" firstAttribute="leading" secondItem="Hyg-Mh-PJw" secondAttribute="leading" id="hkF-y5-j59"/>
+                        <constraint firstAttribute="trailing" secondItem="caW-QL-ApI" secondAttribute="trailing" id="xCZ-KD-Qnm"/>
                     </constraints>
                 </view>
             </subviews>

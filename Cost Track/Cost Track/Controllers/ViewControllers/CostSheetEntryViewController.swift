@@ -53,6 +53,8 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var selectFromGalleryButtonHeightConstraint: NSLayoutConstraint!
 	@IBOutlet weak var takePhotoButtonHeightConstraint: NSLayoutConstraint!
 
+	@IBOutlet weak var configurationBar: UIView!
+
 	// MARK: Properties
 	private weak var dataSource: CostSheetDataSource!
 	private weak var deltaDelegate: DeltaDelegate!
@@ -98,10 +100,12 @@ class CostSheetEntryViewController: UIViewController {
 		super.viewDidAppear(animated)
 
 		// Calculating height constraints for views in the bottom
-		categoryPickerHeightConstraint.constant = view.frame.size.height - (descriptionTextView.frame.origin.y + descriptionTextView.frame.size.height)
+		let viewHeights = amountBarView.frame.size.height + configurationBar.frame.size.height + descriptionTextView.frame.size.height
+		categoryPickerHeightConstraint.constant = view.frame.size.height - navigationController!.navigationBar.frame.size.height - (view.safeAreaInsets.top + view.safeAreaInsets.bottom) - viewHeights
 		datePickerHeightConstraint.constant = categoryPickerHeightConstraint.constant
 		placeEditorHeightConstraint.constant = categoryPickerHeightConstraint.constant
 		imageEditorHeightConstraint.constant = categoryPickerHeightConstraint.constant
+		updateImageEditorView(for: image)
 	}
 
 	// MARK: Navigation
@@ -170,8 +174,7 @@ class CostSheetEntryViewController: UIViewController {
 		updateCategoryViews(category: oldEntry.category)
 		if oldEntry.hasImage {
 			image = UIImage(data: oldEntry.image)
-			imageButton.setTitle("", for: .normal)
-			imageButton.setBackgroundImage(image, for: .normal)
+			updateImageEditorView(for: image)
 		}
 		updateDateViews(date: oldEntryDate)
 		if oldEntry.hasPlace {
@@ -206,6 +209,32 @@ class CostSheetEntryViewController: UIViewController {
 		}
 	}
 
+	private func updateCategoryViews(category: Category?) {
+		if let category = category {
+			entryCategoryPicker.selectCategory(category)
+		} else {
+			entryCategoryPicker.categoryPickerView.selectRow(0, inComponent: 0, animated: false)
+		}
+		categoryLabel.text = entryCategoryPicker.selectedCategory.name
+	}
+
+	private func updateImageEditorView(for image: UIImage?) {
+		if let image = image {
+			imageButton.setTitle("", for: .normal)
+			imageButton.setBackgroundImage(image, for: .normal)
+			takePhotoButtonHeightConstraint.constant = categoryPickerHeightConstraint.constant / 2
+			selectFromGalleryButtonHeightConstraint.constant = categoryPickerHeightConstraint.constant / 2
+		} else {
+			imageButton.setTitle("Img", for: .normal)
+			imageButton.setBackgroundImage(nil, for: .normal)
+			takePhotoButtonHeightConstraint.constant = categoryPickerHeightConstraint.constant
+			selectFromGalleryButtonHeightConstraint.constant = categoryPickerHeightConstraint.constant
+		}
+		UIView.animate(withDuration: 0.1) {
+			self.view.layoutIfNeeded()
+		}
+	}
+
 	private func updateDateViews(date: Date) {
 		if Calendar.current.isDateInToday(date) {
 			dateLabel.text = "Today"
@@ -214,15 +243,6 @@ class CostSheetEntryViewController: UIViewController {
 		}
 		timeLabel.text = date.string(format: "hh:mm a")
 		entryDatePicker.datePicker.date = date
-	}
-
-	private func updateCategoryViews(category: Category?) {
-		if let category = category {
-			entryCategoryPicker.selectCategory(category)
-		} else {
-			entryCategoryPicker.categoryPickerView.selectRow(0, inComponent: 0, animated: false)
-		}
-		categoryLabel.text = entryCategoryPicker.selectedCategory.name
 	}
 
 	private func updatePlaceViews(place: Place?) {
@@ -507,6 +527,14 @@ extension CostSheetEntryViewController {
 		case .restricted:
 			return
 		}
+	}
+
+	@IBAction func deletePhotoButtonPressed(_ sender: Any) {
+		image = nil
+		updateImageEditorView(for: nil)
+	}
+
+	@IBAction func viewPhotoButtonPressed(_ sender: Any) {
 	}
 
 	@IBAction func dateViewTapped(_ sender: Any) {
@@ -817,8 +845,7 @@ extension CostSheetEntryViewController: UIImagePickerControllerDelegate, UINavig
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
 		image = info["UIImagePickerControllerOriginalImage"] as? UIImage
 		image = rotateImageToCorrectOrientation(image!)
-		imageButton.setTitle("", for: .normal)
-		imageButton.setBackgroundImage(image, for: .normal)
+		updateImageEditorView(for: image)
 
 		picker.dismiss(animated: true)
 	}
