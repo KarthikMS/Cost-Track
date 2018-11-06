@@ -40,6 +40,8 @@ class AccountingPeriodViewController: UIViewController {
 
 		shouldCarryOver = UserDefaults.standard.value(forKey: BalanceCarryOver) as! Bool
 
+		addShadow()
+
 		var startDayLabelFrame = CGRect()
 		startDayLabelFrame.origin = CGPoint.zero
 		startDayLabelFrame.size.height = 70
@@ -49,6 +51,16 @@ class AccountingPeriodViewController: UIViewController {
 		startDayLabel.textAlignment = .right
 
 		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "AccountingPeriodCell")
+		tableView.isScrollEnabled = false
+	}
+
+	private func addShadow() {
+		let shadowPath = UIBezierPath(rect: view.bounds)
+		view.layer.shadowPath = shadowPath.cgPath
+		view.layer.masksToBounds = false
+		view.layer.shadowColor = UIColor.black.cgColor
+		view.layer.shadowOpacity = 0.5
+		view.layer.shadowOffset = CGSize(width: 0, height: 0.5)
 	}
 
 	@objc
@@ -61,14 +73,18 @@ class AccountingPeriodViewController: UIViewController {
 
 	private func adjustFrameForMonth() {
 		var frame = view.frame
-		frame.size.height += 100
+		frame.size.height += 200
 		view.frame = frame
+		let shadowPath = UIBezierPath(rect: view.bounds)
+		view.layer.shadowPath = shadowPath.cgPath
 	}
 
 	private func adjustFrameForOtherAccountingPeriod() {
 		var frame = view.frame
-		frame.size.height -= 100
+		frame.size.height -= 200
 		view.frame = frame
+		let shadowPath = UIBezierPath(rect: view.bounds)
+		view.layer.shadowPath = shadowPath.cgPath
 	}
 
 }
@@ -77,11 +93,14 @@ class AccountingPeriodViewController: UIViewController {
 private extension AccountingPeriodViewController {
 
 	@IBAction func cancelButtonPressed(_ sender: Any) {
+		adjustFrameForOtherAccountingPeriod()
 		delegate.cancelButtonPressed()
 	}
 
 	@IBAction func applyButtonPressed(_ sender: Any) {
 		UserDefaults.standard.setValue(shouldCarryOver, forKey: BalanceCarryOver)
+		UserDefaults.standard.setValue(Int(startDayLabel.text!)!, forKey: StartDayForMonthlyAccountingPeriod)
+		adjustFrameForOtherAccountingPeriod()
 		delegate.accountingPeriodChanged()
 	}
 
@@ -154,7 +173,7 @@ extension AccountingPeriodViewController: UITableViewDataSource {
 
 			// Adding UISwitch as accessoryView
 			let switchView = UISwitch(frame: CGRect.zero)
-			switchView.isOn = UserDefaults.standard.value(forKey: BalanceCarryOver) as! Bool
+			switchView.isOn = shouldCarryOver
 			switchView.addTarget(self, action: #selector(carryOverSwitchTapped), for: .valueChanged)
 			cell.accessoryView = switchView
 
@@ -196,11 +215,13 @@ extension AccountingPeriodViewController: UITableViewDelegate {
 			let textView = UITextView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width , height: 45))
 			textView.text = "Activate this option to carry over the balance from the completed accounting period to the next one."
 			textView.textColor = .darkGray
+			textView.backgroundColor = TintedWhiteColor
 			return textView
 		} else {
 			var footerViewFrame = CGRect(x: 0, y: 0, width: view.frame.size.width , height: 45)
 			var textViewFrame = footerViewFrame
 			let footerView = UIView(frame: footerViewFrame)
+			footerView.backgroundColor = TintedWhiteColor
 			if shouldShowMonthStartDaySelector {
 				footerViewFrame.size.height = 145
 				footerView.frame = footerViewFrame
@@ -208,6 +229,7 @@ extension AccountingPeriodViewController: UITableViewDelegate {
 
 				let startDayPicker = UIPickerView(frame: CGRect(x: 0, y: 10, width: view.frame.size.width
 					, height: 90))
+				startDayPicker.backgroundColor = .clear
 				startDayPicker.dataSource = self
 				startDayPicker.selectRow(startDayForMonthlyAccountingPeriod - 1, inComponent: 0, animated: false)
 				startDayPicker.delegate = self
@@ -217,6 +239,7 @@ extension AccountingPeriodViewController: UITableViewDelegate {
 			let textView = UITextView(frame: textViewFrame)
 			textView.text = "Select the first day of the accounting month."
 			textView.textColor = .darkGray
+			textView.backgroundColor = .clear
 			footerView.addSubview(textView)
 
 			return footerView
