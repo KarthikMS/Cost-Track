@@ -100,8 +100,7 @@ class CostSheetEntryViewController: UIViewController {
 		super.viewDidAppear(animated)
 
 		// Calculating height constraints for views in the bottom
-		let viewHeights = amountBarView.frame.size.height + configurationBar.frame.size.height + descriptionTextView.frame.size.height
-		categoryPickerHeightConstraint.constant = view.frame.size.height - navigationController!.navigationBar.frame.size.height - (view.safeAreaInsets.top + view.safeAreaInsets.bottom) - viewHeights
+		categoryPickerHeightConstraint.constant = view.frame.size.height - (view.safeAreaInsets.top + view.safeAreaInsets.bottom) - (amountBarView.frame.size.height + configurationBar.frame.size.height + descriptionTextView.frame.size.height)
 		datePickerHeightConstraint.constant = categoryPickerHeightConstraint.constant
 		placeEditorHeightConstraint.constant = categoryPickerHeightConstraint.constant
 		imageEditorHeightConstraint.constant = categoryPickerHeightConstraint.constant
@@ -110,7 +109,8 @@ class CostSheetEntryViewController: UIViewController {
 
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == TransferAmountSegue {
+		switch segue.identifier {
+		case TransferAmountSegue:
 			guard let amount = Float(amountTextView.text),
 				let transferAmountViewController = segue.destination as? TransferAmountViewController else {
 					assertionFailure()
@@ -123,6 +123,15 @@ class CostSheetEntryViewController: UIViewController {
 				entryType: entryType,
 				amount: amount
 			)
+		case ViewPhotoSegue:
+			guard let entryPhotoViewController = (segue.destination as? UINavigationController)?.topViewController as? EntryPhotoViewController else {
+				assertionFailure()
+				return
+			}
+			_ = entryPhotoViewController.view
+			entryPhotoViewController.imageView.image = image
+		default:
+			return
 		}
 	}
 
@@ -535,6 +544,7 @@ extension CostSheetEntryViewController {
 	}
 
 	@IBAction func viewPhotoButtonPressed(_ sender: Any) {
+		performSegue(withIdentifier: ViewPhotoSegue, sender: nil)
 	}
 
 	@IBAction func dateViewTapped(_ sender: Any) {

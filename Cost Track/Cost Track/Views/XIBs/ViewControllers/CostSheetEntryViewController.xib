@@ -35,9 +35,9 @@
                 <outlet property="placeEditorHideTopConstraint" destination="v70-a3-uXp" id="tnK-XA-3zN"/>
                 <outlet property="placeEditorShowTopConstraint" destination="n70-Uz-2KV" id="6Bi-5N-re1"/>
                 <outlet property="placeNameLabel" destination="hbj-2R-yBR" id="g8P-PC-adf"/>
-                <outlet property="selectFromGalleryButtonHeightConstraint" destination="bbE-3W-NQf" id="iSa-ep-km7"/>
+                <outlet property="selectFromGalleryButtonHeightConstraint" destination="bVb-H6-8Lg" id="fEu-6X-GjS"/>
                 <outlet property="selectPlaceLabel" destination="QVv-pg-RKz" id="0Dq-me-VHj"/>
-                <outlet property="takePhotoButtonHeightConstraint" destination="FZr-3O-Q3B" id="I9Z-d2-UWw"/>
+                <outlet property="takePhotoButtonHeightConstraint" destination="VFQ-QW-Dnc" id="yay-jZ-rZt"/>
                 <outlet property="timeLabel" destination="RWa-3S-V8V" id="5ke-E4-t1D"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -301,7 +301,9 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mpz-YT-9ea">
                             <rect key="frame" x="0.0" y="0.0" width="187.5" height="1"/>
-                            <color key="backgroundColor" red="1" green="0.031076394890000001" blue="0.16038954590000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="bVb-H6-8Lg"/>
+                            </constraints>
                             <state key="normal" title="Select from gallery"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
@@ -313,8 +315,10 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eNM-XQ-r0Z">
-                            <rect key="frame" x="187.5" y="0.0" width="187.5" height="1"/>
-                            <color key="backgroundColor" red="1" green="0.031076394890000001" blue="0.16038954590000001" alpha="1" colorSpace="calibratedRGB"/>
+                            <rect key="frame" x="187.5" y="0.0" width="187.5" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="VFQ-QW-Dnc"/>
+                            </constraints>
                             <state key="normal" title="Take photo"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
@@ -338,7 +342,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="caW-QL-ApI">
-                            <rect key="frame" x="187.5" y="1" width="187.5" height="0.5"/>
+                            <rect key="frame" x="187.5" y="30" width="187.5" height="0.5"/>
                             <state key="normal" title="View photo"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
@@ -358,12 +362,10 @@
                         <constraint firstAttribute="height" constant="1" id="BPp-a9-WWD"/>
                         <constraint firstItem="eNM-XQ-r0Z" firstAttribute="top" secondItem="Hyg-Mh-PJw" secondAttribute="top" id="Can-w8-E1j"/>
                         <constraint firstItem="dg9-PZ-I4c" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="Dck-JU-KjZ"/>
-                        <constraint firstItem="eNM-XQ-r0Z" firstAttribute="height" secondItem="Hyg-Mh-PJw" secondAttribute="height" id="FZr-3O-Q3B"/>
                         <constraint firstItem="dg9-PZ-I4c" firstAttribute="top" secondItem="Mpz-YT-9ea" secondAttribute="bottom" id="S5J-gG-nQm"/>
                         <constraint firstItem="caW-QL-ApI" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="UB5-WX-pgh"/>
                         <constraint firstItem="Mpz-YT-9ea" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="VQG-Zq-ZnR"/>
                         <constraint firstAttribute="trailing" secondItem="eNM-XQ-r0Z" secondAttribute="trailing" id="Xik-Lg-YUZ"/>
-                        <constraint firstItem="Mpz-YT-9ea" firstAttribute="height" secondItem="Hyg-Mh-PJw" secondAttribute="height" id="bbE-3W-NQf"/>
                         <constraint firstItem="caW-QL-ApI" firstAttribute="top" secondItem="eNM-XQ-r0Z" secondAttribute="bottom" id="cbw-NA-5fF"/>
                         <constraint firstItem="caW-QL-ApI" firstAttribute="height" secondItem="Hyg-Mh-PJw" secondAttribute="height" multiplier="0.5" id="eXt-Ex-0kA"/>
                         <constraint firstItem="eNM-XQ-r0Z" firstAttribute="width" secondItem="Hyg-Mh-PJw" secondAttribute="width" multiplier="0.5" id="g7h-01-5yK"/>

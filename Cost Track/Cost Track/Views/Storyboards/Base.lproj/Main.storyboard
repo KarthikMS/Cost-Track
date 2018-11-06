@@ -146,6 +146,42 @@
             </objects>
             <point key="canvasLocation" x="1990" y="-670"/>
         </scene>
+        <!--Entry Photo View Controller-->
+        <scene sceneID="d2C-Y8-zDt">
+            <objects>
+                <viewController id="VFh-hD-KCc" customClass="EntryPhotoViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0aS-sz-rqx">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xMM-bu-zTC">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="xMM-bu-zTC" firstAttribute="top" secondItem="WJ9-pg-gnC" secondAttribute="top" id="8lA-7k-jHm"/>
+                            <constraint firstItem="WJ9-pg-gnC" firstAttribute="trailing" secondItem="xMM-bu-zTC" secondAttribute="trailing" id="OYs-At-Y4B"/>
+                            <constraint firstItem="WJ9-pg-gnC" firstAttribute="bottom" secondItem="xMM-bu-zTC" secondAttribute="bottom" id="aoX-1H-gVe"/>
+                            <constraint firstItem="xMM-bu-zTC" firstAttribute="leading" secondItem="WJ9-pg-gnC" secondAttribute="leading" id="xSa-Et-qcP"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="WJ9-pg-gnC"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="eW7-qY-HaH">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="ZEy-yw-bCB">
+                            <connections>
+                                <action selector="doneButtonPressed:" destination="VFh-hD-KCc" id="RAb-FP-605"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="imageView" destination="xMM-bu-zTC" id="bJ1-UR-ppo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XmG-R4-8xd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3575" y="-670"/>
+        </scene>
         <!--Cost sheet name-->
         <scene sceneID="aTx-MN-Tcw">
             <objects>
@@ -200,6 +236,7 @@
                     <connections>
                         <outlet property="navigationBarTitleButton" destination="Otn-81-YjO" id="H7D-YX-24L"/>
                         <segue destination="DT4-xC-FO1" kind="show" identifier="TransferAmountSegue" id="KFU-Dv-iH3"/>
+                        <segue destination="YCb-5w-ApT" kind="presentation" identifier="ViewPhotoSegue" id="ypx-U1-cTl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dag-9M-Wkn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -384,6 +421,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OaI-75-WBe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1238" y="-669"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="weN-Et-pqX">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YCb-5w-ApT" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="4Qu-J7-pvI">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="VFh-hD-KCc" kind="relationship" relationship="rootViewController" id="oXI-Y5-feA"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wwu-1x-Vob" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2752.8000000000002" y="-670.61469265367316"/>
         </scene>
     </scenes>
 </document>

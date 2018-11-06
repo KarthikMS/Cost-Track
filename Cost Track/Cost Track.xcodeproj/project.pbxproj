@@ -39,6 +39,7 @@
 		D989740C21173E9A0051F809 /* EntryCategoryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D989740B21173E9A0051F809 /* EntryCategoryPicker.swift */; };
 		D989740E21173EA60051F809 /* EntryCategoryPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = D989740D21173EA60051F809 /* EntryCategoryPicker.xib */; };
 		D9982E69216374E90093B28C /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9982E68216374E90093B28C /* SettingsTableViewController.swift */; };
+		D9A42AC821915B8B0036D9AE /* EntryPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A42AC721915B8B0036D9AE /* EntryPhotoViewController.swift */; };
 		D9AC8183217AFD49002FCA94 /* CostSheetEntry.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC817E217AFD49002FCA94 /* CostSheetEntry.pb.swift */; };
 		D9AC8184217AFD49002FCA94 /* Category.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC817F217AFD49002FCA94 /* Category.pb.swift */; };
 		D9AC8185217AFD49002FCA94 /* CostSheet.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AC8180217AFD49002FCA94 /* CostSheet.pb.swift */; };
@@ -122,6 +123,7 @@
 		D989740B21173E9A0051F809 /* EntryCategoryPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryCategoryPicker.swift; sourceTree = "<group>"; };
 		D989740D21173EA60051F809 /* EntryCategoryPicker.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EntryCategoryPicker.xib; sourceTree = "<group>"; };
 		D9982E68216374E90093B28C /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		D9A42AC721915B8B0036D9AE /* EntryPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryPhotoViewController.swift; sourceTree = "<group>"; };
 		D9AC817E217AFD49002FCA94 /* CostSheetEntry.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheetEntry.pb.swift; sourceTree = "<group>"; };
 		D9AC817F217AFD49002FCA94 /* Category.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.pb.swift; sourceTree = "<group>"; };
 		D9AC8180217AFD49002FCA94 /* CostSheet.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheet.pb.swift; sourceTree = "<group>"; };
@@ -317,6 +319,7 @@
 				D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */,
 				D9F249FA218D782600D0C81A /* CostSheetSettingsViewController.swift */,
 				D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */,
+				D9A42AC721915B8B0036D9AE /* EntryPhotoViewController.swift */,
 				D9032EBC20FB75EC009EF5FC /* NewCostSheetViewController.swift */,
 				D97AB0F82123071300000D6F /* TransferEntryTableViewController.swift */,
 				D97AB0FA212D90D200000D6F /* GroupSelectTableViewController.swift */,
@@ -676,6 +679,7 @@
 				D962F42820F9C152003C7C58 /* MyCostSheetsViewController.swift in Sources */,
 				D9AC8189217B0085002FCA94 /* Category+Util.swift in Sources */,
 				D9B119A8213D9D5E0007CDA1 /* FieldStringUtil.swift in Sources */,
+				D9A42AC821915B8B0036D9AE /* EntryPhotoViewController.swift in Sources */,
 				D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */,
 				D9032E9020FB1A71009EF5FC /* CostSheetViewController.swift in Sources */,
 				D97AB0FE213284C000000D6F /* TableViewSectionHeaderView.swift in Sources */,
