@@ -49,3 +49,11 @@ extension Bool : DataConvertible { }
 var startDayForMonthlyAccountingPeriod: Int {
 	return UserDefaults.standard.value(forKey: StartDayForMonthlyAccountingPeriod) as! Int
 }
+
+var shouldCarryOverBalance: Bool {
+	return UserDefaults.standard.value(forKey: BalanceCarryOver) as! Bool
+}
+
+var accountingPeriodFormat: Int {
+	return UserDefaults.standard.value(forKey: AccountingPeriodFormat) as! Int
+}

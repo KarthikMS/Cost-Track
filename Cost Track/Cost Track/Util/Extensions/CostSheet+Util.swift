@@ -37,6 +37,28 @@ extension CostSheet {
 		return balance
 	}
 
+	var balanceInAccountingPeriod: Float {
+		if shouldCarryOverBalance {
+			return self.balance
+		}
+		var balance: Float = 0
+		for entry in entriesInAccountingPeriod {
+			switch entry.type {
+			case .income:
+				balance += entry.amount
+			case .expense:
+				balance -= entry.amount
+			}
+		}
+		return balance
+	}
+
+	var entriesInAccountingPeriod: [CostSheetEntry] {
+		var entriesInAccountingPeriod = [CostSheetEntry]()
+
+		return entriesInAccountingPeriod
+	}
+
 	var incomeExpenseInfo: IncomeExpenseInfo {
 		var incomeCount = 0
 		var incomeAmount: Float = 0

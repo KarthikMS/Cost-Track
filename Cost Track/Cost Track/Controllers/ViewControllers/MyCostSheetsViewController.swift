@@ -35,6 +35,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		}
 
 		initAccountingPeriodViewController()
+		updateNavigationBarAccountingLabel()
 
 		if document.costSheets.isEmpty {
 			noCostSheetsTextView.isHidden = false
@@ -353,6 +354,29 @@ extension MyCostSheetsViewController: AccountingPeriodViewControllerDelegate {
 	func accountingPeriodChanged() {
 		tableView.reloadData()
 		hideAccountingPeriodViewController()
+		updateNavigationBarAccountingLabel()
+	}
+
+	private func updateNavigationBarAccountingLabel() {
+		switch AccountingPeriod(rawValue: accountingPeriodFormat)! {
+		case .day:
+			accountingPeriodLabel.text = Date().string(format: "dd/MM/yy")
+		case .week:
+			let (startDate, endDate) = Date().startAndEndDatesOfWeek()
+			accountingPeriodLabel.text = "\(startDate.string(format: "dd MMM")) - \(endDate.string(format: "dd MMM"))"
+		case .month:
+			let now = Date()
+			if startDayForMonthlyAccountingPeriod == 1 {
+				accountingPeriodLabel.text = "\(now.string(format: "MMMM yyyy"))"
+			} else {
+				let (startDate, endDate) = now.startAndEndDatesAMonthApart(startDay: startDayForMonthlyAccountingPeriod)
+				accountingPeriodLabel.text = "\(startDate.string(format: "dd MMM")) - \(endDate.string(format: "dd MMM"))"
+			}
+		case .year:
+			accountingPeriodLabel.text = Date().string(format: "yyyy")
+		case .all:
+			accountingPeriodLabel.text = "At all times"
+		}
 	}
 
 }

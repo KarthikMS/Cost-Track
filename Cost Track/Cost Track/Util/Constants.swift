@@ -33,3 +33,4 @@ let GroupSelectFromCostSheetSettingsSegue = "GroupSelectFromCostSheetSettingsSeg
 // MARK: Strings
 let BalanceCarryOver = "BalanceCarryOver"
 let StartDayForMonthlyAccountingPeriod = "StartDayForMonthlyAccountingPeriod"
+let AccountingPeriodFormat = "AccountingPeriodFormat"

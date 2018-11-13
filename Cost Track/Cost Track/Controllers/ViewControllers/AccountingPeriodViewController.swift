@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum AccountingPeriod {
+enum AccountingPeriod: Int {
 	case day
 	case week
 	case month
@@ -37,10 +37,12 @@ class AccountingPeriodViewController: UIViewController {
 	// MARK: UIViewController functions
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		shouldCarryOver = UserDefaults.standard.value(forKey: BalanceCarryOver) as! Bool
+		// TODO: shouldCarryOver switch
+		shouldCarryOver = shouldCarryOverBalance
 
 		addShadow()
+
+		segmentedControl.selectedSegmentIndex = accountingPeriodFormat
 
 		var startDayLabelFrame = CGRect()
 		startDayLabelFrame.origin = CGPoint.zero
@@ -49,6 +51,7 @@ class AccountingPeriodViewController: UIViewController {
 		startDayLabel.frame = startDayLabelFrame
 		startDayLabel.textColor = .darkGray
 		startDayLabel.textAlignment = .right
+		startDayLabel.text = String(startDayForMonthlyAccountingPeriod)
 
 		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "AccountingPeriodCell")
 		tableView.isScrollEnabled = false
@@ -99,6 +102,7 @@ private extension AccountingPeriodViewController {
 
 	@IBAction func applyButtonPressed(_ sender: Any) {
 		UserDefaults.standard.setValue(shouldCarryOver, forKey: BalanceCarryOver)
+		UserDefaults.standard.setValue(accountingPeriod.rawValue, forKey: AccountingPeriodFormat)
 		UserDefaults.standard.setValue(Int(startDayLabel.text!)!, forKey: StartDayForMonthlyAccountingPeriod)
 		adjustFrameForOtherAccountingPeriod()
 		delegate.accountingPeriodChanged()
@@ -215,6 +219,7 @@ extension AccountingPeriodViewController: UITableViewDelegate {
 			let textView = UITextView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width , height: 45))
 			textView.text = "Activate this option to carry over the balance from the completed accounting period to the next one."
 			textView.textColor = .darkGray
+			textView.isEditable = false
 			textView.backgroundColor = TintedWhiteColor
 			return textView
 		} else {
@@ -239,6 +244,7 @@ extension AccountingPeriodViewController: UITableViewDelegate {
 			let textView = UITextView(frame: textViewFrame)
 			textView.text = "Select the first day of the accounting month."
 			textView.textColor = .darkGray
+			textView.isEditable = false
 			textView.backgroundColor = .clear
 			footerView.addSubview(textView)
 
