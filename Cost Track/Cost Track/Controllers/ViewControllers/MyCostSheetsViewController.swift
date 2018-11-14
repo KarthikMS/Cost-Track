@@ -108,6 +108,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		frame.origin.x = (view.frame.size.width - frame.size.width) / 2
 		frame.origin.y = navigationController!.navigationBar.frame.origin.y + navigationController!.navigationBar.frame.size.height + 5
 		accountingPeriodViewController.view.frame = frame
+		accountingPeriodViewController.view.clipsToBounds = true
 		view.addSubview(accountingPeriodViewController.view)
 		accountingPeriodViewController.view.isHidden = true
 		accountingPeriodViewController.delegate = self
@@ -120,13 +121,10 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 			return
 		}
 		frame.size.height = showFrameHeight
+		self.accountingPeriodViewController.view.isHidden = false
 		UIView.animate(withDuration: 0.5, animations: {
 			self.accountingPeriodViewController.view.frame = frame
-		}) { (completed) in
-			if completed {
-				self.accountingPeriodViewController.view.isHidden = false
-			}
-		}
+		})
 	}
 
 	private func hideAccountingPeriodViewController() {
