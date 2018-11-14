@@ -31,21 +31,17 @@ class AccountingPeriodViewController: UIViewController {
 	weak var delegate: AccountingPeriodViewControllerDelegate!
 	var accountingPeriod = AccountingPeriod(rawValue: accountingPeriodFormat)!
 	private var shouldCarryOver = true
-	private var shouldShowMonthStartDaySelector = false
 	private let startDayLabel = UILabel()
 
 	// MARK: UIViewController functions
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		// TODO: update shouldCarryOver switch on load
+
 		shouldCarryOver = shouldCarryOverBalance
 
 		addShadow()
 
 		segmentedControl.selectedSegmentIndex = accountingPeriodFormat
-		if segmentedControl.selectedSegmentIndex == 2 {
-			shouldShowMonthStartDaySelector = true
-		}
 
 		var startDayLabelFrame = CGRect()
 		startDayLabelFrame.origin = CGPoint.zero
@@ -161,7 +157,6 @@ private extension AccountingPeriodViewController {
 			}
 			accountingPeriod = .all
 		}
-		shouldShowMonthStartDaySelector = false
 		tableView.reloadData()
 	}
 
@@ -184,6 +179,7 @@ extension AccountingPeriodViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "AccountingPeriodCell", for: indexPath)
+		cell.selectionStyle = .none
 		if indexPath.section == 0 {
 			cell.textLabel?.text = "Carry Over"
 
@@ -213,11 +209,7 @@ extension AccountingPeriodViewController: UITableViewDataSource {
 		if section == 0 {
 			return 45
 		} else {
-			if shouldShowMonthStartDaySelector {
-				return 145
-			} else {
-				return 45
-			}
+			return 145
 		}
 	}
 
@@ -235,24 +227,22 @@ extension AccountingPeriodViewController: UITableViewDelegate {
 			textView.backgroundColor = TintedWhiteColor
 			return textView
 		} else {
-			var footerViewFrame = CGRect(x: 0, y: 0, width: view.frame.size.width , height: 45)
-			var textViewFrame = footerViewFrame
+			let footerViewFrame = CGRect(x: 0, y: 0, width: view.frame.size.width , height: 145)
 			let footerView = UIView(frame: footerViewFrame)
 			footerView.backgroundColor = TintedWhiteColor
-			if shouldShowMonthStartDaySelector {
-				footerViewFrame.size.height = 145
-				footerView.frame = footerViewFrame
-				textViewFrame.origin.y = 100
 
-				let startDayPicker = UIPickerView(frame: CGRect(x: 0, y: 10, width: view.frame.size.width
-					, height: 90))
-				startDayPicker.backgroundColor = .clear
-				startDayPicker.dataSource = self
-				startDayPicker.selectRow(startDayForMonthlyAccountingPeriod - 1, inComponent: 0, animated: false)
-				startDayPicker.delegate = self
-				footerView.addSubview(startDayPicker)
-			}
+			// Start day picker
+			let startDayPicker = UIPickerView(frame: CGRect(x: 0, y: 10, width: view.frame.size.width
+				, height: 90))
+			startDayPicker.backgroundColor = .clear
+			startDayPicker.dataSource = self
+			startDayPicker.selectRow(startDayForMonthlyAccountingPeriod - 1, inComponent: 0, animated: false)
+			startDayPicker.delegate = self
+			footerView.addSubview(startDayPicker)
 
+			// Textview
+			var textViewFrame = footerViewFrame
+			textViewFrame.origin.y = 100
 			let textView = UITextView(frame: textViewFrame)
 			textView.text = "Select the first day of the accounting month."
 			textView.textColor = .darkGray
@@ -261,13 +251,6 @@ extension AccountingPeriodViewController: UITableViewDelegate {
 			footerView.addSubview(textView)
 
 			return footerView
-		}
-	}
-
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if indexPath.section == 1 {
-			shouldShowMonthStartDaySelector = !shouldShowMonthStartDaySelector
-			tableView.reloadData()
 		}
 	}
 
