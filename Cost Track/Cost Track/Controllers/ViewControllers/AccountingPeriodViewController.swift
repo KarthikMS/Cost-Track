@@ -29,7 +29,7 @@ class AccountingPeriodViewController: UIViewController {
 
 	// MARK: Properties
 	weak var delegate: AccountingPeriodViewControllerDelegate!
-	var accountingPeriod = AccountingPeriod.all
+	var accountingPeriod = AccountingPeriod(rawValue: accountingPeriodFormat)!
 	private var shouldCarryOver = true
 	private var shouldShowMonthStartDaySelector = false
 	private let startDayLabel = UILabel()
@@ -37,12 +37,15 @@ class AccountingPeriodViewController: UIViewController {
 	// MARK: UIViewController functions
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		// TODO: shouldCarryOver switch
+		// TODO: update shouldCarryOver switch on load
 		shouldCarryOver = shouldCarryOverBalance
 
 		addShadow()
 
 		segmentedControl.selectedSegmentIndex = accountingPeriodFormat
+		if segmentedControl.selectedSegmentIndex == 2 {
+			shouldShowMonthStartDaySelector = true
+		}
 
 		var startDayLabelFrame = CGRect()
 		startDayLabelFrame.origin = CGPoint.zero
@@ -56,6 +59,7 @@ class AccountingPeriodViewController: UIViewController {
 		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "AccountingPeriodCell")
 		tableView.isScrollEnabled = false
 	}
+
 
 	private func addShadow() {
 		let shadowPath = UIBezierPath(rect: view.bounds)
@@ -76,18 +80,26 @@ class AccountingPeriodViewController: UIViewController {
 
 	private func adjustFrameForMonth() {
 		var frame = view.frame
-		frame.size.height += 200
+		guard frame.height != 500 else {
+			return
+		}
+		frame.size.height = 500
 		view.frame = frame
 		let shadowPath = UIBezierPath(rect: view.bounds)
 		view.layer.shadowPath = shadowPath.cgPath
+		view.layoutSubviews()
 	}
 
 	private func adjustFrameForOtherAccountingPeriod() {
 		var frame = view.frame
-		frame.size.height -= 200
+		guard frame.height != 300 else {
+			return
+		}
+		frame.size.height = 300
 		view.frame = frame
 		let shadowPath = UIBezierPath(rect: view.bounds)
 		view.layer.shadowPath = shadowPath.cgPath
+		view.layoutSubviews()
 	}
 
 }

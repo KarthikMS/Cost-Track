@@ -115,10 +115,11 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 
 	private func showAccountingPeriodViewController() {
 		var frame = accountingPeriodViewController.view.frame
-		guard frame.size.height != 300 else {
+		let showFrameHeight: CGFloat = AccountingPeriod(rawValue: accountingPeriodFormat)! == .month ? 500 : 300
+		guard frame.size.height != showFrameHeight else {
 			return
 		}
-		frame.size.height = 300
+		frame.size.height = showFrameHeight
 		UIView.animate(withDuration: 0.5, animations: {
 			self.accountingPeriodViewController.view.frame = frame
 		}) { (completed) in
