@@ -109,8 +109,12 @@ private extension AccountingPeriodViewController {
 	}
 
 	@IBAction func applyButtonPressed(_ sender: Any) {
-		UserDefaults.standard.setValue(shouldCarryOver, forKey: BalanceCarryOver)
 		UserDefaults.standard.setValue(accountingPeriod.rawValue, forKey: AccountingPeriodFormat)
+		if AccountingPeriod(rawValue: accountingPeriod.rawValue)! == .all {
+			UserDefaults.standard.setValue(true, forKey: BalanceCarryOver)
+		} else {
+			UserDefaults.standard.setValue(shouldCarryOver, forKey: BalanceCarryOver)
+		}
 		UserDefaults.standard.setValue(Int(startDayLabel.text!)!, forKey: StartDayForMonthlyAccountingPeriod)
 		adjustFrameForOtherAccountingPeriod()
 		delegate.accountingPeriodChanged()

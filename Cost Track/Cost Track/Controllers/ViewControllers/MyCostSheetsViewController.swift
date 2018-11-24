@@ -20,7 +20,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	// MARK: Properties
 	var (document, isNewDocument) = CTFileManager.getDocument()
 	var selectedCostSheetId = ""
-	private var shouldUpdateViews = false
+	private var shouldUpdateViews = true
 	private var sectionsToHide = Set<Int>()
 	private let accountingPeriodViewController = AccountingPeriodViewController()
 
