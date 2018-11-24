@@ -57,3 +57,19 @@ var shouldCarryOverBalance: Bool {
 var accountingPeriodFormat: Int {
 	return UserDefaults.standard.value(forKey: AccountingPeriodFormat) as! Int
 }
+
+var accountingPeriodDateRange: (startDate: Date, endDate: Date)? {
+	let now = Date()
+	switch AccountingPeriod(rawValue: accountingPeriodFormat)! {
+	case .day:
+		return (now, now)
+	case .week:
+		return now.startAndEndDatesOfWeek()
+	case .month:
+		return now.startAndEndDatesAMonthApart(startDay: startDayForMonthlyAccountingPeriod)
+	case .year:
+		return now.startAndEndDatesOfYear()
+	case .all:
+		return nil
+	}
+}

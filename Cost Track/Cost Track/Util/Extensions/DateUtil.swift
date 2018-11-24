@@ -55,6 +55,55 @@ extension Date {
 		return (startDate, endDate)
 	}
 
+	func startAndEndDatesOfYear() -> (startDate: Date, endDate: Date) {
+		let dateFormatter = DateFormatter()
+		let year = self.string(format: "yyyy")
+		let startDate = dateFormatter.date(from: "01 01 \(year)")!
+		let endDate = dateFormatter.date(from: "31 12 \(year)")!
+		return (startDate, endDate)
+	}
+
+	func isBetween(_ startDate: Date, and endDate: Date) -> Bool {
+		let day = self.string(format: "dd")
+		let month = self.string(format: "MM")
+		let year = self.string(format: "yyyy")
+
+		let startDay = startDate.string(format: "dd")
+		let startMonth = startDate.string(format: "MM")
+		let startYear = startDate.string(format: "yyyy")
+
+		var afterStartDate = false
+		if year >= startYear {
+			if month > startMonth {
+				afterStartDate = true
+			} else if month == startMonth {
+				if day >= startDay {
+					afterStartDate = true
+				}
+			}
+		}
+		guard afterStartDate else {
+			return false
+		}
+
+		let endDay = endDate.string(format: "dd")
+		let endMonth = endDate.string(format: "MM")
+		let endYear = endDate.string(format: "yyyy")
+
+		var beforeEndDate = false
+		if year <= endYear {
+			if month < endMonth {
+				beforeEndDate = true
+			} else if month == endMonth {
+				if day <= endDay {
+					beforeEndDate = true
+				}
+			}
+		}
+
+		return beforeEndDate
+	}
+	
 }
 
 extension Data {
