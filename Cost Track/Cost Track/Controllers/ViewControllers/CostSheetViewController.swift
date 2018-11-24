@@ -47,7 +47,7 @@ class CostSheetViewController: UIViewController {
 
 		navigationItem.title = costSheet!.name
 
-		if costSheet!.entries.isEmpty {
+		if costSheet!.entriesInAccountingPeriod.isEmpty {
 			noEntriesTextView.isHidden = false
 		} else {
 			noEntriesTextView.isHidden = true
@@ -119,7 +119,7 @@ class CostSheetViewController: UIViewController {
 			sortEntriesByDate()
 		}
 
-		if costSheet.entries.isEmpty {
+		if costSheet.entriesInAccountingPeriod.isEmpty {
 			noEntriesTextView.isHidden = false
 		} else {
 			noEntriesTextView.isHidden = true
@@ -135,7 +135,7 @@ class CostSheetViewController: UIViewController {
 			return
 		}
 
-		var balance = costSheet.balance
+		var balance = costSheet.balanceInAccountingPeriod
 		if balance < 0 {
 			amountLabel.backgroundColor = DarkExpenseColor
 			balance *= -1
@@ -164,7 +164,7 @@ class CostSheetViewController: UIViewController {
 			return
 		}
 
-		let entries = costSheet.entries.sorted(by: { (entry1, entry2) -> Bool in
+		let entries = costSheet.entriesInAccountingPeriod.sorted(by: { (entry1, entry2) -> Bool in
 			guard let date1 = entry1.date.date,
 				let date2 = entry2.date.date else {
 					assertionFailure()
@@ -229,7 +229,7 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByPlace() {
-		guard let costSheetEntries = dataSource.document.costSheetWithId(dataSource.costSheetId)?.entries else {
+		guard let costSheetEntries = dataSource.document.costSheetWithId(dataSource.costSheetId)?.entriesInAccountingPeriod else {
 			assertionFailure("Could not get costSheet")
 			return
 		}

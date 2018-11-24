@@ -38,11 +38,16 @@ extension CostSheet {
 	}
 
 	var balanceInAccountingPeriod: Float {
-		if shouldCarryOverBalance {
+		if shouldCarryOverBalance || AccountingPeriod(rawValue: accountingPeriodFormat)! == .all {
 			return self.balance
 		}
+
 		var balance: Float = 0
-		for entry in entriesInAccountingPeriod {
+		guard let (startDate, endDate) = accountingPeriodDateRange else {
+			assertionFailure()
+			return 0
+		}
+		for entry in entries where entry.date.date!.isBetween(startDate, and: endDate) {
 			switch entry.type {
 			case .income:
 				balance += entry.amount
@@ -54,9 +59,15 @@ extension CostSheet {
 	}
 
 	var entriesInAccountingPeriod: [CostSheetEntry] {
-		var entriesInAccountingPeriod = [CostSheetEntry]()
+		if AccountingPeriod(rawValue: accountingPeriodFormat)! == .all {
+			return entries
+		}
 
-		return entriesInAccountingPeriod
+		guard let (startDate, endDate) = accountingPeriodDateRange else {
+			assertionFailure()
+			return entries
+		}
+		return entries.filter { $0.date.date!.isBetween(startDate, and: endDate) }
 	}
 
 	var incomeExpenseInfo: IncomeExpenseInfo {
