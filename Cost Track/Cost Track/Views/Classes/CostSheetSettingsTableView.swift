@@ -47,6 +47,11 @@ class CostSheetSettingsTableView: UITableView {
 		costSheet.initialBalance = Float(initalBalanceTextView.text)!
 	}
 
+	@objc
+	private func dismissKeyboard() {
+		endEditing(true)
+	}
+
 	private func getTextAndHeightsForFooterViews() -> [(text: String, height: CGFloat)] {
 		var textsAndHeights = [(text: String, height: CGFloat)]()
 		let texts = [
@@ -151,6 +156,12 @@ extension CostSheetSettingsTableView: UITableViewDelegate {
 		let textView = UITextView(frame: frame)
 		textView.backgroundColor = TintedWhiteColor
 		textView.text = textAndHeight.text
+		textView.isSelectable = false
+		textView.isScrollEnabled = false
+		textView.isEditable = false
+
+		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+		textView.addGestureRecognizer(tapGesture)
 
 		return textView
 	}
