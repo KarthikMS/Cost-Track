@@ -20,6 +20,8 @@ class CostSheetViewController: UIViewController {
 	@IBOutlet weak var amountLabel: UILabel!
 	@IBOutlet weak var transactionsTableView: UITableView!
 	@IBOutlet weak var noEntriesTextView: UITextView!
+	@IBOutlet weak var costSheetNameLabel: UILabel!
+	@IBOutlet weak var accountingPeriodLabel: UILabel!
 	
 	// MARK: Properties
 	private weak var dataSource: CostSheetDataSource!
@@ -39,20 +41,12 @@ class CostSheetViewController: UIViewController {
 	private var entriesSortedByDate = [CostSheetEntry]()
 	private var transferEntryIndexPath: IndexPath?
 	var sectionsToHide = Set<Int>()
+	private var shouldUpdateViews = true
+	private var isLoadingViewsForFirstTime = true
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
-		let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId)
-
-		navigationItem.title = costSheet!.name
-
-		if costSheet!.entriesInAccountingPeriod.isEmpty {
-			noEntriesTextView.isHidden = false
-		} else {
-			noEntriesTextView.isHidden = true
-			sortEntries()
-		}
 
 		transactionsTableViewDataSource.dataSource = self
 		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
@@ -62,8 +56,41 @@ class CostSheetViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		updateAmountLabel()
+		if shouldUpdateViews {
+			guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
+				assertionFailure("Could not get costSheet")
+				return
+			}
+
+			updateNavigationBar(for: costSheet)
+
+			if classificationMode != .date {
+				sortedEntriesForTableView.removeAll()
+				sortEntriesByDate()
+			}
+
+			if costSheet.entriesInAccountingPeriod.isEmpty {
+				noEntriesTextView.isHidden = false
+			} else {
+				noEntriesTextView.isHidden = true
+				sortEntries()
+				if isLoadingViewsForFirstTime {
+					isLoadingViewsForFirstTime = false
+				} else {
+					transactionsTableView.reloadData()
+				}
+			}
+
+			updateAmountLabel()
+			shouldUpdateViews = false
+		}
+
 		transferEntryIndexPath = nil
+	}
+
+	private func updateNavigationBar(for costSheet: CostSheet) {
+		costSheetNameLabel.text = costSheet.name
+		accountingPeriodLabel.text = accountingPeriodNavigationBarLabelText
 	}
 
 	// MARK: Navigation
@@ -108,27 +135,6 @@ class CostSheetViewController: UIViewController {
 	}
 
 	// MARK: View functions
-	private func reloadAfterEntryModification() {
-		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
-			assertionFailure("Could not get costSheet")
-			return
-		}
-
-		if classificationMode != .date {
-			sortedEntriesForTableView.removeAll()
-			sortEntriesByDate()
-		}
-
-		if costSheet.entriesInAccountingPeriod.isEmpty {
-			noEntriesTextView.isHidden = false
-		} else {
-			noEntriesTextView.isHidden = true
-		}
-
-		sortEntries()
-		transactionsTableView.reloadData()
-	}
-
 	private func updateAmountLabel() {
 		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
 			assertionFailure("Could not get costSheet")
@@ -458,7 +464,7 @@ extension CostSheetViewController: DeltaDelegate {
 
 	func sendDeltaComponents(_ components: [DocumentContentOperation.Component]) {
 		deltaDelegate.sendDeltaComponents(components)
-		reloadAfterEntryModification()
+		shouldUpdateViews = true
 	}
 
 }

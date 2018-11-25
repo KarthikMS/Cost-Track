@@ -225,12 +225,46 @@
             </objects>
             <point key="canvasLocation" x="3575" y="-670"/>
         </scene>
-        <!--Cost sheet name-->
+        <!--Cost Sheet View Controller-->
         <scene sceneID="aTx-MN-Tcw">
             <objects>
                 <viewController id="egc-Yf-OgO" customClass="CostSheetViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Cost sheet name" id="fGy-wO-y2X">
+                    <navigationItem key="navigationItem" id="fGy-wO-y2X">
+                        <nil key="title"/>
+                        <view key="titleView" contentMode="scaleToFill" id="1NH-9o-Sp2" userLabel="Navigation Title View">
+                            <rect key="frame" x="187.5" y="22" width="0.0" height="0.0"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Cost Sheets" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGh-GF-eFz">
+                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="24"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="24" id="cml-2k-EDe"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="At all times" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="18f-r7-znO">
+                                    <rect key="frame" x="0.0" y="24" width="0.0" height="17"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="17" id="cS8-Vf-Xfi"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstItem="gGh-GF-eFz" firstAttribute="leading" secondItem="1NH-9o-Sp2" secondAttribute="leading" id="3JY-dR-7oC"/>
+                                <constraint firstAttribute="trailing" secondItem="18f-r7-znO" secondAttribute="trailing" id="6i1-LP-d5K"/>
+                                <constraint firstItem="18f-r7-znO" firstAttribute="top" secondItem="gGh-GF-eFz" secondAttribute="bottom" id="9UC-qH-LwZ"/>
+                                <constraint firstItem="18f-r7-znO" firstAttribute="leading" secondItem="1NH-9o-Sp2" secondAttribute="leading" id="I4K-n9-mfR"/>
+                                <constraint firstItem="gGh-GF-eFz" firstAttribute="top" secondItem="1NH-9o-Sp2" secondAttribute="top" id="kSA-ek-LQM"/>
+                                <constraint firstAttribute="trailing" secondItem="gGh-GF-eFz" secondAttribute="trailing" id="oxj-Yx-LnV"/>
+                            </constraints>
+                        </view>
                         <rightBarButtonItems>
                             <barButtonItem title="Sett" id="7il-T7-ecw">
                                 <connections>
@@ -246,6 +280,8 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="accountingPeriodLabel" destination="18f-r7-znO" id="JDW-Df-4op"/>
+                        <outlet property="costSheetNameLabel" destination="gGh-GF-eFz" id="7jX-VL-4tp"/>
                         <segue destination="VJY-cq-tDL" kind="show" identifier="CostSheetEntrySegue" id="pWF-n5-Vqd"/>
                         <segue destination="e0M-uA-qqC" kind="presentation" identifier="TransferEntrySegue" id="UfP-jf-kuQ"/>
                     </connections>

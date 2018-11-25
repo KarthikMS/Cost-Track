@@ -73,3 +73,25 @@ var accountingPeriodDateRange: (startDate: Date, endDate: Date)? {
 		return nil
 	}
 }
+
+var accountingPeriodNavigationBarLabelText: String {
+	switch AccountingPeriod(rawValue: accountingPeriodFormat)! {
+	case .day:
+		return Date().string(format: "dd/MM/yy")
+	case .week:
+		let (startDate, endDate) = Date().startAndEndDatesOfWeek()
+		return "\(startDate.string(format: "dd MMM")) - \(endDate.string(format: "dd MMM"))"
+	case .month:
+		let now = Date()
+		if startDayForMonthlyAccountingPeriod == 1 {
+			return "\(now.string(format: "MMMM yyyy"))"
+		} else {
+			let (startDate, endDate) = now.startAndEndDatesAMonthApart(startDay: startDayForMonthlyAccountingPeriod)
+			return "\(startDate.string(format: "dd MMM")) - \(endDate.string(format: "dd MMM"))"
+		}
+	case .year:
+		return Date().string(format: "yyyy")
+	case .all:
+		return "At all times"
+	}
+}
