@@ -20,12 +20,12 @@ class CostSheetTableViewCell: UITableViewCell {
 	@IBOutlet weak var expenseCountLabel: UILabel!
 
 	// MARK: Functions
-	func setValuesForCostSheet(_ costSheet: CostSheet) {
+	func setValues(for costSheet: CostSheet) {
 		costSheetNameLabel.text = costSheet.name
 		dateLabel.text = costSheet.lastModifiedDateString
 
 		// Balance label
-		var balance = costSheet.balance
+		var balance = costSheet.balanceInAccountingPeriod
 		if balance < 0 {
 			balanceAmountLabel.textColor = DarkExpenseColor
 			balance *= -1

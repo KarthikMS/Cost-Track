@@ -17,6 +17,7 @@
 		D9032EBB20FB4F20009EF5FC /* TransactionsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */; };
 		D9032EBD20FB75EC009EF5FC /* NewCostSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032EBC20FB75EC009EF5FC /* NewCostSheetViewController.swift */; };
 		D9032EBF20FB7806009EF5FC /* CostSheetSettingsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032EBE20FB7806009EF5FC /* CostSheetSettingsTableView.swift */; };
+		D955C66A21AA826700223AD9 /* CostSheetEntry+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */; };
 		D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F3F120F9BE81003C7C58 /* AppDelegate.swift */; };
 		D962F3F720F9BE81003C7C58 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F520F9BE81003C7C58 /* Main.storyboard */; };
 		D962F3F920F9BE81003C7C58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F820F9BE81003C7C58 /* Assets.xcassets */; };
@@ -97,6 +98,7 @@
 		D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionsTableViewCell.xib; sourceTree = "<group>"; };
 		D9032EBC20FB75EC009EF5FC /* NewCostSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCostSheetViewController.swift; sourceTree = "<group>"; };
 		D9032EBE20FB7806009EF5FC /* CostSheetSettingsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetSettingsTableView.swift; sourceTree = "<group>"; };
+		D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CostSheetEntry+Util.swift"; sourceTree = "<group>"; };
 		D962F3EE20F9BE81003C7C58 /* Cost Track.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cost Track.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D962F3F120F9BE81003C7C58 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D962F3F620F9BE81003C7C58 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -399,6 +401,7 @@
 			children = (
 				D9B119B121515BD50007CDA1 /* Document+Util.swift */,
 				D98973DF210E281F0051F809 /* CostSheet+Util.swift */,
+				D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */,
 				D9AC8188217B0085002FCA94 /* Category+Util.swift */,
 				D98974052116E08A0051F809 /* DateUtil.swift */,
 			);
@@ -676,6 +679,7 @@
 				D9AC8183217AFD49002FCA94 /* CostSheetEntry.pb.swift in Sources */,
 				D97AB0FB212D90D200000D6F /* GroupSelectTableViewController.swift in Sources */,
 				D9F249FB218D782600D0C81A /* CostSheetSettingsViewController.swift in Sources */,
+				D955C66A21AA826700223AD9 /* CostSheetEntry+Util.swift in Sources */,
 				D9032EBD20FB75EC009EF5FC /* NewCostSheetViewController.swift in Sources */,
 				D9AC8186217AFD49002FCA94 /* CTEnums.pb.swift in Sources */,
 				D9D7F01D217214CC00749589 /* Place.pb.swift in Sources */,

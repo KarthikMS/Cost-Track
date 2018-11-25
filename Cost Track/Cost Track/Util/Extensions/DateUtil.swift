@@ -103,6 +103,29 @@ extension Date {
 
 		return beforeEndDate
 	}
+
+	func isBefore(_ startDate: Date) -> Bool {
+		let day = self.string(format: "dd")
+		let month = self.string(format: "MM")
+		let year = self.string(format: "yyyy")
+
+		let startDay = startDate.string(format: "dd")
+		let startMonth = startDate.string(format: "MM")
+		let startYear = startDate.string(format: "yyyy")
+
+		var beforeStartDate = false
+		if year <= startYear {
+			if month < startMonth {
+				beforeStartDate = true
+			} else if month == startMonth {
+				if day < startDay {
+					beforeStartDate = true
+				}
+			}
+		}
+
+		return beforeStartDate
+	}
 	
 }
 

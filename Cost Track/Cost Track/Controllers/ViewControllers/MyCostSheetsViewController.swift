@@ -234,7 +234,7 @@ extension MyCostSheetsViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "CostSheetTableViewCell", for: indexPath) as! CostSheetTableViewCell
-		cell.setValuesForCostSheet(costSheetAtIndexPath(indexPath))
+		cell.setValues(for: costSheetAtIndexPath(indexPath))
 		return cell
 	}
 

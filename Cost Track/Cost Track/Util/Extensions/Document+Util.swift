@@ -81,7 +81,7 @@ extension Document {
 	var totalDisplayAmount: Float {
 		var totalAmount: Float = 0
 		for costSheet in costSheets where costSheet.includeInOverallTotal == true {
-			totalAmount += costSheet.balance
+			totalAmount += costSheet.balanceInAccountingPeriod
 		}
 		return totalAmount
 	}

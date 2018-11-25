@@ -49,7 +49,13 @@ extension CostSheet {
 			balance = createdOnDate.date!.isBetween(startDate, and: endDate) ? initialBalance : 0
 		}
 
-		for entry in entries where entry.date.date!.isBetween(startDate, and: endDate) {
+		for entry in entries {
+			let isEntryValid = entry.isBetween(startDate, and: endDate) ||
+				(shouldCarryOverBalance && entry.isBefore(startDate))
+			guard isEntryValid else {
+				continue
+			}
+
 			switch entry.type {
 			case .income:
 				balance += entry.amount
@@ -64,15 +70,16 @@ extension CostSheet {
 		guard let (startDate, endDate) = accountingPeriodDateRange else {
 			return entries
 		}
-		return entries.filter { $0.date.date!.isBetween(startDate, and: endDate) }
+		return entries.filter { $0.isBetween(startDate, and: endDate) }
 	}
 
 	var incomeExpenseInfo: IncomeExpenseInfo {
 		var incomeCount = 0
 		var incomeAmount: Float = 0
 		var expenseAmount: Float = 0
+		let entriesInAccountingPeriod = self.entriesInAccountingPeriod
 
-		for entry in entries {
+		for entry in entriesInAccountingPeriod {
 			switch entry.type {
 			case .income:
 				incomeAmount += entry.amount
@@ -84,7 +91,7 @@ extension CostSheet {
 
 		return IncomeExpenseInfo(
 			incomeCount: incomeCount,
-			expenseCount: entries.count - incomeCount,
+			expenseCount: entriesInAccountingPeriod.count - incomeCount,
 			incomeAmount: incomeAmount,
 			expenseAmount: expenseAmount
 		)
