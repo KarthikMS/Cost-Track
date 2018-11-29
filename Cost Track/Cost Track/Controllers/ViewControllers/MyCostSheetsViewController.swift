@@ -282,7 +282,7 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 		frame.origin.y = 0
 		frame.size.height = 40
 		let title = document.groupsWithCostSheets[section].name
-		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, delegate: self)
+		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, balance: nil, delegate: self)
 		return headerView
 	}
 

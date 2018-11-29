@@ -407,8 +407,17 @@ extension CostSheetViewController: UITableViewDelegate {
 		var frame = tableView.frame
 		frame.origin.y = 0
 		frame.size.height = 40
-		let title = Array(entries)[0].key
-		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, delegate: self)
+		let entriesArray = Array(entries)[0]
+		let title = entriesArray.key
+		let sectionBalance = entriesArray.value.reduce(0) { (balance, entry) -> Float in
+			switch entry.type {
+			case .income:
+				return balance + entry.amount
+			case .expense:
+				return balance - entry.amount
+			}
+		}
+		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, balance: sectionBalance, delegate: self)
 		return headerView
 	}
 
