@@ -73,6 +73,27 @@ extension CostSheet {
 		return entries.filter { $0.isBetween(startDate, and: endDate) }
 	}
 
+	func balanceBefore(_ beforeDate: Date) -> Float {
+		var balance = initialBalance
+		for entry in entries {
+			if entry.isBefore(beforeDate) {
+				switch entry.type {
+				case .income:
+					balance += entry.amount
+				case .expense:
+					balance -= entry.amount
+				}
+			} else {
+				continue
+			}
+		}
+		return balance
+	}
+
+	func entriesBefore(_ beforeDate: Date) -> [CostSheetEntry] {
+		return entries.filter { $0.isBefore(beforeDate) }
+	}
+
 	var incomeExpenseInfo: IncomeExpenseInfo {
 		var incomeCount = 0
 		var incomeAmount: Float = 0

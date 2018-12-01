@@ -27,9 +27,9 @@ class TableViewSectionHeaderView: UIView {
 		self.backgroundColor = TintedWhiteColor
 
 		// Label
-		let leftGap: CGFloat = 30
+		let padding: CGFloat = 30
 		var labelFrame = frame
-		labelFrame.origin.x = leftGap
+		labelFrame.origin.x = padding
 		labelFrame.size.width = 0.65 * frame.width//frame.width - labelFrame.origin.x
 		let label = UILabel(frame: labelFrame)
 		label.backgroundColor = .clear
@@ -40,7 +40,7 @@ class TableViewSectionHeaderView: UIView {
 		// Balance label
 		if var balance = balance {
 			labelFrame.size.width = 0.1 * frame.width
-			labelFrame.origin.x = frame.width - labelFrame.width - leftGap
+			labelFrame.origin.x = frame.width - labelFrame.width - padding
 			let balanceLabel = UILabel(frame: labelFrame)
 			balanceLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 			balanceLabel.backgroundColor = .clear

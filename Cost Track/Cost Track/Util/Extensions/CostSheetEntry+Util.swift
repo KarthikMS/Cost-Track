@@ -18,12 +18,12 @@ extension CostSheetEntry {
 		return date.isBetween(startDate, and: endDate)
 	}
 
-	func isBefore(_ startDate: Date) -> Bool {
+	func isBefore(_ beforeDate: Date) -> Bool {
 		guard let date = date.date else {
 			assertionFailure()
 			return false
 		}
-		return date.isBefore(startDate)
+		return date.isBefore(beforeDate)
 	}
 
 }

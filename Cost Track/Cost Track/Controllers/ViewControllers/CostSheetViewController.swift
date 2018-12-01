@@ -51,6 +51,7 @@ class CostSheetViewController: UIViewController {
 		transactionsTableViewDataSource.dataSource = self
 		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
 		transactionsTableView.dataSource = transactionsTableViewDataSource
+		transactionsTableView.tableFooterView = footerViewForTableView
     }
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -135,6 +136,66 @@ class CostSheetViewController: UIViewController {
 	}
 
 	// MARK: View functions
+	private var footerViewForTableView: UIView? {
+		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
+			assertionFailure("Could not get costSheet")
+			return nil
+		}
+		var labelText: String?
+		var balanceAmount: Float?
+		if AccountingPeriod(rawValue: accountingPeriodFormat)! == .all {
+			labelText = "Initial balance"
+			balanceAmount = costSheet.initialBalance
+		} else if shouldCarryOverBalance {
+			guard let (startDate, _) = accountingPeriodDateRange else {
+				assertionFailure()
+				return nil
+			}
+			labelText = "Carry over"
+			balanceAmount = costSheet.balanceBefore(startDate)
+		}
+		if let labelText = labelText, var balanceAmount = balanceAmount {
+			var frame = CGRect()
+			frame.origin.x = 0
+			frame.origin.y = 0
+			frame.size.width = self.view.frame.size.width
+			frame.size.height = 40
+			let headerView = UIView(frame: frame)
+
+			// Left label
+			let padding: CGFloat = 30
+			frame.origin.y = 0
+			frame.origin.x = padding
+			frame.size.width = 0.65 * self.view.frame.width
+
+			let leftLabel = UILabel(frame: frame)
+			leftLabel.text = labelText
+			leftLabel.backgroundColor = .clear
+			leftLabel.font = UIFont.boldSystemFont(ofSize: 15)
+			headerView.addSubview(leftLabel)
+
+			// Balance label
+			frame.size.width = 0.1 * self.view.frame.width
+			frame.origin.x = self.view.frame.width - frame.width - padding
+			let balanceLabel = UILabel(frame: frame)
+			balanceLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+			balanceLabel.backgroundColor = .clear
+			if balanceAmount < 0 {
+				balanceLabel.textColor = DarkExpenseColor
+			} else {
+				balanceLabel.textColor = DarkIncomeColor
+			}
+			if balanceAmount < 0 {
+				balanceAmount *= -1
+			}
+			balanceLabel.text = String(balanceAmount)
+			headerView.addSubview(balanceLabel)
+
+			return headerView
+		}
+		return nil
+	}
+
 	private func updateAmountLabel() {
 		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
 			assertionFailure("Could not get costSheet")
