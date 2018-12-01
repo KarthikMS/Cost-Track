@@ -181,6 +181,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		if document.costSheets.isEmpty {
 			noCostSheetsTextView.isHidden = false
 		}
+		updateTopBar()
 	}
 }
 
