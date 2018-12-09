@@ -14,6 +14,7 @@ class AllPlacesTableViewController: UITableViewController {
 	private weak var settingsDataSource: SettingsDataSource!
 	private weak var deltaDelegate: DeltaDelegate!
 	private var newPlaceAlertOkAction: UIAlertAction?
+	private var renamePlaceAlertOkAction: UIAlertAction?
 
 	func setup(dataSource: SettingsDataSource, deltaDelegate: DeltaDelegate) {
 		self.settingsDataSource = dataSource
@@ -52,8 +53,61 @@ extension AllPlacesTableViewController {
 extension AllPlacesTableViewController {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		// TODO: Show alert to rename place name
+		showAlertToRenamePlace(at: indexPath.row)
 		tableView.deselectRow(at: indexPath, animated: true)
+	}
+
+	private func showAlertToRenamePlace(at index: Int) {
+		let place = settingsDataSource.document.places[index]
+		let alertController = UIAlertController(title: "Rename Place", message: "Please enter a new name for \(place.name).", preferredStyle: .alert)
+		alertController.addTextField { (textField: UITextField) in
+			textField.placeholder = "New Name"
+			textField.addTarget(self, action: #selector(self.renamePlaceAlertTextFieldTextDidChange), for: .editingChanged)
+		}
+		let cancelAction = UIAlertAction( title: "Cancel", style: .cancel, handler: { (cancelAction) in
+			alertController.dismiss(animated: true)
+		})
+		renamePlaceAlertOkAction = UIAlertAction(title: "Ok", style: .default, handler: { (okAction) in
+			guard let textField = alertController.textFields?.first,
+				let newPlaceName = textField.text else {
+					assertionFailure()
+					return
+			}
+			let document = self.settingsDataSource.document
+
+			guard document.isPlaceNameNew(newPlaceName) else {
+				self.showAlertSaying("\'\(newPlaceName)\' already exists. Please enter a different name.")
+				return
+			}
+
+			// Updated place
+			var updatedPlace = place
+			updatedPlace.name = newPlaceName
+
+			// Delta Component
+			let updatePlaceComponent = DeltaUtil.getComponentToUpdatePlace(updatedPlace, in: document, at: index)
+			self.deltaDelegate.sendDeltaComponents([updatePlaceComponent])
+
+			self.tableView.reloadData()
+			alertController.dismiss(animated: true)
+		})
+		renamePlaceAlertOkAction?.isEnabled = false
+		alertController.addAction(cancelAction)
+		alertController.addAction(renamePlaceAlertOkAction!)
+		present(alertController, animated: true)
+	}
+
+	@objc
+	private func renamePlaceAlertTextFieldTextDidChange(textField: UITextField) {
+		guard let alertOkAction = renamePlaceAlertOkAction else {
+			assertionFailure()
+			return
+		}
+		if textField.text == "" {
+			alertOkAction.isEnabled = false
+		} else {
+			alertOkAction.isEnabled = true
+		}
 	}
 
 }
@@ -63,9 +117,9 @@ extension AllPlacesTableViewController {
 
 	@IBAction func addNewPlaceButtonPressed(_ sender: Any) {
 		let alertController = UIAlertController(title: "New Place", message: "Please enter a place name.", preferredStyle: .alert)
-		alertController.addTextField { (textField) in
+		alertController.addTextField { (textField: UITextField) in
 			textField.placeholder = "Place Name"
-			textField.addTarget(self, action: #selector(self.alertTextFieldTextDidChange(textField:)), for: .editingChanged)
+			textField.addTarget(self, action: #selector(self.newPlaceAlertTextFieldTextDidChange), for: .editingChanged)
 		}
 		let cancelAction = UIAlertAction( title: "Cancel", style: .cancel, handler: { (cancelAction) in
 			alertController.dismiss(animated: true)
@@ -83,7 +137,7 @@ extension AllPlacesTableViewController {
 				return
 			}
 
-			// New group
+			// New place
 			var newPlace = Place()
 			newPlace.name = placeName
 			newPlace.id = UUID().uuidString
@@ -102,7 +156,7 @@ extension AllPlacesTableViewController {
 	}
 
 	@objc
-	func alertTextFieldTextDidChange(textField: UITextField) {
+	private func newPlaceAlertTextFieldTextDidChange(textField: UITextField) {
 		guard let alertOkAction = newPlaceAlertOkAction else {
 			assertionFailure()
 			return
