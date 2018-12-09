@@ -186,12 +186,13 @@ class CostSheetEntryViewController: UIViewController {
 			updateImageEditorView(for: image)
 		}
 		updateDateViews(date: oldEntryDate)
-		if oldEntry.hasPlace {
-			entryPlace = oldEntry.place
-			updatePlaceViews(place: oldEntry.place)
-		} else {
-			updatePlaceViews(place: nil)
-		}
+		// WORK HERE Place
+//		if oldEntry.hasPlace {
+//			entryPlace = oldEntry.place
+//			updatePlaceViews(place: oldEntry.place)
+//		} else {
+//			updatePlaceViews(place: nil)
+//		}
 		descriptionTextView.text = oldEntry.description_p
 		descriptionTextView.textColor = .black
 	}
@@ -588,11 +589,12 @@ extension CostSheetEntryViewController {
 			if let imageData = imageData {
 				oldEntry.image = imageData
 			}
-			if let place = entryPlace {
-				oldEntry.place = place
-			} else {
-				oldEntry.clearPlace()
-			}
+			// WORK HERE Place
+//			if let place = entryPlace {
+//				oldEntry.place = place
+//			} else {
+//				oldEntry.clearPlace()
+//			}
 			oldEntry.date = dateData
 			oldEntry.description_p = descriptionText
 
@@ -605,7 +607,8 @@ extension CostSheetEntryViewController {
 					newTransferEntry.image = imageData
 				}
 				if let place = entryPlace {
-					newTransferEntry.place = place
+					// WORK HERE Place
+//					newTransferEntry.place = place
 				}
 				newTransferEntry.date = dateData
 				newTransferEntry.description_p = descriptionText
@@ -652,7 +655,8 @@ extension CostSheetEntryViewController {
 						newTransferEntry.image = imageData
 					}
 					if let place = entryPlace {
-						newTransferEntry.place = place
+						// WORK HERE Place
+//						newTransferEntry.place = place
 					}
 					newTransferEntry.date = dateData
 					newTransferEntry.description_p = descriptionText
@@ -673,9 +677,10 @@ extension CostSheetEntryViewController {
 			if let imageData = imageData {
 				newEntry.image = imageData
 			}
-			if let place = entryPlace {
-				newEntry.place = place
-			}
+			// WORK HERE Place
+//			if let place = entryPlace {
+//				newEntry.place = place
+//			}
 			newEntry.date = dateData
 			newEntry.description_p = descriptionText
 
@@ -689,7 +694,8 @@ extension CostSheetEntryViewController {
 					newTransferEntry.image = imageData
 				}
 				if let place = entryPlace {
-					newTransferEntry.place = place
+					// WORK HERE Place
+//					newTransferEntry.place = place
 				}
 				newTransferEntry.date = dateData
 				newTransferEntry.description_p = descriptionText
@@ -755,22 +761,21 @@ extension CostSheetEntryViewController: EntryCategoryPickerDelegate {
 extension CostSheetEntryViewController: GMSPlacePickerViewControllerDelegate {
 
 	func placePicker(_ viewController: GMSPlacePickerViewController, didPick place: GMSPlace) {
-//		entryPlace = nil
-		entryPlace = Place()
-		entryPlace?.id = place.placeID
-		entryPlace?.name = place.name
-		entryPlace?.latitude = place.coordinate.latitude
-		entryPlace?.longitude = place.coordinate.longitude
-		if let address = place.formattedAddress {
-			entryPlace?.address = address
-		}
-		if let phoneNumber = place.phoneNumber {
-			entryPlace?.phoneNumber = phoneNumber
-		}
-		updatePlaceViews(place: entryPlace)
-		viewController.dismiss(animated: true) {
-			self.showPlaceEditor()
-		}
+//		entryPlace = Place()
+//		entryPlace?.id = place.placeID
+//		entryPlace?.name = place.name
+//		entryPlace?.latitude = place.coordinate.latitude
+//		entryPlace?.longitude = place.coordinate.longitude
+//		if let address = place.formattedAddress {
+//			entryPlace?.address = address
+//		}
+//		if let phoneNumber = place.phoneNumber {
+//			entryPlace?.phoneNumber = phoneNumber
+//		}
+//		updatePlaceViews(place: entryPlace)
+//		viewController.dismiss(animated: true) {
+//			self.showPlaceEditor()
+//		}
 	}
 
 	func placePickerDidCancel(_ viewController: GMSPlacePickerViewController) {

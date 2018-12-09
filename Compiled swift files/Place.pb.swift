@@ -42,24 +42,6 @@ struct Place {
   /// Clears the value of `name`. Subsequent reads from it will return its default value.
   mutating func clearName() {self._name = nil}
 
-  var latitude: Double {
-    get {return _latitude ?? 0}
-    set {_latitude = newValue}
-  }
-  /// Returns true if `latitude` has been explicitly set.
-  var hasLatitude: Bool {return self._latitude != nil}
-  /// Clears the value of `latitude`. Subsequent reads from it will return its default value.
-  mutating func clearLatitude() {self._latitude = nil}
-
-  var longitude: Double {
-    get {return _longitude ?? 0}
-    set {_longitude = newValue}
-  }
-  /// Returns true if `longitude` has been explicitly set.
-  var hasLongitude: Bool {return self._longitude != nil}
-  /// Clears the value of `longitude`. Subsequent reads from it will return its default value.
-  mutating func clearLongitude() {self._longitude = nil}
-
   var address: String {
     get {return _address ?? String()}
     set {_address = newValue}
@@ -69,25 +51,13 @@ struct Place {
   /// Clears the value of `address`. Subsequent reads from it will return its default value.
   mutating func clearAddress() {self._address = nil}
 
-  var phoneNumber: String {
-    get {return _phoneNumber ?? String()}
-    set {_phoneNumber = newValue}
-  }
-  /// Returns true if `phoneNumber` has been explicitly set.
-  var hasPhoneNumber: Bool {return self._phoneNumber != nil}
-  /// Clears the value of `phoneNumber`. Subsequent reads from it will return its default value.
-  mutating func clearPhoneNumber() {self._phoneNumber = nil}
-
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
 
   fileprivate var _id: String? = nil
   fileprivate var _name: String? = nil
-  fileprivate var _latitude: Double? = nil
-  fileprivate var _longitude: Double? = nil
   fileprivate var _address: String? = nil
-  fileprivate var _phoneNumber: String? = nil
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -97,17 +67,12 @@ extension Place: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "id"),
     2: .same(proto: "name"),
-    3: .same(proto: "latitude"),
-    4: .same(proto: "longitude"),
-    5: .same(proto: "address"),
-    6: .same(proto: "phoneNumber"),
+    3: .same(proto: "address"),
   ]
 
   public var isInitialized: Bool {
     if self._id == nil {return false}
     if self._name == nil {return false}
-    if self._latitude == nil {return false}
-    if self._longitude == nil {return false}
     return true
   }
 
@@ -116,10 +81,7 @@ extension Place: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
       switch fieldNumber {
       case 1: try decoder.decodeSingularStringField(value: &self._id)
       case 2: try decoder.decodeSingularStringField(value: &self._name)
-      case 3: try decoder.decodeSingularDoubleField(value: &self._latitude)
-      case 4: try decoder.decodeSingularDoubleField(value: &self._longitude)
-      case 5: try decoder.decodeSingularStringField(value: &self._address)
-      case 6: try decoder.decodeSingularStringField(value: &self._phoneNumber)
+      case 3: try decoder.decodeSingularStringField(value: &self._address)
       default: break
       }
     }
@@ -132,17 +94,8 @@ extension Place: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
     if let v = self._name {
       try visitor.visitSingularStringField(value: v, fieldNumber: 2)
     }
-    if let v = self._latitude {
-      try visitor.visitSingularDoubleField(value: v, fieldNumber: 3)
-    }
-    if let v = self._longitude {
-      try visitor.visitSingularDoubleField(value: v, fieldNumber: 4)
-    }
     if let v = self._address {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 5)
-    }
-    if let v = self._phoneNumber {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 6)
+      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -150,10 +103,7 @@ extension Place: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
   static func ==(lhs: Place, rhs: Place) -> Bool {
     if lhs._id != rhs._id {return false}
     if lhs._name != rhs._name {return false}
-    if lhs._latitude != rhs._latitude {return false}
-    if lhs._longitude != rhs._longitude {return false}
     if lhs._address != rhs._address {return false}
-    if lhs._phoneNumber != rhs._phoneNumber {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

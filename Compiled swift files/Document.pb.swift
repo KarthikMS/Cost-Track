@@ -30,6 +30,8 @@ struct Document {
 
   var categories: [Category] = []
 
+  var places: [Place] = []
+
   var createdOnDate: Data {
     get {return _createdOnDate ?? SwiftProtobuf.Internal.emptyData}
     set {_createdOnDate = newValue}
@@ -54,7 +56,8 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     1: .same(proto: "costSheets"),
     2: .same(proto: "groups"),
     3: .same(proto: "categories"),
-    4: .same(proto: "createdOnDate"),
+    4: .same(proto: "places"),
+    5: .same(proto: "createdOnDate"),
   ]
 
   public var isInitialized: Bool {
@@ -62,6 +65,7 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if !SwiftProtobuf.Internal.areAllInitialized(self.costSheets) {return false}
     if !SwiftProtobuf.Internal.areAllInitialized(self.groups) {return false}
     if !SwiftProtobuf.Internal.areAllInitialized(self.categories) {return false}
+    if !SwiftProtobuf.Internal.areAllInitialized(self.places) {return false}
     return true
   }
 
@@ -71,7 +75,8 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       case 1: try decoder.decodeRepeatedMessageField(value: &self.costSheets)
       case 2: try decoder.decodeRepeatedMessageField(value: &self.groups)
       case 3: try decoder.decodeRepeatedMessageField(value: &self.categories)
-      case 4: try decoder.decodeSingularBytesField(value: &self._createdOnDate)
+      case 4: try decoder.decodeRepeatedMessageField(value: &self.places)
+      case 5: try decoder.decodeSingularBytesField(value: &self._createdOnDate)
       default: break
       }
     }
@@ -87,8 +92,11 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if !self.categories.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.categories, fieldNumber: 3)
     }
+    if !self.places.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.places, fieldNumber: 4)
+    }
     if let v = self._createdOnDate {
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 4)
+      try visitor.visitSingularBytesField(value: v, fieldNumber: 5)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -97,6 +105,7 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if lhs.costSheets != rhs.costSheets {return false}
     if lhs.groups != rhs.groups {return false}
     if lhs.categories != rhs.categories {return false}
+    if lhs.places != rhs.places {return false}
     if lhs._createdOnDate != rhs._createdOnDate {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource {
+class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource, SettingsDataSource {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var topBar: UIView!
@@ -83,7 +83,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 			guard let settingsTableViewController = segue.destination as? SettingsTableViewController else {
 				return
 			}
-			settingsTableViewController.setup(delegate: self)
+			settingsTableViewController.setup(dataSource: self, delegate: self, deltaDelegate: self)
 		default:
 			break
 		}

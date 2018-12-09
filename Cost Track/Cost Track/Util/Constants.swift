@@ -19,6 +19,7 @@ let LightExpenseColor = UIColor(red: 255/255.0, green: 102/255.0, blue: 102/255.
 let TintedWhiteColor = UIColor(red: 247/255.0, green: 247/255.0, blue: 247/255.0, alpha: 1.0)
 
 // MARK: Segue Identifiers
+// Main Storyboard
 let	CostSheetSegue = "CostSheetSegue"
 let CostSheetEntrySegue = "CostSheetEntrySegue"
 let NewCostSheetSegue = "NewCostSheetSegue"
@@ -29,6 +30,9 @@ let GroupSelectSegue = "GroupSelectSegue"
 let TransferAmountSegue = "TransferAmountSegue"
 let CostSheetSettingsSegue = "CostSheetSettingsSegue"
 let GroupSelectFromCostSheetSettingsSegue = "GroupSelectFromCostSheetSettingsSegue"
+
+// Settings Storyboard
+let AllPlacesSegue = "AllPlacesSegue"
 
 // MARK: Strings
 let BalanceCarryOver = "BalanceCarryOver"

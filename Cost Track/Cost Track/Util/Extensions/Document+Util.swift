@@ -110,6 +110,13 @@ extension Document {
 		return true
 	}
 
+	func isPlaceNameNew(_ name: String) -> Bool {
+		for place in places where place.name == name {
+			return false
+		}
+		return true
+	}
+
 	func indexOfCostSheetWithId(_ id: String) -> Int? {
 		for i in 0..<costSheets.count {
 			if costSheets[i].id == id {

@@ -9,19 +9,28 @@
 import UIKit
 
 // MARK: Protocols
+protocol SettingsDataSource: class {
+	var document: Document { get }
+}
+
 protocol SettingsTableViewControllerDelegate: class {
 	func refreshView()
 }
 
 // MARK: Constants
 private let ClearDataSection = 0
+private let AllPlacesSection = 1
 
 class SettingsTableViewController: UITableViewController {
 
 	// MARK: Properties
+	private weak var settingsDataSource: SettingsDataSource!
 	private weak var settingsTableViewControllerDelegate: SettingsTableViewControllerDelegate!
-	func setup(delegate: SettingsTableViewControllerDelegate) {
+	private weak var deltaDelegate: DeltaDelegate!
+	func setup(dataSource: SettingsDataSource, delegate: SettingsTableViewControllerDelegate, deltaDelegate: DeltaDelegate) {
+		self.settingsDataSource = dataSource
 		self.settingsTableViewControllerDelegate = delegate
+		self.deltaDelegate = deltaDelegate
 	}
 
 	// MARK: UIViewController functions
@@ -29,6 +38,22 @@ class SettingsTableViewController: UITableViewController {
         super.viewDidLoad()
 
     }
+
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		guard let identifier = segue.identifier else {
+			return
+		}
+		switch identifier {
+		case AllPlacesSegue:
+			guard let allPlacesTableViewController = segue.destination as? AllPlacesTableViewController else {
+				assertionFailure()
+				return
+			}
+			allPlacesTableViewController.setup(dataSource: settingsDataSource, deltaDelegate: deltaDelegate)
+		default:
+			return
+		}
+	}
 
 	// MARK: View functions
 	private func showActionSheetToClearData() {
@@ -51,10 +76,12 @@ class SettingsTableViewController: UITableViewController {
 extension SettingsTableViewController {
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+		// Temp
+		return 2
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		// Temp
 		return 1
 	}
 
@@ -63,6 +90,8 @@ extension SettingsTableViewController {
 		switch indexPath.section {
 		case ClearDataSection:
 			cell.textLabel?.text = "Clear data"
+		case AllPlacesSection:
+			cell.textLabel?.text = "Places"
 		default:
 			assertionFailure()
 			break
@@ -79,6 +108,8 @@ extension SettingsTableViewController {
 		switch indexPath.section {
 		case ClearDataSection:
 			showActionSheetToClearData()
+		case AllPlacesSection:
+			performSegue(withIdentifier: AllPlacesSegue, sender: nil)
 		default:
 			assertionFailure()
 			break

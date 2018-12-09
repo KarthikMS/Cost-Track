@@ -58,6 +58,17 @@ class DeltaUtil {
 		return getComponent(opType: .insert, fieldString: fieldString, newValue: group.safeSerializedData)
 	}
 
+	static func getComponentToInsertPlace(_ place: Place, in document: Document, at index: Int? = nil) -> DocumentContentOperation.Component {
+		var insertIndex: Int
+		if let index = index {
+			insertIndex = index
+		} else {
+			insertIndex = document.places.count
+		}
+		let fieldString = "4,arr:\(insertIndex)"
+		return getComponent(opType: .insert, fieldString: fieldString, newValue: place.safeSerializedData)
+	}
+
 	static func getComponentToDeleteGroup(at index: Int, in document: Document) -> DocumentContentOperation.Component {
 		let group = document.groups[index]
 		let fieldString = "2,arr:\(index)"

@@ -58,18 +58,19 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 		}
 
 		let place: Place?
-		if costSheetEntry.hasPlace {
-			place = costSheetEntry.place
-		} else {
-			place = nil
-		}
+		// WORK HERE Place
+//		if costSheetEntry.hasPlace {
+//			place = costSheetEntry.place
+//		} else {
+//			place = nil
+//		}
 
 		cell.setAmount(costSheetEntry.amount,
 					   entryType: costSheetEntry.type,
 					   date: entryDate.string(format: "dd/MM/yy"),
 					   time: entryDate.string(format: "hh:mm a"),
 					   category: costSheetEntry.category.name,
-					   place: place,
+					   place: nil,
 					   description: entryDescription,
 					   forMode: dataSource.classificationMode
 		)
