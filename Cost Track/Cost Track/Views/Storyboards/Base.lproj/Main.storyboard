@@ -316,6 +316,7 @@
                         <outlet property="navigationBarTitleButton" destination="Otn-81-YjO" id="H7D-YX-24L"/>
                         <segue destination="DT4-xC-FO1" kind="show" identifier="TransferAmountSegue" id="KFU-Dv-iH3"/>
                         <segue destination="YCb-5w-ApT" kind="presentation" identifier="ViewPhotoSegue" id="ypx-U1-cTl"/>
+                        <segue destination="UbB-rV-FBe" kind="show" identifier="SelectPlaceSegue" id="JJp-ae-VgQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dag-9M-Wkn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -498,6 +499,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wwu-1x-Vob" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2752.8000000000002" y="-670.61469265367316"/>
+        </scene>
+        <!--Select Place-->
+        <scene sceneID="fYR-kQ-dlQ">
+            <objects>
+                <tableViewController id="UbB-rV-FBe" customClass="AllPlacesTableViewController" customModule="Cost_Track" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="7i4-Fd-aVc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AllPlacesTableViewCell" id="FAv-x8-0vS">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="FAv-x8-0vS" id="mYW-bM-zad">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="UbB-rV-FBe" id="Dg9-li-Nlo"/>
+                            <outlet property="delegate" destination="UbB-rV-FBe" id="yGB-Qf-Zfl"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Select Place" id="y7f-7H-hVX"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="93h-uX-z69" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2753" y="842"/>
         </scene>
     </scenes>
 </document>

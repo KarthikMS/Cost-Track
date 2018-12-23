@@ -59,11 +59,11 @@
 		D9C453FF21561C9D00890E60 /* TransferAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C453FD21561C9D00890E60 /* TransferAmountViewController.swift */; };
 		D9C4540021561C9D00890E60 /* TransferAmountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C453FE21561C9D00890E60 /* TransferAmountViewController.xib */; };
 		D9D7F01D217214CC00749589 /* Place.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9D7F01C217214CC00749589 /* Place.pb.swift */; };
+		D9ED282521BD630600A977FB /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F24A00218EC0DC00D0C81A /* CoreServices.framework */; };
 		D9EED51421B2F64D00F969A8 /* AllPlacesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EED51321B2F64D00F969A8 /* AllPlacesTableViewController.swift */; };
 		D9EED51621B2F70500F969A8 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9EED51521B2F70500F969A8 /* Settings.storyboard */; };
 		D9F249FB218D782600D0C81A /* CostSheetSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F249FA218D782600D0C81A /* CostSheetSettingsViewController.swift */; };
 		D9F249FF218D927400D0C81A /* CommonUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F249FE218D927400D0C81A /* CommonUtil.swift */; };
-		D9F24A01218EC0DC00D0C81A /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F24A00218EC0DC00D0C81A /* CoreServices.framework */; };
 		D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F5E5F220FEF77300454FA9 /* CostSheetEntryViewController.swift */; };
 		D9F5E5F520FEF77300454FA9 /* CostSheetEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9F5E5F320FEF77300454FA9 /* CostSheetEntryViewController.xib */; };
 /* End PBXBuildFile section */
@@ -164,7 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9F24A01218EC0DC00D0C81A /* CoreServices.framework in Frameworks */,
+				D9ED282521BD630600A977FB /* CoreServices.framework in Frameworks */,
 				117B148510AF2FBBC09B5A7C /* Pods_Cost_Track.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

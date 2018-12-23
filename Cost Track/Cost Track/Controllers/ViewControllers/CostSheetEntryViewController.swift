@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import GooglePlacePicker
 import AVKit
 import CoreServices
 
@@ -64,7 +63,6 @@ class CostSheetEntryViewController: UIViewController {
 	}
 	var entryType = EntryType.income
 	var oldEntry: CostSheetEntry?
-	private let locationManager = CLLocationManager()
 	private var entryPlace: Place?
 	var isDirectAmountTransfer = false
 	private var transferCostSheet: CostSheet?
@@ -78,10 +76,6 @@ class CostSheetEntryViewController: UIViewController {
 		entryDatePicker.delegate = self
 		entryCategoryPicker.dataSource = self
 		entryCategoryPicker.delegate = self
-
-		locationManager.distanceFilter = 50
-		locationManager.desiredAccuracy = kCLLocationAccuracyBest
-		locationManager.delegate = self
 
 		if oldEntry != nil {
 			updateViewsForOldEntry()
@@ -130,6 +124,12 @@ class CostSheetEntryViewController: UIViewController {
 			}
 			_ = entryPhotoViewController.view
 			entryPhotoViewController.imageView.image = image
+		case SelectPlaceSegue:
+			guard let allPlacesViewController = segue.destination as? AllPlacesTableViewController else {
+				assertionFailure()
+				return
+			}
+			allPlacesViewController.setup(dataSource: self, deltaDelegate: deltaDelegate, placeSelectionDelegate: self, selectedPlaceId: entryPlace?.id, mode: .select)
 		default:
 			return
 		}
@@ -151,23 +151,7 @@ class CostSheetEntryViewController: UIViewController {
 
 	// MARK: Location functions
 	private func openPlacePicker() {
-		requestLocationServicesIfNecessary()
-		locationManager.startUpdatingLocation()
-	}
-
-	private func requestLocationServicesIfNecessary() {
-		if CLLocationManager.locationServicesEnabled() {
-			switch CLLocationManager.authorizationStatus() {
-			case .notDetermined:
-				locationManager.requestWhenInUseAuthorization()
-			case .denied:
-				showAlertToTakeUserToSettings(reason: .location)
-			default:
-				return
-			}
-		} else {
-			showAlertToTakeUserToSettings(reason: .location)
-		}
+		performSegue(withIdentifier: SelectPlaceSegue, sender: nil)
 	}
 
 	// MARK: View functions
@@ -186,13 +170,16 @@ class CostSheetEntryViewController: UIViewController {
 			updateImageEditorView(for: image)
 		}
 		updateDateViews(date: oldEntryDate)
-		// WORK HERE Place
-//		if oldEntry.hasPlace {
-//			entryPlace = oldEntry.place
-//			updatePlaceViews(place: oldEntry.place)
-//		} else {
-//			updatePlaceViews(place: nil)
-//		}
+		if oldEntry.hasPlaceID {
+			guard let oldEntryPlace = dataSource.document.getPlace(withId: oldEntry.placeID) else {
+				assertionFailure("Could not get place with Id")
+				return
+			}
+			entryPlace = oldEntryPlace
+			updatePlaceViews(place: entryPlace)
+		} else {
+			updatePlaceViews(place: nil)
+		}
 		descriptionTextView.text = oldEntry.description_p
 		descriptionTextView.textColor = .black
 	}
@@ -589,12 +576,11 @@ extension CostSheetEntryViewController {
 			if let imageData = imageData {
 				oldEntry.image = imageData
 			}
-			// WORK HERE Place
-//			if let place = entryPlace {
-//				oldEntry.place = place
-//			} else {
-//				oldEntry.clearPlace()
-//			}
+			if let place = entryPlace {
+				oldEntry.placeID = place.id
+			} else {
+				oldEntry.clearPlaceID()
+			}
 			oldEntry.date = dateData
 			oldEntry.description_p = descriptionText
 
@@ -607,8 +593,7 @@ extension CostSheetEntryViewController {
 					newTransferEntry.image = imageData
 				}
 				if let place = entryPlace {
-					// WORK HERE Place
-//					newTransferEntry.place = place
+					newTransferEntry.placeID = place.id
 				}
 				newTransferEntry.date = dateData
 				newTransferEntry.description_p = descriptionText
@@ -655,8 +640,7 @@ extension CostSheetEntryViewController {
 						newTransferEntry.image = imageData
 					}
 					if let place = entryPlace {
-						// WORK HERE Place
-//						newTransferEntry.place = place
+						newTransferEntry.placeID = place.id
 					}
 					newTransferEntry.date = dateData
 					newTransferEntry.description_p = descriptionText
@@ -677,10 +661,9 @@ extension CostSheetEntryViewController {
 			if let imageData = imageData {
 				newEntry.image = imageData
 			}
-			// WORK HERE Place
-//			if let place = entryPlace {
-//				newEntry.place = place
-//			}
+			if let place = entryPlace {
+				newEntry.placeID = place.id
+			}
 			newEntry.date = dateData
 			newEntry.description_p = descriptionText
 
@@ -694,8 +677,7 @@ extension CostSheetEntryViewController {
 					newTransferEntry.image = imageData
 				}
 				if let place = entryPlace {
-					// WORK HERE Place
-//					newTransferEntry.place = place
+					newTransferEntry.placeID = place.id
 				}
 				newTransferEntry.date = dateData
 				newTransferEntry.description_p = descriptionText
@@ -720,6 +702,15 @@ extension CostSheetEntryViewController {
 
 		oldEntry = nil
 		navigationController?.popViewController(animated: true)
+	}
+
+}
+
+// MARK: SettingsDataSource
+extension CostSheetEntryViewController: SettingsDataSource {
+
+	var document: Document {
+		return dataSource.document
 	}
 
 }
@@ -757,10 +748,30 @@ extension CostSheetEntryViewController: EntryCategoryPickerDelegate {
 
 }
 
-// MARK: GMSPlacePickerViewControllerDelegate
-extension CostSheetEntryViewController: GMSPlacePickerViewControllerDelegate {
+// MARK: PlaceSelectionDelegate
+extension CostSheetEntryViewController: PlaceSelectionDelegate {
 
-	func placePicker(_ viewController: GMSPlacePickerViewController, didPick place: GMSPlace) {
+	func didSelectPlace(withId placeId: String) {
+		guard let place = dataSource.document.getPlace(withId: placeId) else {
+			assertionFailure()
+			return
+		}
+
+		entryPlace = Place()
+		entryPlace?.id = place.id
+		entryPlace?.name = place.name
+		entryPlace?.address = place.address
+
+		updatePlaceViews(place: place)
+		showPlaceEditor()
+	}
+
+}
+
+//// MARK: GMSPlacePickerViewControllerDelegate
+//extension CostSheetEntryViewController: GMSPlacePickerViewControllerDelegate {
+//
+//	func placePicker(_ viewController: GMSPlacePickerViewController, didPick place: GMSPlace) {
 //		entryPlace = Place()
 //		entryPlace?.id = place.placeID
 //		entryPlace?.name = place.name
@@ -776,42 +787,9 @@ extension CostSheetEntryViewController: GMSPlacePickerViewControllerDelegate {
 //		viewController.dismiss(animated: true) {
 //			self.showPlaceEditor()
 //		}
-	}
-
-	func placePickerDidCancel(_ viewController: GMSPlacePickerViewController) {
-		viewController.dismiss(animated: true)
-	}
-
-}
-
-// MARK: CLLocationManagerDelegate
-extension CostSheetEntryViewController: CLLocationManagerDelegate {
-
-	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		manager.stopUpdatingLocation()
-
-		// Getting viewPort
-		let location = locations.last!
-		let latitude = location.coordinate.latitude
-		let longitude = location.coordinate.longitude
-		let center = CLLocationCoordinate2DMake(latitude, longitude)
-		let northEast = CLLocationCoordinate2DMake(center.latitude + 0.001, center.longitude + 0.001)
-		let southWest = CLLocationCoordinate2DMake(center.latitude - 0.001, center.longitude - 0.001)
-		let viewPort = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
-
-		let config = GMSPlacePickerConfig(viewport: viewPort)
-		let placePicker = GMSPlacePickerViewController(config: config)
-		placePicker.delegate = self
-
-		present(placePicker, animated: true, completion: nil)
-	}
-
-	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		manager.stopUpdatingLocation()
-		print("locationManager Error: \(error.localizedDescription)")
-	}
-
-}
+//	}
+//
+//}
 
 // MARK: UITextViewDelegate
 extension CostSheetEntryViewController: UITextViewDelegate {

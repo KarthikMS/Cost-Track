@@ -47,14 +47,24 @@ extension Float : DataConvertible { }
 extension Bool : DataConvertible { }
 
 var startDayForMonthlyAccountingPeriod: Int {
+	if UserDefaults.standard.value(forKey: StartDayForMonthlyAccountingPeriod) == nil {
+		UserDefaults.standard.setValue(1, forKey: StartDayForMonthlyAccountingPeriod)
+	}
 	return UserDefaults.standard.value(forKey: StartDayForMonthlyAccountingPeriod) as! Int
 }
 
 var shouldCarryOverBalance: Bool {
+	if UserDefaults.standard.value(forKey: BalanceCarryOver) == nil {
+		UserDefaults.standard.setValue(true, forKey: BalanceCarryOver)
+	}
 	return UserDefaults.standard.value(forKey: BalanceCarryOver) as! Bool
 }
 
+// MARK: Accounting period
 var accountingPeriodFormat: Int {
+	if UserDefaults.standard.value(forKey: AccountingPeriodFormat) == nil {
+		UserDefaults.standard.setValue(4, forKey: AccountingPeriodFormat)
+	}
 	return UserDefaults.standard.value(forKey: AccountingPeriodFormat) as! Int
 }
 

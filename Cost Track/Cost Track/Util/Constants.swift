@@ -30,6 +30,7 @@ let GroupSelectSegue = "GroupSelectSegue"
 let TransferAmountSegue = "TransferAmountSegue"
 let CostSheetSettingsSegue = "CostSheetSettingsSegue"
 let GroupSelectFromCostSheetSettingsSegue = "GroupSelectFromCostSheetSettingsSegue"
+let SelectPlaceSegue = "SelectPlaceSegue"
 
 // Settings Storyboard
 let AllPlacesSegue = "AllPlacesSegue"

@@ -8,17 +8,32 @@
 
 import UIKit
 
+enum AllPlacesTableViewControllerMode {
+	case view
+	case select
+}
+
+protocol PlaceSelectionDelegate: class {
+	func didSelectPlace(withId placeId: String)
+}
+
 class AllPlacesTableViewController: UITableViewController {
 
 	// MARK: Global parameters
 	private weak var settingsDataSource: SettingsDataSource!
 	private weak var deltaDelegate: DeltaDelegate!
+	private weak var placeSelectionDelegate: PlaceSelectionDelegate?
 	private var newPlaceAlertOkAction: UIAlertAction?
 	private var renamePlaceAlertOkAction: UIAlertAction?
+	private var mode = AllPlacesTableViewControllerMode.view
+	private var selectedPlaceId: String?
 
-	func setup(dataSource: SettingsDataSource, deltaDelegate: DeltaDelegate) {
+	func setup(dataSource: SettingsDataSource, deltaDelegate: DeltaDelegate, placeSelectionDelegate: PlaceSelectionDelegate?, selectedPlaceId: String? = nil, mode: AllPlacesTableViewControllerMode) {
 		self.settingsDataSource = dataSource
 		self.deltaDelegate = deltaDelegate
+		self.placeSelectionDelegate = placeSelectionDelegate
+		self.selectedPlaceId = selectedPlaceId
+		self.mode = mode
 	}
 
 }
@@ -43,6 +58,11 @@ extension AllPlacesTableViewController {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "AllPlacesTableViewCell", for: indexPath)
 		let place = settingsDataSource.document.places[indexPath.row]
+		if let selectedPlaceId = selectedPlaceId, place.id == selectedPlaceId {
+			cell.accessoryType = .checkmark
+		} else {
+			cell.accessoryType = .none
+		}
 		cell.textLabel?.text = place.name
 		return cell
 	}
@@ -53,8 +73,15 @@ extension AllPlacesTableViewController {
 extension AllPlacesTableViewController {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		showAlertToRenamePlace(at: indexPath.row)
 		tableView.deselectRow(at: indexPath, animated: true)
+		switch mode {
+		case .view:
+			showAlertToRenamePlace(at: indexPath.row)
+		case .select:
+			let selectedPlace = settingsDataSource.document.places[indexPath.row]
+			placeSelectionDelegate?.didSelectPlace(withId: selectedPlace.id)
+			navigationController?.popViewController(animated: true)
+		}
 	}
 
 	private func showAlertToRenamePlace(at index: Int) {

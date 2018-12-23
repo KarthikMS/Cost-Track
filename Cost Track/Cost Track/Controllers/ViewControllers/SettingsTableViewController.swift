@@ -49,7 +49,7 @@ class SettingsTableViewController: UITableViewController {
 				assertionFailure()
 				return
 			}
-			allPlacesTableViewController.setup(dataSource: settingsDataSource, deltaDelegate: deltaDelegate)
+			allPlacesTableViewController.setup(dataSource: settingsDataSource, deltaDelegate: deltaDelegate, placeSelectionDelegate: nil, mode: .view)
 		default:
 			return
 		}

@@ -43,6 +43,13 @@ extension Document {
 		return nil
 	}
 
+	func getPlace(withId id: String) -> Place? {
+		for place in places where place.id == id {
+			return place
+		}
+		return nil
+	}
+
 	var groupsWithCostSheets: [CostSheetGroup] {
 		var groupsWithCostSheets = [CostSheetGroup]()
 		for group in groups {

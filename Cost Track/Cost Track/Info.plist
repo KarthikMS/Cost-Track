@@ -22,8 +22,6 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Testtting</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location is needed to select places for entires.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string></string>
 	<key>UILaunchStoryboardName</key>

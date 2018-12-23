@@ -48,10 +48,7 @@ class CostSheetViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		transactionsTableViewDataSource.dataSource = self
-		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
-		transactionsTableView.dataSource = transactionsTableViewDataSource
-		transactionsTableView.tableFooterView = footerViewForTableView
+		setUpTableView()
     }
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -89,6 +86,14 @@ class CostSheetViewController: UIViewController {
 		transferEntryIndexPath = nil
 	}
 
+	private func setUpTableView() {
+		transactionsTableViewDataSource.dataSource = self
+		transactionsTableView.backgroundColor = TintedWhiteColor
+		transactionsTableView.register(UINib(nibName: "TransactionsTableViewCell", bundle: nil), forCellReuseIdentifier: "TransactionsTableViewCell")
+		transactionsTableView.dataSource = transactionsTableViewDataSource
+		transactionsTableView.tableFooterView = footerViewForTableView
+	}
+	
 	private func updateNavigationBar(for costSheet: CostSheet) {
 		costSheetNameLabel.text = costSheet.name
 		accountingPeriodLabel.text = accountingPeriodNavigationBarLabelText
@@ -297,39 +302,43 @@ class CostSheetViewController: UIViewController {
 
 	private func sortEntriesByPlace() {
 		// WORK HERE Place
-//		guard let costSheetEntries = dataSource.document.costSheetWithId(dataSource.costSheetId)?.entriesInAccountingPeriod else {
-//			assertionFailure("Could not get costSheet")
-//			return
-//		}
-//		var entriesSortedByPlace = [String: [CostSheetEntry]]()
-//		for entry in costSheetEntries {
-//			if !entry.hasPlace {
-//				if entriesSortedByPlace["No place"] == nil {
-//					entriesSortedByPlace["No place"] = [CostSheetEntry]()
-//				}
-//				entriesSortedByPlace["No place"]?.append(entry)
-//			} else {
-//				if entriesSortedByPlace[entry.place.name] == nil {
-//					entriesSortedByPlace[entry.place.name] = [CostSheetEntry]()
-//				}
-//				entriesSortedByPlace[entry.place.name]?.append(entry)
-//			}
-//		}
-//
-//		var i = 0
-//		let entriesWithoutPlace = entriesSortedByPlace["No place"]
-//		if let entriesWithoutPlace = entriesWithoutPlace {
-//			sortedEntriesForTableView[i] = ["No place": entriesWithoutPlace]
-//			i += 1
-//		}
-//
-//		let sortedEntriesWithPlace = entriesSortedByPlace
-//			.filter { $0.key != "No place" }
-//			.sorted { $0.key < $1.key }
-//		for (placeName, entries) in sortedEntriesWithPlace {
-//			sortedEntriesForTableView[i] = [placeName: entries]
-//			i += 1
-//		}
+		guard let costSheetEntries = dataSource.document.costSheetWithId(dataSource.costSheetId)?.entriesInAccountingPeriod else {
+			assertionFailure("Could not get costSheet")
+			return
+		}
+		var entriesSortedByPlace = [String: [CostSheetEntry]]()
+		for entry in costSheetEntries {
+			if !entry.hasPlaceID {
+				if entriesSortedByPlace["No place"] == nil {
+					entriesSortedByPlace["No place"] = [CostSheetEntry]()
+				}
+				entriesSortedByPlace["No place"]?.append(entry)
+			} else {
+				guard let entryPlace = dataSource.document.getPlace(withId: entry.placeID) else {
+					assertionFailure("Could not get place by Id")
+					return
+				}
+				if entriesSortedByPlace[entryPlace.name] == nil {
+					entriesSortedByPlace[entryPlace.name] = [CostSheetEntry]()
+				}
+				entriesSortedByPlace[entryPlace.name]?.append(entry)
+			}
+		}
+
+		var i = 0
+		let entriesWithoutPlace = entriesSortedByPlace["No place"]
+		if let entriesWithoutPlace = entriesWithoutPlace {
+			sortedEntriesForTableView[i] = ["No place": entriesWithoutPlace]
+			i += 1
+		}
+
+		let sortedEntriesWithPlace = entriesSortedByPlace
+			.filter { $0.key != "No place" }
+			.sorted { $0.key < $1.key }
+		for (placeName, entries) in sortedEntriesWithPlace {
+			sortedEntriesForTableView[i] = [placeName: entries]
+			i += 1
+		}
 	}
 
 	func getSortedEntry(at indexPath: IndexPath) -> CostSheetEntry? {
