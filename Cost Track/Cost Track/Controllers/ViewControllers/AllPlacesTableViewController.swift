@@ -67,6 +67,64 @@ extension AllPlacesTableViewController {
 		return cell
 	}
 
+	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		switch mode {
+		case .view:
+			return true
+		case .select:
+			return false
+		}
+	}
+
+	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (deleteAction, indexPath) in
+			let placeToDelete = self.settingsDataSource.document.places[indexPath.row]
+			if self.settingsDataSource.document.hasEntriesWithPlace(placeToDelete) {
+				self.showAlertForPlaceDeletionConfirmation(indexPath: indexPath)
+			} else {
+				self.deletePlace(at: indexPath)
+			}
+		}
+		return [deleteAction]
+	}
+
+	private func deletePlace(at indexPath: IndexPath) {
+		let document = settingsDataSource.document
+		let placeToDelete = document.places[indexPath.row]
+
+		// Delta
+		let deletePlaceComp = DeltaUtil.getComponentToDeletePlace(at: indexPath.row, in: document)
+		let clearPlaceIdComps = DeltaUtil.getComponentToClearPlaceIdsForEntries(withPlaceId: placeToDelete.id, in: document)
+		var deltaComps = [deletePlaceComp]
+		deltaComps.append(contentsOf: clearPlaceIdComps)
+		deltaDelegate.sendDeltaComponents(deltaComps)
+
+		tableView.reloadData()
+	}
+
+	private func showAlertForPlaceDeletionConfirmation(indexPath: IndexPath) {
+		let document = settingsDataSource.document
+		let placeToDelete = document.places[indexPath.row]
+		let entryCount = document.numberOfEntriesWithPlace(placeToDelete)
+
+		let message: String
+		if entryCount == 1 {
+			message = "There is an entry with place \(placeToDelete.name). It will NOT be deleted. It's place will be cleared.'"
+		} else {
+			message = "There are \(entryCount) entries with place \(placeToDelete.name). They will NOT be deleted. Their places will be cleared."
+		}
+
+		let alertController = UIAlertController(title: "Delete Place", message: message, preferredStyle: .alert)
+		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (cancelAction) in
+			alertController.dismiss(animated: true)
+		}))
+		alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (deleteAction) in
+			self.deletePlace(at: indexPath)
+			alertController.dismiss(animated: true)
+		}))
+		present(alertController, animated: true)
+	}
+
 }
 
 // MARK: UITableViewDelegate

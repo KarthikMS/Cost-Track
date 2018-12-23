@@ -36,6 +36,13 @@ extension Document {
 		return costSheetsInGroup(group).count
 	}
 
+	func hasCostSheets(in group: CostSheetGroup) -> Bool {
+		for costSheet in costSheets where costSheet.group.id == group.id {
+			return true
+		}
+		return false
+	}
+
 	func getGroup(withId id: String) -> CostSheetGroup? {
 		for group in groups where group.id == id {
 			return group
@@ -48,6 +55,29 @@ extension Document {
 			return place
 		}
 		return nil
+	}
+
+	func numberOfEntriesWithPlace(_ place: Place) -> Int {
+		var count = 0
+		for costSheet in costSheets {
+			count += costSheet.numberOfEntriesWithPlace(place)
+		}
+		return count
+	}
+
+	func hasEntriesWithPlace(_ place: Place) -> Bool {
+		for costSheet in costSheets {
+			for entry in costSheet.entries {
+				guard let entryPlace = getPlace(withId: entry.placeID) else {
+					assertionFailure("Could not get place by Id")
+					return false
+				}
+				if entryPlace == place {
+					return true
+				}
+			}
+		}
+		return false
 	}
 
 	var groupsWithCostSheets: [CostSheetGroup] {

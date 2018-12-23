@@ -301,7 +301,6 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByPlace() {
-		// WORK HERE Place
 		guard let costSheetEntries = dataSource.document.costSheetWithId(dataSource.costSheetId)?.entriesInAccountingPeriod else {
 			assertionFailure("Could not get costSheet")
 			return

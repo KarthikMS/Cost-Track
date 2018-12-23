@@ -69,6 +69,12 @@ class DeltaUtil {
 		return getComponent(opType: .insert, fieldString: fieldString, newValue: place.safeSerializedData)
 	}
 
+	static func getComponentToDeletePlace(at index: Int, in document: Document) -> DocumentContentOperation.Component {
+		let oldPlace = document.places[index]
+		let fieldString = "4,arr:\(index)"
+		return getComponent(opType: .delete, fieldString: fieldString, oldValue: oldPlace.safeSerializedData)
+	}
+
 	static func getComponentToUpdatePlace(_ updatedPlace: Place, in document: Document, at index: Int) -> DocumentContentOperation.Component {
 		let fieldString = "4,arr:\(index)"
 		let oldPlace = document.places[index]
@@ -78,6 +84,37 @@ class DeltaUtil {
 			oldValue: oldPlace.safeSerializedData,
 			newValue: updatedPlace.safeSerializedData
 		)
+	}
+
+	static func getComponentToClearPlaceIdsForEntries(withPlaceId placeId: String, in document: Document) -> [DocumentContentOperation.Component] {
+		var comps = [DocumentContentOperation.Component]()
+
+		for i in 0..<document.costSheets.count {
+			let costSheet = document.costSheets[i]
+			for j in 0..<costSheet.entries.count {
+				let entry = costSheet.entries[j]
+				guard let entryPlace = document.getPlace(withId: entry.placeID) else {
+					assertionFailure("Could not get place by Id")
+					return []
+				}
+				if entryPlace.id == placeId {
+					var newEntry = entry
+					newEntry.clearPlaceID()
+
+					let fieldString = "1,arr:\(i),5,arr:\(j),5"
+
+					let comp = getComponent(
+						opType: .update,
+						fieldString: fieldString,
+						oldValue: entry.safeSerializedData,
+						newValue: newEntry.safeSerializedData
+					)
+					comps.append(comp)
+				}
+			}
+		}
+
+		return comps
 	}
 
 	static func getComponentToDeleteGroup(at index: Int, in document: Document) -> DocumentContentOperation.Component {

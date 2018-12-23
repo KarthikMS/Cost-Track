@@ -37,42 +37,6 @@ class GroupSelectTableViewController: UITableViewController {
 		groupSelectTableViewControllerDelegate?.didSelectGroup(id: selectedGroupID)
 	}
 
-	// MARK: View functions
-	private func deleteGroup(at indexPath: IndexPath) {
-		let document = groupSelectTableViewControllerDataSource.document
-
-		// Delta Component
-		let deleteGroupComp = DeltaUtil.getComponentToDeleteGroup(at: indexPath.row, in: document)
-		let moveCostSheetsComps = DeltaUtil.getComponentsToMoveCostSheets(from: document.groups[indexPath.row], to: NotSetGroup, in: document)
-		var deltaComps = [deleteGroupComp]
-		deltaComps.append(contentsOf: moveCostSheetsComps)
-		deltaDelegate.sendDeltaComponents(deltaComps)
-
-		if indexPath.row > 0 {
-			selectedGroupID = document.groups[indexPath.row - 1].id
-		} else {
-			selectedGroupID = document.groups[0].id
-		}
-		self.tableView.reloadData()
-	}
-
-	private func showAlertForGroupDeletionConfirmation(deletionIndexPath: IndexPath) {
-		let deletionGroup = groupSelectTableViewControllerDataSource.document.groups[deletionIndexPath.row]
-		let numberOfCostSheets = groupSelectTableViewControllerDataSource.document.numberOfCostSheets(in: deletionGroup)
-
-		let alertController = UIAlertController(
-			title: "Delete Group",
-			message: "There are \(numberOfCostSheets) cost sheet(s) in \(deletionGroup.name). They will NOT be deleted. They will not belong to any group.", preferredStyle: .alert)
-		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (cancelAction) in
-			alertController.dismiss(animated: true)
-		}))
-		alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (deleteAction) in
-			self.deleteGroup(at: deletionIndexPath)
-			alertController.dismiss(animated: true)
-		}))
-		present(alertController, animated: true)
-	}
-
 }
 
 // MARK: UITableViewDataSource
@@ -103,13 +67,54 @@ extension GroupSelectTableViewController {
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (deleteAction, indexPath) in
-			if self.groupSelectTableViewControllerDataSource.document.numberOfCostSheets(in: self.groupSelectTableViewControllerDataSource.document.groups[indexPath.row]) == 0 {
-				self.deleteGroup(at: indexPath)
-			} else {
+			let groupToDelete = self.groupSelectTableViewControllerDataSource.document.groups[indexPath.row]
+			if self.groupSelectTableViewControllerDataSource.document.hasCostSheets(in: groupToDelete) {
 				self.showAlertForGroupDeletionConfirmation(deletionIndexPath: indexPath)
+			} else {
+				self.deleteGroup(at: indexPath)
 			}
 		}
 		return [deleteAction]
+	}
+
+	private func deleteGroup(at indexPath: IndexPath) {
+		let document = groupSelectTableViewControllerDataSource.document
+
+		// Delta Component
+		let deleteGroupComp = DeltaUtil.getComponentToDeleteGroup(at: indexPath.row, in: document)
+		let moveCostSheetsComps = DeltaUtil.getComponentsToMoveCostSheets(from: document.groups[indexPath.row], to: NotSetGroup, in: document)
+		var deltaComps = [deleteGroupComp]
+		deltaComps.append(contentsOf: moveCostSheetsComps)
+		deltaDelegate.sendDeltaComponents(deltaComps)
+
+		if indexPath.row > 0 {
+			selectedGroupID = document.groups[indexPath.row - 1].id
+		} else {
+			selectedGroupID = document.groups[0].id
+		}
+		self.tableView.reloadData()
+	}
+
+	private func showAlertForGroupDeletionConfirmation(deletionIndexPath: IndexPath) {
+		let deletionGroup = groupSelectTableViewControllerDataSource.document.groups[deletionIndexPath.row]
+		let costSheetCount = groupSelectTableViewControllerDataSource.document.numberOfCostSheets(in: deletionGroup)
+
+		let message: String
+		if costSheetCount == 1 {
+			message = "There is a cost sheet in \(deletionGroup.name). It will NOT be deleted. It will not belong to any group."
+		} else {
+			message = "There are \(costSheetCount) cost sheet(s) in \(deletionGroup.name). They will NOT be deleted. They will not belong to any group."
+		}
+
+		let alertController = UIAlertController(title: "Delete Group", message: message, preferredStyle: .alert)
+		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (cancelAction) in
+			alertController.dismiss(animated: true)
+		}))
+		alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (deleteAction) in
+			self.deleteGroup(at: deletionIndexPath)
+			alertController.dismiss(animated: true)
+		}))
+		present(alertController, animated: true)
 	}
 
 }
