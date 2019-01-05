@@ -2,36 +2,20 @@ syntax = "proto2";
 
 option swift_prefix = "";
 
+import "Category.proto";
+import "CTEnums.proto";
+
 message CostSheetEntry {
-
-  enum EntryType {
-		INCOME = 0;
-		EXPENSE = 1;
-	}
-
-  enum Category {
-    SALARY = 0;
-    VEHICLE_AND_TRANSPORT = 1;
-    HOUSEHOLD = 2;
-    SHOPPING = 3;
-    PHONE = 4;
-    ENTERTAINMENT = 5;
-    MEDICINE = 6;
-    INVESTMENT = 7;
-    INVESTMENT_RETURN = 8;
-    TAX = 9;
-    INSURANCE = 10;
-    FOOD_AND_DRINKS = 11;
-    MISC = 12;
-    TRANSFER = 13;
-  }
 
   required EntryType type = 1;
   required float amount = 2;
   required Category category = 3;
-  optional string place = 4;
-  required bytes date = 5;
-  optional string description = 6;
-  required string id = 7;
+  optional bytes image = 4;
+  optional string placeId = 5;
+  required bytes date = 6;
+  optional string description = 7;
+  required string id = 8;
+  optional string transferCostSheetId = 9;
+  optional string transferEntryId = 10;
 
 }

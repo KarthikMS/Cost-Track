@@ -37,12 +37,70 @@ extension CostSheet {
 		return balance
 	}
 
+	var balanceInAccountingPeriod: Float {
+		guard let (startDate, endDate) = accountingPeriodDateRange else {
+			return self.balance
+		}
+
+		var balance: Float
+		if shouldCarryOverBalance {
+			balance = initialBalance
+		} else {
+			balance = createdOnDate.date!.isBetween(startDate, and: endDate) ? initialBalance : 0
+		}
+
+		for entry in entries {
+			let isEntryValid = entry.isBetween(startDate, and: endDate) ||
+				(shouldCarryOverBalance && entry.isBefore(startDate))
+			guard isEntryValid else {
+				continue
+			}
+
+			switch entry.type {
+			case .income:
+				balance += entry.amount
+			case .expense:
+				balance -= entry.amount
+			}
+		}
+		return balance
+	}
+
+	var entriesInAccountingPeriod: [CostSheetEntry] {
+		guard let (startDate, endDate) = accountingPeriodDateRange else {
+			return entries
+		}
+		return entries.filter { $0.isBetween(startDate, and: endDate) }
+	}
+
+	func balanceBefore(_ beforeDate: Date) -> Float {
+		var balance = initialBalance
+		for entry in entries {
+			if entry.isBefore(beforeDate) {
+				switch entry.type {
+				case .income:
+					balance += entry.amount
+				case .expense:
+					balance -= entry.amount
+				}
+			} else {
+				continue
+			}
+		}
+		return balance
+	}
+
+	func entriesBefore(_ beforeDate: Date) -> [CostSheetEntry] {
+		return entries.filter { $0.isBefore(beforeDate) }
+	}
+
 	var incomeExpenseInfo: IncomeExpenseInfo {
 		var incomeCount = 0
 		var incomeAmount: Float = 0
 		var expenseAmount: Float = 0
+		let entriesInAccountingPeriod = self.entriesInAccountingPeriod
 
-		for entry in entries {
+		for entry in entriesInAccountingPeriod {
 			switch entry.type {
 			case .income:
 				incomeAmount += entry.amount
@@ -54,7 +112,7 @@ extension CostSheet {
 
 		return IncomeExpenseInfo(
 			incomeCount: incomeCount,
-			expenseCount: entries.count - incomeCount,
+			expenseCount: entriesInAccountingPeriod.count - incomeCount,
 			incomeAmount: incomeAmount,
 			expenseAmount: expenseAmount
 		)
@@ -101,6 +159,14 @@ extension CostSheet {
 		return nil
 	}
 
+	func entryWithId(_ id: String) -> CostSheetEntry {
+		guard let index = indexOfEntryWithId(id) else {
+			assertionFailure()
+			return CostSheetEntry()
+		}
+		return entries[index]
+	}
+
 	mutating func updateEntry(at index: Int, with updatedEntry: CostSheetEntry) {
 		entries[index] = updatedEntry
 	}
@@ -119,6 +185,14 @@ extension CostSheet {
 			return
 		}
 		entries.remove(at: index)
+	}
+
+	func numberOfEntriesWithPlace(_ place: Place) -> Int {
+		var count = 0
+		for entry in entries where entry.placeID == place.id {
+			count += 1
+		}
+		return count
 	}
 
 }

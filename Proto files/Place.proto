@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+option swift_prefix = "";
+
+message Place {
+
+  required string id = 1;
+  required string name = 2;
+  optional string address = 3;
+
+}

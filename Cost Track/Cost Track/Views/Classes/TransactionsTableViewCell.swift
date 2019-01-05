@@ -33,7 +33,7 @@ class TransactionsTableViewCell: UITableViewCell {
 	@IBOutlet weak var PCategoryLabel: UILabel!
 
 	// MARK: Functions
-	func setAmount(_ amount: Float, entryType: CostSheetEntry.EntryType, date: String, time: String, category: String, place: String?, description: String?, forMode mode: TransactionClassificationMode) {
+	func setAmount(_ amount: Float, entryType: EntryType, date: String, time: String, category: String, place: String?, description: String?, forMode mode: TransactionClassificationMode) {
 		setClassificationMode(mode)
 
 		amountLabel.text = String(amount)
@@ -50,9 +50,11 @@ class TransactionsTableViewCell: UITableViewCell {
 			descriptionLabel.text = ""
 		}
 
-		var placeName = "No place"
+		let placeName: String
 		if let place = place {
 			placeName = place
+		} else {
+			placeName = "No place"
 		}
 
 		switch mode {

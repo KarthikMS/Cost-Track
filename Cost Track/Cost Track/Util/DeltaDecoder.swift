@@ -377,11 +377,11 @@ public struct DeltaDataApplier: SwiftProtobuf.Decoder {
 	}
 
 	mutating public func decodeSingularBytesField(value: inout Data) throws {
-		assert(false, "decoding logic not written yet")
+		value = self.dataValue
 	}
 
 	mutating public func decodeSingularBytesField(value: inout Data?) throws {
-		assert(false, "decoding logic not written yet")
+		value = self.dataValue
 	}
 
 	mutating public func decodeRepeatedBytesField(value: inout [Data]) throws {

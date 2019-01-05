@@ -1,16 +1,33 @@
 PODS:
+  - GoogleMaps (2.7.0):
+    - GoogleMaps/Maps (= 2.7.0)
+  - GoogleMaps/Base (2.7.0)
+  - GoogleMaps/Maps (2.7.0):
+    - GoogleMaps/Base
+  - GooglePlacePicker (2.7.0):
+    - GoogleMaps (= 2.7.0)
+    - GooglePlaces (= 2.7.0)
+  - GooglePlaces (2.7.0):
+    - GoogleMaps/Base (= 2.7.0)
   - SwiftProtobuf (1.0.3)
 
 DEPENDENCIES:
+  - GooglePlacePicker
   - SwiftProtobuf (= 1.0.3)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - GoogleMaps
+    - GooglePlacePicker
+    - GooglePlaces
     - SwiftProtobuf
 
 SPEC CHECKSUMS:
+  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
+  GooglePlacePicker: 59ea44db173c58486ad6123993e81feefcbce9c3
+  GooglePlaces: 3d06e6c99654545b4738ce49648745779c25f2ef
   SwiftProtobuf: 5ccc0e4054e37c75800e5744acb2aa80bb72b39c
 
-PODFILE CHECKSUM: 871a1284a75569eb4d2fa75de6b7083992f76655
+PODFILE CHECKSUM: 3fb461dccb56e4b50c697ff40e41964627cbcc05
 
 COCOAPODS: 1.5.3

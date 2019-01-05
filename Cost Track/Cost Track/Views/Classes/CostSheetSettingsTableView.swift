@@ -33,6 +33,7 @@ class CostSheetSettingsTableView: UITableView {
 		self.mode = mode
 
 		costSheet.id = UUID().uuidString
+		costSheet.includeInOverallTotal = true
 		footerTextsAndHeights = getTextAndHeightsForFooterViews()
 		separatorInset.left = 0
 		register(UITableViewCell.self, forCellReuseIdentifier: "CostSheetSettingsTableViewCell")
@@ -46,10 +47,15 @@ class CostSheetSettingsTableView: UITableView {
 		costSheet.initialBalance = Float(initalBalanceTextView.text)!
 	}
 
+	@objc
+	private func dismissKeyboard() {
+		endEditing(true)
+	}
+
 	private func getTextAndHeightsForFooterViews() -> [(text: String, height: CGFloat)] {
 		var textsAndHeights = [(text: String, height: CGFloat)]()
 		let texts = [
-			"Enter a cost sheet name for your account (Cash, Debit Card, Bank Account, etc.) or event(Wedding, Summer Holidays, Apartment Renovation, etc.) for which you will track your incomes and expenses.",
+			"Enter a cost sheet name for your document (Cash, Debit Card, Bank Account, etc.) or event(Wedding, Summer Holidays, Apartment Renovation, etc.) for which you will track your incomes and expenses.",
 			"Select a currency for the cost sheet. Please note that you can convert currencies when entering incomes or expenses.",
 			"Initial balance can be positive or negative. It is used for the current sheet balance calculation only.",
 			"Define whether you want to include this cost sheet in overall total or not.",
@@ -69,6 +75,14 @@ class CostSheetSettingsTableView: UITableView {
 
 		textView.removeFromSuperview()
 		return textsAndHeights
+	}
+
+	@objc
+	private func includeInTotalSwitchTapped(sender: Any) {
+		guard let sender = sender as? UISwitch else {
+			return
+		}
+		costSheet.includeInOverallTotal = sender.isOn
 	}
 }
 
@@ -108,7 +122,13 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 			cell.selectionStyle = .none
 			initalBalanceTextView.text = String(costSheet.initialBalance)
 		case 3:
-			cell.textLabel?.text = "Overall Total"
+			cell.textLabel?.text = "Include in overall total"
+
+			// Adding UISwitch as accessoryView
+			let switchView = UISwitch(frame: CGRect.zero)
+			switchView.isOn = costSheet.includeInOverallTotal
+			switchView.addTarget(self, action: #selector(includeInTotalSwitchTapped(sender:)), for: .valueChanged)
+			cell.accessoryView = switchView
 		case 4:
 			cell.textLabel?.text = "Group"
 			cell.addAccessoryLabel(text: costSheet.group.name)
@@ -136,6 +156,12 @@ extension CostSheetSettingsTableView: UITableViewDelegate {
 		let textView = UITextView(frame: frame)
 		textView.backgroundColor = TintedWhiteColor
 		textView.text = textAndHeight.text
+		textView.isSelectable = false
+		textView.isScrollEnabled = false
+		textView.isEditable = false
+
+		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+		textView.addGestureRecognizer(tapGesture)
 
 		return textView
 	}

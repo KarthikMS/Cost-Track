@@ -16,28 +16,45 @@ class TableViewSectionHeaderView: UIView {
 
 	// MARK: Properties
 	private let section: Int
-	private let text: String
 	weak var delegate: TableViewSectionHeaderViewDelegate?
 
 	// MARK: Initializers
-	init(frame: CGRect, section: Int, text: String, delegate: TableViewSectionHeaderViewDelegate) {
+	init(frame: CGRect, section: Int, text: String, balance: Float?, delegate: TableViewSectionHeaderViewDelegate) {
 		self.section = section
-		self.text = text
 		self.delegate = delegate
 		super.init(frame: frame)
 
 		self.backgroundColor = TintedWhiteColor
 
 		// Label
-		let leftGap: CGFloat = 30
+		let padding: CGFloat = 30
 		var labelFrame = frame
-		labelFrame.origin.x = leftGap
-		labelFrame.size.width = frame.width - labelFrame.origin.x
+		labelFrame.origin.x = padding
+		labelFrame.size.width = 0.65 * frame.width//frame.width - labelFrame.origin.x
 		let label = UILabel(frame: labelFrame)
 		label.backgroundColor = .clear
 		label.text = text
 		label.font = UIFont.boldSystemFont(ofSize: 15)
 		addSubview(label)
+
+		// Balance label
+		if var balance = balance {
+			labelFrame.size.width = 0.1 * frame.width
+			labelFrame.origin.x = frame.width - labelFrame.width - padding
+			let balanceLabel = UILabel(frame: labelFrame)
+			balanceLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+			balanceLabel.backgroundColor = .clear
+			if balance < 0 {
+				balanceLabel.textColor = DarkExpenseColor
+			} else {
+				balanceLabel.textColor = DarkIncomeColor
+			}
+			if balance < 0 {
+				balance *= -1
+			}
+			balanceLabel.text = String(balance)
+			addSubview(balanceLabel)
+		}
 
 		// Tap gesture
 		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))

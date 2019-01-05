@@ -13,6 +13,7 @@ message CostSheet {
   required CostSheetGroup group = 4;
   repeated CostSheetEntry entries = 5;
   required bytes lastModifiedDate = 6;
-  required string id = 7;
+  required bytes createdOnDate = 7;
+  required string id = 8;
 
 }

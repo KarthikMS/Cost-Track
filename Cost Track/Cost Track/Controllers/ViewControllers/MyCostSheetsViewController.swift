@@ -8,35 +8,36 @@
 
 import UIKit
 
-class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource, CostSheetViewControllerDataSource {
+class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource, SettingsDataSource {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var topBar: UIView!
 	@IBOutlet weak var totalAmountLabel: UILabel!
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var noCostSheetsTextView: UITextView!
-
+	@IBOutlet weak var accountingPeriodLabel: UILabel!
+	
 	// MARK: Properties
-	var account = Account()
+	var (document, isNewDocument) = CTFileManager.getDocument()
 	var selectedCostSheetId = ""
-	private var shouldUpdateViews = false
+	private var shouldUpdateViews = true
 	private var sectionsToHide = Set<Int>()
+	private let accountingPeriodViewController = AccountingPeriodViewController()
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		// Setting NotSetGroup. Should happen only once in app's life time.
-		if account.groups.isEmpty {
-			var notSetGroup = CostSheetGroup()
-			notSetGroup.name = "Not set"
-			notSetGroup.id = UUID().uuidString
-			account.groups.append(notSetGroup)
-
-			NotSetGroup = notSetGroup
+		if isNewDocument {
+			CTFileManager.saveDocument(document)
+			UserDefaults.standard.setValue(true, forKey: BalanceCarryOver)
+			UserDefaults.standard.setValue(1, forKey: StartDayForMonthlyAccountingPeriod)
 		}
 
-		if account.costSheets.isEmpty {
+		initAccountingPeriodViewController()
+		updateNavigationBarAccountingLabel()
+
+		if document.costSheets.isEmpty {
 			noCostSheetsTextView.isHidden = false
 		} else {
 			noCostSheetsTextView.isHidden = true
@@ -50,7 +51,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		if shouldUpdateViews {
 			sectionsToHide.removeAll()
 			updateTopBar()
-			if account.costSheets.isEmpty {
+			if document.costSheets.isEmpty {
 				noCostSheetsTextView.isHidden = false
 			} else {
 				noCostSheetsTextView.isHidden = true
@@ -67,24 +68,30 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		guard let identifier = segue.identifier else {
 			return
 		}
-		if identifier == CostSheetSegue {
+		switch identifier {
+		case CostSheetSegue:
 			guard let costSheetViewController = segue.destination as? CostSheetViewController else {
 				return
 			}
-			costSheetViewController.dataSource = self
-			costSheetViewController.deltaDelegate = self
-		} else if identifier == NewCostSheetSegue {
+			costSheetViewController.setup(dataSource: self, deltaDelegate: self)
+		case NewCostSheetSegue:
 			guard let newCostSheetViewController = segue.destination as? NewCostSheetViewController else {
 				return
 			}
-			newCostSheetViewController.dataSource = self
-			newCostSheetViewController.deltaDelegate = self
+			newCostSheetViewController.setup(dataSource: self, deltaDelegate: self)
+		case SettingsSegue:
+			guard let settingsTableViewController = segue.destination as? SettingsTableViewController else {
+				return
+			}
+			settingsTableViewController.setup(dataSource: self, delegate: self, deltaDelegate: self)
+		default:
+			break
 		}
 	}
 
 	// MARK: View functions
 	private func updateTopBar() {
-		var totalAmount = account.totalAmount
+		var totalAmount = document.totalDisplayAmount
 		if totalAmount < 0 {
 			topBar.backgroundColor = DarkExpenseColor
 			totalAmount *= -1
@@ -94,10 +101,51 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		totalAmountLabel.text = String(totalAmount)
 	}
 
+	private func initAccountingPeriodViewController() {
+		var frame = CGRect()
+		frame.size.width = 0.95 * view.frame.size.width
+		frame.size.height = 0
+		frame.origin.x = (view.frame.size.width - frame.size.width) / 2
+		frame.origin.y = navigationController!.navigationBar.frame.origin.y + navigationController!.navigationBar.frame.size.height + 5
+		accountingPeriodViewController.view.frame = frame
+		accountingPeriodViewController.view.clipsToBounds = true
+		view.addSubview(accountingPeriodViewController.view)
+		accountingPeriodViewController.view.isHidden = true
+		accountingPeriodViewController.delegate = self
+	}
+
+	private func showAccountingPeriodViewController() {
+		var frame = accountingPeriodViewController.view.frame
+		let showFrameHeight: CGFloat = AccountingPeriod(rawValue: accountingPeriodFormat)! == .month ? 500 : 300
+		guard frame.size.height != showFrameHeight else {
+			return
+		}
+		frame.size.height = showFrameHeight
+		self.accountingPeriodViewController.view.isHidden = false
+		UIView.animate(withDuration: 0.5, animations: {
+			self.accountingPeriodViewController.view.frame = frame
+		})
+	}
+
+	private func hideAccountingPeriodViewController() {
+		var frame = accountingPeriodViewController.view.frame
+		guard frame.size.height != 0 else {
+			return
+		}
+		frame.size.height = 0
+		UIView.animate(withDuration: 0.5, animations: {
+			self.accountingPeriodViewController.view.frame = frame
+		}) { (completed) in
+			if completed {
+				self.accountingPeriodViewController.view.isHidden = true
+			}
+		}
+	}
+
 	// MARK: Misc. functions
 	private func costSheetAtIndexPath(_ indexPath: IndexPath) -> CostSheet {
-		let groupsWithCostSheets = account.groupsWithCostSheets
-		return account.costSheetsInGroup(groupsWithCostSheets[indexPath.section])[indexPath.row]
+		let groupsWithCostSheets = document.groupsWithCostSheets
+		return document.costSheetsInGroup(groupsWithCostSheets[indexPath.section])[indexPath.row]
 	}
 
 	private func showAlertForDeletingCostSheet(withId id: String, at indexPath: IndexPath) {
@@ -115,8 +163,10 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	}
 
 	private func deleteCostSheet(withId id: String, at indexPath: IndexPath) {
-		account.deleteCostSheet(withId: id)
-		if !account.hasCostSheetsInOtherGroups {
+		let deleteCostSheetComp = DeltaUtil.getComponentToDeleteCostSheet(withId: id, in: document)
+		sendDeltaComponents([deleteCostSheetComp])
+		
+		if !document.hasCostSheetsInOtherGroups {
 			sectionsToHide.removeAll()
 			tableView.reloadData()
 		} else {
@@ -128,32 +178,41 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 			}
 			tableView.endUpdates()
 		}
-		if account.costSheets.isEmpty {
+		if document.costSheets.isEmpty {
 			noCostSheetsTextView.isHidden = false
 		}
+		updateTopBar()
 	}
 }
 
 // MARK: IBActions
-extension MyCostSheetsViewController {
+private extension MyCostSheetsViewController {
 
-	@IBAction private func chartViewButtonPressed(_ sender: Any) {
+	@IBAction func navigationTitleViewTapped(_ sender: Any) {
+		if accountingPeriodViewController.view.frame.size.height == 0 {
+			showAccountingPeriodViewController()
+		} else {
+			hideAccountingPeriodViewController()
+		}
+	}
+
+	@IBAction func chartViewButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 
-	@IBAction private func generalStatisticsButtonPressed(_ sender: Any) {
+	@IBAction func generalStatisticsButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 
-	@IBAction private func addNewCostSheetButtonPressed(_ sender: Any) {
+	@IBAction func addNewCostSheetButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 
-	@IBAction private func settingsButtonPressed(_ sender: Any) {
+	@IBAction func settingsButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 
-	@IBAction private func searchButtonPressed(_ sender: Any) {
+	@IBAction func searchButtonPressed(_ sender: Any) {
 		// Finish this
 	}
 
@@ -163,20 +222,20 @@ extension MyCostSheetsViewController {
 extension MyCostSheetsViewController: UITableViewDataSource {
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return account.groupsWithCostSheets.count
+		return document.groupsWithCostSheets.count
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if sectionsToHide.contains(section) {
 			return 0
 		}
-		let groupsWithCostSheets = account.groupsWithCostSheets
-		return account.costSheetsInGroup(groupsWithCostSheets[section]).count
+		let groupsWithCostSheets = document.groupsWithCostSheets
+		return document.costSheetsInGroup(groupsWithCostSheets[section]).count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "CostSheetTableViewCell", for: indexPath) as! CostSheetTableViewCell
-		cell.setValuesForCostSheet(costSheetAtIndexPath(indexPath))
+		cell.setValues(for: costSheetAtIndexPath(indexPath))
 		return cell
 	}
 
@@ -209,22 +268,22 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if !account.hasCostSheetsInOtherGroups {
+		if !document.hasCostSheetsInOtherGroups {
 			return 0
 		}
 		return 40
 	}
 
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		if !account.hasCostSheetsInOtherGroups {
+		if !document.hasCostSheetsInOtherGroups {
 			return nil
 		}
 
 		var frame = tableView.frame
 		frame.origin.y = 0
 		frame.size.height = 40
-		let title = account.groupsWithCostSheets[section].name
-		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, delegate: self)
+		let title = document.groupsWithCostSheets[section].name
+		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, balance: nil, delegate: self)
 		return headerView
 	}
 
@@ -244,6 +303,29 @@ extension MyCostSheetsViewController: TableViewSectionHeaderViewDelegate {
 
 }
 
+extension MyCostSheetsViewController: CostSheetDataSource {
+
+	var costSheetId: String {
+		return selectedCostSheetId
+	}
+
+}
+
+// MARK: SettingsTableViewControllerDelegate
+extension MyCostSheetsViewController: SettingsTableViewControllerDelegate {
+
+	func refreshView() {
+		(document, isNewDocument) = CTFileManager.getDocument()
+		if isNewDocument {
+			CTFileManager.saveDocument(document)
+			UserDefaults.standard.setValue(true, forKey: BalanceCarryOver)
+			UserDefaults.standard.setValue(1, forKey: StartDayForMonthlyAccountingPeriod)
+		}
+		shouldUpdateViews = true
+	}
+
+}
+
 // MARK: DeltaDelegate
 extension MyCostSheetsViewController: DeltaDelegate {
 
@@ -251,12 +333,32 @@ extension MyCostSheetsViewController: DeltaDelegate {
 		for component in components {
 			do {
 				var decoder = try DeltaDataApplier(fieldString: component.fields, value: component.value.inBytes.value, operationType: component.opType)
-				try account.decodeMessage(decoder: &decoder)
+				try document.decodeMessage(decoder: &decoder)
 				shouldUpdateViews = true
 			} catch {
-				assertionFailure()
+				assertionFailure(error.localizedDescription)
 			}
 		}
+		CTFileManager.saveDocument(document)
+	}
+
+}
+
+// MARK: AccountingPeriodViewControllerDelegate
+extension MyCostSheetsViewController: AccountingPeriodViewControllerDelegate {
+
+	func cancelButtonPressed() {
+		hideAccountingPeriodViewController()
+	}
+
+	func accountingPeriodChanged() {
+		tableView.reloadData()
+		hideAccountingPeriodViewController()
+		updateNavigationBarAccountingLabel()
+	}
+
+	private func updateNavigationBarAccountingLabel() {
+		accountingPeriodLabel.text = accountingPeriodNavigationBarLabelText
 	}
 
 }

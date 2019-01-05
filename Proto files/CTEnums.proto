@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+option swift_prefix = "";
+
+enum EntryType {
+  INCOME = 0;
+  EXPENSE = 1;
+}
