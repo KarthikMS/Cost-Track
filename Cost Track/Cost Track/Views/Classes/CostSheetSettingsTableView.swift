@@ -201,7 +201,7 @@ private extension UITableViewCell {
 
 		textView.frame = frame
 		textView.keyboardType = keyboardType
-		textView.backgroundColor = .red
+		textView.layer.borderWidth = 1
 
 		accessoryView = textView
 	}
