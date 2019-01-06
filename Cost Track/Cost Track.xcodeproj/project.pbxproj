@@ -10,6 +10,7 @@
 		109C14D06180ED6C4E847798 /* Pods_Cost_TrackUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52EC24338E6DD4F56261180B /* Pods_Cost_TrackUITests.framework */; };
 		117B148510AF2FBBC09B5A7C /* Pods_Cost_Track.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB2BE677FA212D05F16B2A9 /* Pods_Cost_Track.framework */; };
 		5AEEAFE083C53CEE1E139E17 /* Pods_Cost_TrackTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B16E8471E55CFD62A5B82FE0 /* Pods_Cost_TrackTests.framework */; };
+		D902752721E202AB0065B163 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D902752621E202AB0065B163 /* GoogleService-Info.plist */; };
 		D9032E9020FB1A71009EF5FC /* CostSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */; };
 		D9032E9220FB1A7F009EF5FC /* CostSheetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */; };
 		D9032EB620FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032EB520FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift */; };
@@ -93,6 +94,7 @@
 		AFE7896F24C06576F1EE7544 /* Pods-Cost TrackUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cost TrackUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Cost TrackUITests/Pods-Cost TrackUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		B16E8471E55CFD62A5B82FE0 /* Pods_Cost_TrackTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cost_TrackTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D626755D1E6B4A60E7020B41 /* Pods-Cost TrackTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cost TrackTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Cost TrackTests/Pods-Cost TrackTests.release.xcconfig"; sourceTree = "<group>"; };
+		D902752621E202AB0065B163 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D9032E8F20FB1A71009EF5FC /* CostSheetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CostSheetViewController.swift; sourceTree = "<group>"; };
 		D9032E9120FB1A7F009EF5FC /* CostSheetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CostSheetViewController.xib; sourceTree = "<group>"; };
 		D9032EB520FB4DB5009EF5FC /* TransactionsTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewDataSource.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 				D98973C7210E144D0051F809 /* Util */,
 				D962F42420F9C0E9003C7C58 /* Resources */,
 				D962F3FD20F9BE81003C7C58 /* Info.plist */,
+				D902752621E202AB0065B163 /* GoogleService-Info.plist */,
 			);
 			path = "Cost Track";
 			sourceTree = "<group>";
@@ -550,6 +553,7 @@
 				D962F42F20F9D877003C7C58 /* CostSheetTableViewCell.xib in Resources */,
 				D9EED51621B2F70500F969A8 /* Settings.storyboard in Resources */,
 				D962F3F720F9BE81003C7C58 /* Main.storyboard in Resources */,
+				D902752721E202AB0065B163 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,11 +617,17 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Cost Track/Pods-Cost Track-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftProtobuf/SwiftProtobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftProtobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

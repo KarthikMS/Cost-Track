@@ -9,6 +9,7 @@
 import UIKit
 import GoogleMaps
 import GooglePlacePicker
+import Firebase
 
 let GoogleAPIKey = "AIzaSyBvN9fXoC9UgIwXEs47shynf4d-eNPbUto"
 
@@ -21,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		GMSServices.provideAPIKey(GoogleAPIKey)
 		GMSPlacesClient.provideAPIKey(GoogleAPIKey)
+		FirebaseApp.configure()
 		return true
 	}
 
