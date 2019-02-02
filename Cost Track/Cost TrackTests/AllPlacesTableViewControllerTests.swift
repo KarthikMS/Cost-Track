@@ -11,12 +11,15 @@ import XCTest
 
 class AllPlacesTableViewControllerTests: XCTestCase {
 
-	// TODO: Get loaded document from json
-	var document = Document()
 	var documentHandler: DocumentHandler!
 
     override func setUp() {
-		documentHandler = DocumentHandler(document: document)
+		do {
+			let document = try Document(jsonString: documentJSON)
+			documentHandler = DocumentHandler(document: document)
+		} catch {
+			assertionFailure("Error converting json to document.")
+		}
     }
 
 	func testAddPlace() {
@@ -33,30 +36,25 @@ class AllPlacesTableViewControllerTests: XCTestCase {
 	}
 
 	func testDeletePlace() {
-		documentHandler.insertPlace(name: "placeName", address: "placeAdd")
-		let deleteindex = 0
+		let deleteIndex = 0
 		let oldPlaces = documentHandler.getDocument().places
-		let placeToDelete = oldPlaces[deleteindex]
-		let relatedEntries = documentHandler.getDocument().entriesWithPlaceId(placeToDelete.id)
+		let placeToDelete = oldPlaces[deleteIndex]
 
-		documentHandler.deletePlaceAndClearRelatedPlaceIds(index: deleteindex)
+		documentHandler.deletePlaceAndClearRelatedPlaceIds(index: deleteIndex)
 
 		// Asserting place count
-		let newPlaces = documentHandler.getDocument().places
+		let newDocument = documentHandler.getDocument()
 		if oldPlaces.isEmpty {
-			XCTAssert(newPlaces.isEmpty, "Place count not correct.")
+			XCTAssert(newDocument.places.isEmpty, "Place count not correct.")
 		} else {
-			XCTAssert(newPlaces.count == oldPlaces.count - 1, "Place count not correct.")
+			XCTAssert(newDocument.places.count == oldPlaces.count - 1, "Place count not correct.")
 		}
 
-		// Asserting placeId == nil in related entries
-		for entry in relatedEntries {
-			XCTAssert(!entry.hasPlaceID, "Related entries still have the deleted placeId.")
-		}
+		// Asserting related entry count
+		XCTAssert(newDocument.entriesWithPlaceId(placeToDelete.id).isEmpty, "Related entries still have the deleted placeId.")
 	}
 
 	func testUpdatePlace() {
-		documentHandler.insertPlace(name: "placeName", address: "placeAdd")
 		let updateindex = 0
 		let oldPlaces = documentHandler.getDocument().places
 		let placeToUpdate = oldPlaces[updateindex]

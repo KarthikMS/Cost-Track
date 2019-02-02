@@ -22,10 +22,16 @@ class AllPlacesTableViewController: UITableViewController {
 	// MARK: Global parameters
 	private weak var documentHandler: DocumentHandler!
 	private weak var placeSelectionDelegate: PlaceSelectionDelegate?
+
 	private var newPlaceAlertOkAction: UIAlertAction?
 	private var isNewPlaceNameValid = false
 	private var isNewPlaceAddressValid = false
-	private var renamePlaceAlertOkAction: UIAlertAction?
+
+	private var renamePlaceNameAlertOkAction: UIAlertAction?
+	private var renamePlaceAddressAlertOkAction: UIAlertAction?
+	private var isRenamePlaceNameValid = false
+	private var isRenamePlaceAddressValid = false
+
 	private var mode = AllPlacesTableViewControllerMode.view
 	private var selectedPlaceId: String?
 
@@ -125,26 +131,28 @@ extension AllPlacesTableViewController {
 	}
 
 	private func showAlertToEditPlace(at index: Int) {
+		isRenamePlaceNameValid = true
+		isRenamePlaceAddressValid = true
+
 		let document = documentHandler.getDocument()
 		let place = document.places[index]
 		let alertController = UIAlertController(title: "Edit Place", message: nil, preferredStyle: .alert)
 		alertController.addTextField { (textField: UITextField) in
-			textField.placeholder = "New Name"
-			textField.addTarget(self, action: #selector(self.renamePlaceAlertTextFieldTextDidChange), for: .editingChanged)
+			textField.text = place.name
+			textField.addTarget(self, action: #selector(self.renamePlaceNameAlertTextFieldTextDidChange), for: .editingChanged)
+		}
+		alertController.addTextField { (textField: UITextField) in
+			textField.text = place.address
+			textField.addTarget(self, action: #selector(self.renamePlaceAddressAlertTextFieldTextDidChange), for: .editingChanged)
 		}
 		let cancelAction = UIAlertAction( title: "Cancel", style: .cancel, handler: { (cancelAction) in
 			alertController.dismiss(animated: true)
 		})
-		renamePlaceAlertOkAction = UIAlertAction(title: "Ok", style: .default, handler: { (okAction) in
+		renamePlaceNameAlertOkAction = UIAlertAction(title: "Ok", style: .default, handler: { (okAction) in
 			guard let newPlaceName = alertController.textFields?[0].text,
 				let newPlaceAddress = alertController.textFields?[1].text else {
 					assertionFailure()
 					return
-			}
-
-			guard document.isPlaceNameNew(newPlaceName) else {
-				self.showAlertSaying("'\(newPlaceName)\' already exists. Please enter a different name.")
-				return
 			}
 			guard document.isAddressNew(address: newPlaceAddress, forPlaceName: newPlaceName) else {
 				self.showAlertSaying("Address '\(newPlaceAddress)' for '\(newPlaceName)\' already exists. Please enter a different name.")
@@ -160,23 +168,37 @@ extension AllPlacesTableViewController {
 			self.tableView.reloadData()
 			alertController.dismiss(animated: true)
 		})
-		renamePlaceAlertOkAction?.isEnabled = false
 		alertController.addAction(cancelAction)
-		alertController.addAction(renamePlaceAlertOkAction!)
+		alertController.addAction(renamePlaceNameAlertOkAction!)
 		present(alertController, animated: true)
 	}
 
 	@objc
-	private func renamePlaceAlertTextFieldTextDidChange(textField: UITextField) {
-		guard let alertOkAction = renamePlaceAlertOkAction else {
+	private func renamePlaceNameAlertTextFieldTextDidChange(textField: UITextField) {
+		guard let alertOkAction = renamePlaceNameAlertOkAction else {
 			assertionFailure()
 			return
 		}
 		if textField.text == "" {
-			alertOkAction.isEnabled = false
+			isRenamePlaceNameValid = false
 		} else {
-			alertOkAction.isEnabled = true
+			isRenamePlaceNameValid = true
 		}
+		alertOkAction.isEnabled = isRenamePlaceNameValid && isRenamePlaceAddressValid
+	}
+
+	@objc
+	private func renamePlaceAddressAlertTextFieldTextDidChange(textField: UITextField) {
+		guard let alertOkAction = renamePlaceNameAlertOkAction else {
+			assertionFailure()
+			return
+		}
+		if textField.text == "" {
+			isRenamePlaceAddressValid = false
+		} else {
+			isRenamePlaceAddressValid = true
+		}
+		alertOkAction.isEnabled = isRenamePlaceNameValid && isRenamePlaceAddressValid
 	}
 
 }
@@ -185,6 +207,9 @@ extension AllPlacesTableViewController {
 extension AllPlacesTableViewController {
 
 	@IBAction func addNewPlaceButtonPressed(_ sender: Any) {
+		isNewPlaceNameValid = false
+		isNewPlaceAddressValid = false
+
 		let alertController = UIAlertController(title: "New Place", message: "Please enter a place name.", preferredStyle: .alert)
 		alertController.addTextField { (textField: UITextField) in
 			textField.placeholder = "Name"
@@ -204,11 +229,6 @@ extension AllPlacesTableViewController {
 					return
 			}
 			let document = self.documentHandler.getDocument()
-
-			guard document.isPlaceNameNew(placeName) else {
-				self.showAlertSaying("'\(placeName)\' already exists. Please enter a different name.")
-				return
-			}
 			guard document.isAddressNew(address: placeAddress, forPlaceName: placeName) else {
 				self.showAlertSaying("Address '\(placeAddress)' for '\(placeName)\' already exists. Please enter a different name.")
 				return

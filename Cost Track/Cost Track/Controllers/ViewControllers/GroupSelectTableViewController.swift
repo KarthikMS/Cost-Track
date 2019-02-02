@@ -64,7 +64,7 @@ extension GroupSelectTableViewController {
 			let document = self.documentHandler.getDocument()
 			let groupToDelete = document.groups[indexPath.row]
 			if document.hasCostSheets(in: groupToDelete) {
-				self.showAlertForGroupDeletionConfirmation(deletionIndexPath: indexPath)
+				self.showAlertForGroupDeletionConfirmation(deleteIndexPath: indexPath)
 			} else {
 				self.deleteGroup(at: indexPath)
 			}
@@ -90,9 +90,9 @@ extension GroupSelectTableViewController {
 		self.tableView.reloadData()
 	}
 
-	private func showAlertForGroupDeletionConfirmation(deletionIndexPath: IndexPath) {
+	private func showAlertForGroupDeletionConfirmation(deleteIndexPath: IndexPath) {
 		let document = documentHandler.getDocument()
-		let deletionGroup = document.groups[deletionIndexPath.row]
+		let deletionGroup = document.groups[deleteIndexPath.row]
 		let costSheetCount = document.numberOfCostSheets(in: deletionGroup)
 
 		let message: String
@@ -107,7 +107,7 @@ extension GroupSelectTableViewController {
 			alertController.dismiss(animated: true)
 		}))
 		alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (deleteAction) in
-			self.deleteGroup(at: deletionIndexPath)
+			self.deleteGroup(at: deleteIndexPath)
 			alertController.dismiss(animated: true)
 		}))
 		present(alertController, animated: true)
