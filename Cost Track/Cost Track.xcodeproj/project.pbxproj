@@ -18,6 +18,8 @@
 		D9032EBB20FB4F20009EF5FC /* TransactionsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */; };
 		D9032EBD20FB75EC009EF5FC /* NewCostSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032EBC20FB75EC009EF5FC /* NewCostSheetViewController.swift */; };
 		D9032EBF20FB7806009EF5FC /* CostSheetSettingsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032EBE20FB7806009EF5FC /* CostSheetSettingsTableView.swift */; };
+		D910AE772205848600A83C4E /* DocumentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE762205848600A83C4E /* DocumentModel.swift */; };
+		D910AE792205872000A83C4E /* DocumentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE782205872000A83C4E /* DocumentHandler.swift */; };
 		D955C66A21AA826700223AD9 /* CostSheetEntry+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */; };
 		D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F3F120F9BE81003C7C58 /* AppDelegate.swift */; };
 		D962F3F720F9BE81003C7C58 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F520F9BE81003C7C58 /* Main.storyboard */; };
@@ -102,6 +104,8 @@
 		D9032EB920FB4F20009EF5FC /* TransactionsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionsTableViewCell.xib; sourceTree = "<group>"; };
 		D9032EBC20FB75EC009EF5FC /* NewCostSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCostSheetViewController.swift; sourceTree = "<group>"; };
 		D9032EBE20FB7806009EF5FC /* CostSheetSettingsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetSettingsTableView.swift; sourceTree = "<group>"; };
+		D910AE762205848600A83C4E /* DocumentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentModel.swift; sourceTree = "<group>"; };
+		D910AE782205872000A83C4E /* DocumentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentHandler.swift; sourceTree = "<group>"; };
 		D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CostSheetEntry+Util.swift"; sourceTree = "<group>"; };
 		D962F3EE20F9BE81003C7C58 /* Cost Track.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cost Track.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D962F3F120F9BE81003C7C58 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -216,6 +220,14 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		D910AE752205846E00A83C4E /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				D910AE762205848600A83C4E /* DocumentModel.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		D962F3E520F9BE81003C7C58 = {
 			isa = PBXGroup;
 			children = (
@@ -241,6 +253,7 @@
 		D962F3F020F9BE81003C7C58 /* Cost Track */ = {
 			isa = PBXGroup;
 			children = (
+				D910AE752205846E00A83C4E /* Protocols */,
 				D962F41F20F9C09D003C7C58 /* Models */,
 				D962F42020F9C0B1003C7C58 /* Views */,
 				D962F42120F9C0BA003C7C58 /* Controllers */,
@@ -401,6 +414,7 @@
 				D9B119A9213D9EDB0007CDA1 /* DeltaUtil.swift */,
 				D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */,
 				D9B119B521516A670007CDA1 /* CTFileManager.swift */,
+				D910AE782205872000A83C4E /* DocumentHandler.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -723,8 +737,10 @@
 				D9982E69216374E90093B28C /* SettingsTableViewController.swift in Sources */,
 				D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */,
 				D9AC8185217AFD49002FCA94 /* CostSheet.pb.swift in Sources */,
+				D910AE772205848600A83C4E /* DocumentModel.swift in Sources */,
 				D9B119A22139786E0007CDA1 /* DeltaDecoder.swift in Sources */,
 				D97AB0F92123071300000D6F /* TransferEntryTableViewController.swift in Sources */,
+				D910AE792205872000A83C4E /* DocumentHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

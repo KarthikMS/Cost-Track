@@ -20,7 +20,7 @@ protocol PlaceSelectionDelegate: class {
 class AllPlacesTableViewController: UITableViewController {
 
 	// MARK: Global parameters
-	private weak var settingsDataSource: SettingsDataSource!
+	private weak var documentHandler: DocumentHandler!
 	private weak var deltaDelegate: DeltaDelegate!
 	private weak var placeSelectionDelegate: PlaceSelectionDelegate?
 	private var newPlaceAlertOkAction: UIAlertAction?
@@ -28,9 +28,8 @@ class AllPlacesTableViewController: UITableViewController {
 	private var mode = AllPlacesTableViewControllerMode.view
 	private var selectedPlaceId: String?
 
-	func setup(dataSource: SettingsDataSource, deltaDelegate: DeltaDelegate, placeSelectionDelegate: PlaceSelectionDelegate?, selectedPlaceId: String? = nil, mode: AllPlacesTableViewControllerMode) {
-		self.settingsDataSource = dataSource
-		self.deltaDelegate = deltaDelegate
+	func setup(documentHandler: DocumentHandler, placeSelectionDelegate: PlaceSelectionDelegate?, selectedPlaceId: String? = nil, mode: AllPlacesTableViewControllerMode) {
+		self.documentHandler = documentHandler
 		self.placeSelectionDelegate = placeSelectionDelegate
 		self.selectedPlaceId = selectedPlaceId
 		self.mode = mode
@@ -52,12 +51,12 @@ extension AllPlacesTableViewController {
 extension AllPlacesTableViewController {
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return settingsDataSource.document.places.count
+		return documentHandler.getDocument().places.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "AllPlacesTableViewCell", for: indexPath)
-		let place = settingsDataSource.document.places[indexPath.row]
+		let place = documentHandler.getDocument().places[indexPath.row]
 		if let selectedPlaceId = selectedPlaceId, place.id == selectedPlaceId {
 			cell.accessoryType = .checkmark
 		} else {
@@ -78,8 +77,9 @@ extension AllPlacesTableViewController {
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (deleteAction, indexPath) in
-			let placeToDelete = self.settingsDataSource.document.places[indexPath.row]
-			if self.settingsDataSource.document.hasEntriesWithPlace(placeToDelete) {
+			let document = self.documentHandler.getDocument()
+			let placeToDelete = document.places[indexPath.row]
+			if document.hasEntriesWithPlace(placeToDelete) {
 				self.showAlertForPlaceDeletionConfirmation(indexPath: indexPath)
 			} else {
 				self.deletePlace(at: indexPath)
@@ -89,7 +89,7 @@ extension AllPlacesTableViewController {
 	}
 
 	private func deletePlace(at indexPath: IndexPath) {
-		let document = settingsDataSource.document
+		let document = documentHandler.getDocument()
 		let placeToDelete = document.places[indexPath.row]
 
 		// Delta
@@ -103,7 +103,7 @@ extension AllPlacesTableViewController {
 	}
 
 	private func showAlertForPlaceDeletionConfirmation(indexPath: IndexPath) {
-		let document = settingsDataSource.document
+		let document = documentHandler.getDocument()
 		let placeToDelete = document.places[indexPath.row]
 		let entryCount = document.numberOfEntriesWithPlace(placeToDelete)
 
@@ -136,14 +136,15 @@ extension AllPlacesTableViewController {
 		case .view:
 			showAlertToRenamePlace(at: indexPath.row)
 		case .select:
-			let selectedPlace = settingsDataSource.document.places[indexPath.row]
+			let selectedPlace = documentHandler.getDocument().places[indexPath.row]
 			placeSelectionDelegate?.didSelectPlace(withId: selectedPlace.id)
 			navigationController?.popViewController(animated: true)
 		}
 	}
 
 	private func showAlertToRenamePlace(at index: Int) {
-		let place = settingsDataSource.document.places[index]
+		let document = documentHandler.getDocument()
+		let place = document.places[index]
 		let alertController = UIAlertController(title: "Rename Place", message: "Please enter a new name for \(place.name).", preferredStyle: .alert)
 		alertController.addTextField { (textField: UITextField) in
 			textField.placeholder = "New Name"
@@ -158,7 +159,6 @@ extension AllPlacesTableViewController {
 					assertionFailure()
 					return
 			}
-			let document = self.settingsDataSource.document
 
 			guard document.isPlaceNameNew(newPlaceName) else {
 				self.showAlertSaying("\'\(newPlaceName)\' already exists. Please enter a different name.")
@@ -215,7 +215,7 @@ extension AllPlacesTableViewController {
 					assertionFailure()
 					return
 			}
-			let document = self.settingsDataSource.document
+			let document = self.documentHandler.getDocument()
 
 			guard document.isPlaceNameNew(placeName) else {
 				self.showAlertSaying("\'\(placeName)\' already exists. Please enter a different name.")

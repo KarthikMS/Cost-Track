@@ -55,11 +55,11 @@ class CostSheetEntryViewController: UIViewController {
 	@IBOutlet weak var configurationBar: UIView!
 
 	// MARK: Properties
-	private weak var dataSource: CostSheetDataSource!
-	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: CostSheetDataSource, deltaDelegate: DeltaDelegate) {
-		self.dataSource = dataSource
-		self.deltaDelegate = deltaDelegate
+	private weak var documentHandler: DocumentHandler!
+	private var costSheetId: String!
+	func setup(documentHandler: DocumentHandler, costSheetId: String) {
+		self.documentHandler = documentHandler
+		self.costSheetId = costSheetId
 	}
 	var entryType = EntryType.income
 	var oldEntry: CostSheetEntry?
@@ -112,8 +112,8 @@ class CostSheetEntryViewController: UIViewController {
 			}
 			transferAmountViewController.setup(
 				delegate: self,
-				document: dataSource.document,
-				costSheetId: dataSource.costSheetId,
+				document: documentHandler.getDocument(),
+				costSheetId: costSheetId,
 				entryType: entryType,
 				amount: amount
 			)
@@ -129,14 +129,14 @@ class CostSheetEntryViewController: UIViewController {
 				assertionFailure()
 				return
 			}
-			allPlacesViewController.setup(dataSource: self, deltaDelegate: deltaDelegate, placeSelectionDelegate: self, selectedPlaceId: entryPlace?.id, mode: .select)
+			allPlacesViewController.setup(documentHandler: documentHandler, placeSelectionDelegate: self, selectedPlaceId: entryPlace?.id, mode: .select)
 		default:
 			return
 		}
 	}
 
 	private func segueToTransferAmountViewController() {
-		guard dataSource.document.costSheets.count > 1 else {
+		guard documentHandler.getDocument().costSheets.count > 1 else {
 			showAlertForInsufficientCostSheets()
 			return
 		}
@@ -171,7 +171,7 @@ class CostSheetEntryViewController: UIViewController {
 		}
 		updateDateViews(date: oldEntryDate)
 		if oldEntry.hasPlaceID {
-			guard let oldEntryPlace = dataSource.document.getPlace(withId: oldEntry.placeID) else {
+			guard let oldEntryPlace = documentHandler.getDocument().getPlace(withId: oldEntry.placeID) else {
 				assertionFailure("Could not get place with Id")
 				return
 			}
@@ -546,6 +546,7 @@ extension CostSheetEntryViewController {
 	}
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
+		let document = documentHandler.getDocument()
 		// Getting data for entry
 		let amount = Float(amountTextView.text)!
 		let category: Category
@@ -597,31 +598,31 @@ extension CostSheetEntryViewController {
 				}
 				newTransferEntry.date = dateData
 				newTransferEntry.description_p = descriptionText
-				newTransferEntry.transferCostSheetID = dataSource.costSheetId
+				newTransferEntry.transferCostSheetID = costSheetId
 				newTransferEntry.transferEntryID = oldEntry.id
 
 				if oldEntry.category.name == "Transfer" {
 					if oldEntry.transferCostSheetID == transferCostSheet.id {
 						// Old entry has same transferCostSheetId
 						newTransferEntry.id = oldEntry.transferEntryID
-						let updateTransferEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.transferEntryID, with: newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, document: dataSource.document)
+						let updateTransferEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.transferEntryID, with: newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, document: document)
 						deltaComps.append(updateTransferEntryComp)
 					} else {
 						// Old entry has different transferCostSheetId
-						if let deleteOldTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(oldEntry.transferEntryID, inCostSheetWithId: oldEntry.transferCostSheetID, document: dataSource.document) {
+						if let deleteOldTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(oldEntry.transferEntryID, inCostSheetWithId: oldEntry.transferCostSheetID, document: document) {
 							deltaComps.append(deleteOldTransferEntryComp)
 							newTransferEntry.id = oldEntry.transferEntryID
 						} else {
 							newTransferEntry.id = UUID().uuidString
 						}
-						let insertNewTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: dataSource.document)
+						let insertNewTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: document)
 						deltaComps.append(insertNewTransferEntryComp)
 					}
 				} else {
 					// Old entry does not have transferCostSheetId
 					newTransferEntry.id = UUID().uuidString
 
-					let insertNewTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: dataSource.document)
+					let insertNewTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: document)
 					deltaComps.append(insertNewTransferEntryComp)
 				}
 
@@ -632,7 +633,7 @@ extension CostSheetEntryViewController {
 				// Old entry had a transferCostSheetId and entry details were changed without going to TransferAmountViewController
 				oldEntry.category = category
 				if oldEntry.category.name == "Transfer" {
-					var newTransferEntry = dataSource.document.costSheetWithId(oldEntry.transferCostSheetID)!.entryWithId(oldEntry.transferEntryID)
+					var newTransferEntry = document.costSheetWithId(oldEntry.transferCostSheetID)!.entryWithId(oldEntry.transferEntryID)
 					newTransferEntry.type = entryType == .income ? .expense : .income
 					newTransferEntry.amount = amount
 					newTransferEntry.category = TransferCategory
@@ -645,12 +646,12 @@ extension CostSheetEntryViewController {
 					newTransferEntry.date = dateData
 					newTransferEntry.description_p = descriptionText
 
-					let updateTransferEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.transferEntryID, with: newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, document: dataSource.document)
+					let updateTransferEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.transferEntryID, with: newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, document: document)
 					deltaComps.append(updateTransferEntryComp)
 				}
 			}
 
-			let updateEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.id, with: oldEntry, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
+			let updateEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.id, with: oldEntry, inCostSheetWithId: costSheetId, document: document)
 			deltaComps.append(updateEntryComp)
 		} else {
 			// Creating new entry
@@ -681,36 +682,27 @@ extension CostSheetEntryViewController {
 				}
 				newTransferEntry.date = dateData
 				newTransferEntry.description_p = descriptionText
-				newTransferEntry.transferCostSheetID = dataSource.costSheetId
+				newTransferEntry.transferCostSheetID = costSheetId
 				newTransferEntry.transferEntryID = newEntry.id
 
 				newEntry.category = TransferCategory
 				newEntry.transferCostSheetID = transferCostSheet.id
 				newEntry.transferEntryID = newTransferEntry.id
 
-				let insertTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: dataSource.document)
+				let insertTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: document)
 				deltaComps.append(insertTransferEntryComp)
 			} else {
 				newEntry.category = category
 			}
 
-			let insertEntryComp = DeltaUtil.getComponentToInsertEntry(newEntry, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
+			let insertEntryComp = DeltaUtil.getComponentToInsertEntry(newEntry, inCostSheetWithId: costSheetId, document: document)
 			deltaComps.append(insertEntryComp)
 		}
 
-		deltaDelegate.sendDeltaComponents(deltaComps)
+		documentHandler.sendDeltaComponents(deltaComps)
 
 		oldEntry = nil
 		navigationController?.popViewController(animated: true)
-	}
-
-}
-
-// MARK: SettingsDataSource
-extension CostSheetEntryViewController: SettingsDataSource {
-
-	var document: Document {
-		return dataSource.document
 	}
 
 }
@@ -728,7 +720,7 @@ extension CostSheetEntryViewController: EntryDatePickerDelegate {
 extension CostSheetEntryViewController: EntryCategoryPickerDataSource {
 
 	var categoriesFilteredByEntryType: [Category] {
-		let categories = dataSource.document.categories
+		let categories = documentHandler.getDocument().categories
 		return categories.filter { $0.entryTypes.contains(entryType) }
 	}
 
@@ -752,7 +744,7 @@ extension CostSheetEntryViewController: EntryCategoryPickerDelegate {
 extension CostSheetEntryViewController: PlaceSelectionDelegate {
 
 	func didSelectPlace(withId placeId: String) {
-		guard let place = dataSource.document.getPlace(withId: placeId) else {
+		guard let place = documentHandler.getDocument().getPlace(withId: placeId) else {
 			assertionFailure()
 			return
 		}

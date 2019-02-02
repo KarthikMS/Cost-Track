@@ -8,11 +8,6 @@
 
 import UIKit
 
-protocol CostSheetDataSource: class {
-	var document: Document { get }
-	var costSheetId: String { get }
-}
-
 extension UIViewController {
 
 	func showAlertSaying(_ message: String) {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDataSource, SettingsDataSource {
+class MyCostSheetsViewController: UIViewController {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var topBar: UIView!
@@ -18,9 +18,9 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	@IBOutlet weak var accountingPeriodLabel: UILabel!
 	
 	// MARK: Properties
-	var (document, isNewDocument) = CTFileManager.getDocument()
+//	var (document, isNewDocument) = CTFileManager.getDocument()
+	var documentHandler: DocumentHandler!
 	var selectedCostSheetId = ""
-	private var shouldUpdateViews = true
 	private var sectionsToHide = Set<Int>()
 	private let accountingPeriodViewController = AccountingPeriodViewController()
 
@@ -28,6 +28,8 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
     override func viewDidLoad() {
         super.viewDidLoad()
 
+		let (document, isNewDocument) = CTFileManager.getDocument()
+		documentHandler = DocumentHandler(document: document)
 		if isNewDocument {
 			CTFileManager.saveDocument(document)
 			UserDefaults.standard.setValue(true, forKey: BalanceCarryOver)
@@ -48,16 +50,13 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		if shouldUpdateViews {
-			sectionsToHide.removeAll()
-			updateTopBar()
-			if document.costSheets.isEmpty {
-				noCostSheetsTextView.isHidden = false
-			} else {
-				noCostSheetsTextView.isHidden = true
-				tableView.reloadData()
-			}
-			shouldUpdateViews = false
+		sectionsToHide.removeAll()
+		updateTopBar()
+		if documentHandler.getDocument().costSheets.isEmpty {
+			noCostSheetsTextView.isHidden = false
+		} else {
+			noCostSheetsTextView.isHidden = true
+			tableView.reloadData()
 		}
 
 		selectedCostSheetId = ""
@@ -73,17 +72,17 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 			guard let costSheetViewController = segue.destination as? CostSheetViewController else {
 				return
 			}
-			costSheetViewController.setup(dataSource: self, deltaDelegate: self)
+			costSheetViewController.setup(documentHandler: documentHandler, costSheetId: selectedCostSheetId)
 		case NewCostSheetSegue:
 			guard let newCostSheetViewController = segue.destination as? NewCostSheetViewController else {
 				return
 			}
-			newCostSheetViewController.setup(dataSource: self, deltaDelegate: self)
+			newCostSheetViewController.setup(documentHandler: documentHandler)
 		case SettingsSegue:
 			guard let settingsTableViewController = segue.destination as? SettingsTableViewController else {
 				return
 			}
-			settingsTableViewController.setup(dataSource: self, delegate: self, deltaDelegate: self)
+			settingsTableViewController.setup(documentHandler: documentHandler)
 		default:
 			break
 		}
@@ -91,7 +90,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 
 	// MARK: View functions
 	private func updateTopBar() {
-		var totalAmount = document.totalDisplayAmount
+		var totalAmount = documentHandler.getDocument().totalDisplayAmount
 		if totalAmount < 0 {
 			topBar.backgroundColor = DarkExpenseColor
 			totalAmount *= -1
@@ -144,6 +143,7 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 
 	// MARK: Misc. functions
 	private func costSheetAtIndexPath(_ indexPath: IndexPath) -> CostSheet {
+		let document = documentHandler.getDocument()
 		let groupsWithCostSheets = document.groupsWithCostSheets
 		return document.costSheetsInGroup(groupsWithCostSheets[indexPath.section])[indexPath.row]
 	}
@@ -162,26 +162,29 @@ class MyCostSheetsViewController: UIViewController, NewCostSheetViewControllerDa
 		present(alertController, animated: true)
 	}
 
+	// TODO: Make this as a function in DocumentHandler
 	private func deleteCostSheet(withId id: String, at indexPath: IndexPath) {
-		let deleteCostSheetComp = DeltaUtil.getComponentToDeleteCostSheet(withId: id, in: document)
-		sendDeltaComponents([deleteCostSheetComp])
-		
-		if !document.hasCostSheetsInOtherGroups {
-			sectionsToHide.removeAll()
-			tableView.reloadData()
-		} else {
-			tableView.beginUpdates()
-			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
-				tableView.deleteSections([indexPath.section], with: .bottom)
-			} else {
-				tableView.deleteRows(at: [indexPath], with: .left)
-			}
-			tableView.endUpdates()
-		}
-		if document.costSheets.isEmpty {
-			noCostSheetsTextView.isHidden = false
-		}
-		updateTopBar()
+//		let deleteCostSheetComp = DeltaUtil.getComponentToDeleteCostSheet(withId: id, in: documentHandler.getDocument())
+//		sendDeltaComponents([deleteCostSheetComp])
+//
+//		refreshView()
+//
+//		if !documentHandler.getDocument().hasCostSheetsInOtherGroups {
+//			sectionsToHide.removeAll()
+//			tableView.reloadData()
+//		} else {
+//			tableView.beginUpdates()
+//			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
+//				tableView.deleteSections([indexPath.section], with: .bottom)
+//			} else {
+//				tableView.deleteRows(at: [indexPath], with: .left)
+//			}
+//			tableView.endUpdates()
+//		}
+//		if documentHandler.getDocument().costSheets.isEmpty {
+//			noCostSheetsTextView.isHidden = false
+//		}
+//		updateTopBar()
 	}
 }
 
@@ -222,13 +225,14 @@ private extension MyCostSheetsViewController {
 extension MyCostSheetsViewController: UITableViewDataSource {
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return document.groupsWithCostSheets.count
+		return documentHandler.getDocument().groupsWithCostSheets.count
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if sectionsToHide.contains(section) {
 			return 0
 		}
+		let document = documentHandler.getDocument()
 		let groupsWithCostSheets = document.groupsWithCostSheets
 		return document.costSheetsInGroup(groupsWithCostSheets[section]).count
 	}
@@ -268,13 +272,14 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if !document.hasCostSheetsInOtherGroups {
+		if !documentHandler.getDocument().hasCostSheetsInOtherGroups {
 			return 0
 		}
 		return 40
 	}
 
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let document = documentHandler.getDocument()
 		if !document.hasCostSheetsInOtherGroups {
 			return nil
 		}
@@ -299,47 +304,6 @@ extension MyCostSheetsViewController: TableViewSectionHeaderViewDelegate {
 			sectionsToHide.insert(section)
 		}
 		tableView.reloadData()
-	}
-
-}
-
-extension MyCostSheetsViewController: CostSheetDataSource {
-
-	var costSheetId: String {
-		return selectedCostSheetId
-	}
-
-}
-
-// MARK: SettingsTableViewControllerDelegate
-extension MyCostSheetsViewController: SettingsTableViewControllerDelegate {
-
-	func refreshView() {
-		(document, isNewDocument) = CTFileManager.getDocument()
-		if isNewDocument {
-			CTFileManager.saveDocument(document)
-			UserDefaults.standard.setValue(true, forKey: BalanceCarryOver)
-			UserDefaults.standard.setValue(1, forKey: StartDayForMonthlyAccountingPeriod)
-		}
-		shouldUpdateViews = true
-	}
-
-}
-
-// MARK: DeltaDelegate
-extension MyCostSheetsViewController: DeltaDelegate {
-
-	func sendDeltaComponents(_ components: [DocumentContentOperation.Component]) {
-		for component in components {
-			do {
-				var decoder = try DeltaDataApplier(fieldString: component.fields, value: component.value.inBytes.value, operationType: component.opType)
-				try document.decodeMessage(decoder: &decoder)
-				shouldUpdateViews = true
-			} catch {
-				assertionFailure(error.localizedDescription)
-			}
-		}
-		CTFileManager.saveDocument(document)
 	}
 
 }

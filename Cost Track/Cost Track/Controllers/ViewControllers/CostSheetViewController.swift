@@ -24,11 +24,11 @@ class CostSheetViewController: UIViewController {
 	@IBOutlet weak var accountingPeriodLabel: UILabel!
 	
 	// MARK: Properties
-	private weak var dataSource: CostSheetDataSource!
-	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: CostSheetDataSource, deltaDelegate: DeltaDelegate) {
-		self.dataSource = dataSource
-		self.deltaDelegate = deltaDelegate
+	private weak var documentHandler: DocumentHandler!
+	private var costSheetId: String!
+	func setup(documentHandler: DocumentHandler, costSheetId: String) {
+		self.documentHandler = documentHandler
+		self.costSheetId = costSheetId
 	}
 
 	let transactionsTableViewDataSource = TransactionsTableViewDataSource()
@@ -55,7 +55,7 @@ class CostSheetViewController: UIViewController {
 		super.viewWillAppear(animated)
 
 		if shouldUpdateViews {
-			guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
+			guard let costSheet = documentHandler.getDocument().costSheetWithId(costSheetId) else {
 				assertionFailure("Could not get costSheet")
 				return
 			}
@@ -108,7 +108,7 @@ class CostSheetViewController: UIViewController {
 					assertionFailure()
 					return
 			}
-			costSheetEntryViewController.setup(dataSource: self, deltaDelegate: self)
+			costSheetEntryViewController.setup(documentHandler: documentHandler, costSheetId: costSheetId)
 			if let oldEntry = sender["oldEntry"] as? CostSheetEntry {
 				costSheetEntryViewController.oldEntry = oldEntry
 			} else {
@@ -134,7 +134,7 @@ class CostSheetViewController: UIViewController {
 				assertionFailure()
 				return
 			}
-			costSheetSettingsViewController.setup(dataSource: self.dataSource, deltaDelegate: self)
+			costSheetSettingsViewController.setup(documentHandler: documentHandler, costSheetId: costSheetId)
 		default:
 			break
 		}
@@ -142,7 +142,7 @@ class CostSheetViewController: UIViewController {
 
 	// MARK: View functions
 	private var footerViewForTableView: UIView? {
-		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
+		guard let costSheet = documentHandler.getDocument().costSheetWithId(costSheetId) else {
 			assertionFailure("Could not get costSheet")
 			return nil
 		}
@@ -202,7 +202,7 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func updateAmountLabel() {
-		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
+		guard let costSheet = documentHandler.getDocument().costSheetWithId(costSheetId) else {
 			assertionFailure("Could not get costSheet")
 			return
 		}
@@ -231,7 +231,7 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByDate() {
-		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
+		guard let costSheet = documentHandler.getDocument().costSheetWithId(costSheetId) else {
 			assertionFailure("Could not get costSheet")
 			return
 		}
@@ -280,7 +280,7 @@ class CostSheetViewController: UIViewController {
 
 	private func sortEntriesByCategory() {
 		var entriesSortedByCategory = [String: [CostSheetEntry]]()
-		for category in dataSource.document.categories {
+		for category in documentHandler.getDocument().categories {
 			entriesSortedByCategory[category.name] = [CostSheetEntry]()
 		}
 
@@ -301,7 +301,7 @@ class CostSheetViewController: UIViewController {
 	}
 
 	private func sortEntriesByPlace() {
-		guard let costSheetEntries = dataSource.document.costSheetWithId(dataSource.costSheetId)?.entriesInAccountingPeriod else {
+		guard let costSheetEntries = documentHandler.getDocument().costSheetWithId(costSheetId)?.entriesInAccountingPeriod else {
 			assertionFailure("Could not get costSheet")
 			return
 		}
@@ -313,7 +313,7 @@ class CostSheetViewController: UIViewController {
 				}
 				entriesSortedByPlace["No place"]?.append(entry)
 			} else {
-				guard let entryPlace = dataSource.document.getPlace(withId: entry.placeID) else {
+				guard let entryPlace = documentHandler.getDocument().getPlace(withId: entry.placeID) else {
 					assertionFailure("Could not get place by Id")
 					return
 				}
@@ -357,17 +357,17 @@ class CostSheetViewController: UIViewController {
 
 		// Delta
 		var deltaComps = [DocumentContentOperation.Component]()
-		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: dataSource.costSheetId, document: dataSource.document)
+		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: costSheetId, document: documentHandler.getDocument())
 		deltaComps.append(deleteEntryComp!)
 
 		// Deleting transferEntry if any
-		let entryToDelete = document.costSheetWithId(dataSource.costSheetId)!.entryWithId(deleteEntryId)
+		let entryToDelete = documentHandler.getDocument().costSheetWithId(costSheetId)!.entryWithId(deleteEntryId)
 		if entryToDelete.category.name == "Transfer" {
 			let deleteTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(entryToDelete.transferEntryID, inCostSheetWithId: entryToDelete.transferCostSheetID, document: document)
 			deltaComps.append(deleteTransferEntryComp!)
 		}
 
-		deltaDelegate.sendDeltaComponents(deltaComps)
+		documentHandler.sendDeltaComponents(deltaComps)
 
 		if self.classificationMode != .date {
 			sortEntriesByDate()
@@ -444,7 +444,7 @@ extension CostSheetViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let transferEntryAction = UITableViewRowAction(style: .normal, title: "Transfer") { (action, indexPath) in
 			// Checking cost sheets count
-			guard self.dataSource.document.costSheets.count > 1 else {
+			guard self.documentHandler.getDocument().costSheets.count > 1 else {
 				self.showAlertSaying("No other cost sheets to move entry to. Create more cost sheets.")
 				return
 			}
@@ -507,21 +507,13 @@ extension CostSheetViewController: TableViewSectionHeaderViewDelegate {
 
 }
 
-// MARK: CostSheetEntryViewControllerDataSource
-extension CostSheetViewController: CostSheetDataSource {
-
-	var document: Document {
-		return dataSource.document
-	}
-
-	var costSheetId: String {
-		return dataSource.costSheetId
-	}
-
-}
-
 // MARK: TransferEntryTableViewControllerDataSource
 extension CostSheetViewController: TransferEntryTableViewControllerDataSource {
+
+	// TODO: Delete this as DocumentHandler will provide this now.
+	var document: Document {
+		return documentHandler.getDocument()
+	}
 
 	var fromCostSheetId: String {
 		return costSheetId
@@ -542,7 +534,7 @@ extension CostSheetViewController: TransferEntryTableViewControllerDataSource {
 extension CostSheetViewController: DeltaDelegate {
 
 	func sendDeltaComponents(_ components: [DocumentContentOperation.Component]) {
-		deltaDelegate.sendDeltaComponents(components)
+		documentHandler.sendDeltaComponents(components)
 		shouldUpdateViews = true
 	}
 

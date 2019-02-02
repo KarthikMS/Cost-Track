@@ -14,11 +14,11 @@ class CostSheetSettingsViewController: UIViewController {
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
 
 	// MARK: Properties
-	private weak var dataSource: CostSheetDataSource!
-	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: CostSheetDataSource, deltaDelegate: DeltaDelegate) {
-		self.dataSource = dataSource
-		self.deltaDelegate = deltaDelegate
+	private weak var documentHandler: DocumentHandler!
+	private var costSheetId: String!
+	func setup(documentHandler: DocumentHandler, costSheetId: String) {
+		self.documentHandler = documentHandler
+		self.costSheetId = costSheetId
 	}
 	var selectedGroupId: String!
 
@@ -28,7 +28,7 @@ class CostSheetSettingsViewController: UIViewController {
 
 		settingsTableView.setMode(.costSheetSettings)
 		settingsTableView.costSheetSettingsTableViewDelegate = self
-		guard let costSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
+		guard let costSheet = documentHandler.getDocument().costSheetWithId(costSheetId) else {
 			assertionFailure()
 			return
 		}
@@ -45,7 +45,7 @@ class CostSheetSettingsViewController: UIViewController {
 				return
 			}
 			groupSelectTableViewController.selectedGroupID = selectedGroupId
-			groupSelectTableViewController.setup(dataSource: self, delegate: self, deltaDelegate: deltaDelegate)
+			groupSelectTableViewController.setup(documentHandler: documentHandler, delegate: self)
 		}
 	}
 	
@@ -60,20 +60,11 @@ extension CostSheetSettingsViewController: CostSheetSettingsTableViewDelegate {
 
 }
 
-// MARK: GroupSelectTableViewControllerDataSource
-extension CostSheetSettingsViewController: GroupSelectTableViewControllerDataSource {
-
-	var document: Document {
-		return dataSource.document
-	}
-
-}
-
 // MARK: GroupSelectTableViewControllerDelegate
 extension CostSheetSettingsViewController: GroupSelectTableViewControllerDelegate {
 
 	func didSelectGroup(id: String) {
-		guard let group = dataSource.document.getGroup(withId: id) else {
+		guard let group = documentHandler.getDocument().getGroup(withId: id) else {
 			assertionFailure()
 			return
 		}
@@ -99,14 +90,15 @@ private extension CostSheetSettingsViewController {
 			showAlertSaying("Please enter a name for the cost sheet.")
 			return
 		}
-		guard dataSource.document.isCostSheetNameNew(costSheet.name, excludingCostSheetId: costSheet.id) else {
+		let document = documentHandler.getDocument()
+		guard document.isCostSheetNameNew(costSheet.name, excludingCostSheetId: costSheet.id) else {
 			showAlertSaying("\'\(costSheet.name)\' already exists. Please enter a different name.")
 			return
 		}
 
 		costSheet.lastModifiedDate = Date().data
-		let updateCostSheetComp = DeltaUtil.getComponentToUpdateCostSheet(withId: dataSource.costSheetId, with: costSheet, in: document)
-		deltaDelegate.sendDeltaComponents([updateCostSheetComp])
+		let updateCostSheetComp = DeltaUtil.getComponentToUpdateCostSheet(withId: costSheetId, with: costSheet, in: document)
+		documentHandler.sendDeltaComponents([updateCostSheetComp])
 		
 		// TODO: Fix this
 		/*

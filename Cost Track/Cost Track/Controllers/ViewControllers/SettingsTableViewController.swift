@@ -8,15 +8,6 @@
 
 import UIKit
 
-// MARK: Protocols
-protocol SettingsDataSource: class {
-	var document: Document { get }
-}
-
-protocol SettingsTableViewControllerDelegate: class {
-	func refreshView()
-}
-
 // MARK: Constants
 private let ClearDataSection = 0
 private let AllPlacesSection = 1
@@ -24,20 +15,11 @@ private let AllPlacesSection = 1
 class SettingsTableViewController: UITableViewController {
 
 	// MARK: Properties
-	private weak var settingsDataSource: SettingsDataSource!
-	private weak var settingsTableViewControllerDelegate: SettingsTableViewControllerDelegate!
+	private weak var documentHandler: DocumentHandler!
 	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: SettingsDataSource, delegate: SettingsTableViewControllerDelegate, deltaDelegate: DeltaDelegate) {
-		self.settingsDataSource = dataSource
-		self.settingsTableViewControllerDelegate = delegate
-		self.deltaDelegate = deltaDelegate
+	func setup(documentHandler: DocumentHandler) {
+		self.documentHandler = documentHandler
 	}
-
-	// MARK: UIViewController functions
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-    }
 
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		guard let identifier = segue.identifier else {
@@ -49,7 +31,7 @@ class SettingsTableViewController: UITableViewController {
 				assertionFailure()
 				return
 			}
-			allPlacesTableViewController.setup(dataSource: settingsDataSource, deltaDelegate: deltaDelegate, placeSelectionDelegate: nil, mode: .view)
+			allPlacesTableViewController.setup(documentHandler: documentHandler, placeSelectionDelegate: nil, mode: .view)
 		default:
 			return
 		}
@@ -59,8 +41,9 @@ class SettingsTableViewController: UITableViewController {
 	private func showActionSheetToClearData() {
 		let actionSheet = UIAlertController(title: nil, message: "Are you sure you want to clear all data?", preferredStyle: .actionSheet)
 		let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (deletAction) in
-			CTFileManager.deleteDocument()
-			self.settingsTableViewControllerDelegate.refreshView()
+			self.documentHandler.deleteDocument()
+			UserDefaults.standard.setValue(true, forKey: BalanceCarryOver)
+			UserDefaults.standard.setValue(1, forKey: StartDayForMonthlyAccountingPeriod)
 		}
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (cancelAction) in
 			actionSheet.dismiss(animated: true)

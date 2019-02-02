@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol GroupSelectTableViewControllerDataSource: class {
-	var document: Document { get }
-}
-
 protocol GroupSelectTableViewControllerDelegate: class {
 	func didSelectGroup(id: String)
 }
@@ -20,13 +16,11 @@ class GroupSelectTableViewController: UITableViewController {
 
 	// MARK: Properties
 	var selectedGroupID = ""
-	private weak var groupSelectTableViewControllerDataSource: GroupSelectTableViewControllerDataSource!
+	private weak var documentHandler: DocumentHandler!
 	private weak var groupSelectTableViewControllerDelegate: GroupSelectTableViewControllerDelegate!
-	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: GroupSelectTableViewControllerDataSource, delegate: GroupSelectTableViewControllerDelegate, deltaDelegate: DeltaDelegate) {
-		self.groupSelectTableViewControllerDataSource = dataSource
+	func setup(documentHandler: DocumentHandler, delegate: GroupSelectTableViewControllerDelegate) {
+		self.documentHandler = documentHandler
 		self.groupSelectTableViewControllerDelegate = delegate
-		self.deltaDelegate = deltaDelegate
 	}
 	private var alertOkAction: UIAlertAction?
 
@@ -43,12 +37,12 @@ class GroupSelectTableViewController: UITableViewController {
 extension GroupSelectTableViewController {
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return groupSelectTableViewControllerDataSource.document.groups.count
+		return documentHandler.getDocument().groups.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "SelectGroupCell", for: indexPath)
-		let group = groupSelectTableViewControllerDataSource.document.groups[indexPath.row]
+		let group = documentHandler.getDocument().groups[indexPath.row]
 		cell.textLabel?.text = group.name
 		if group.id == selectedGroupID {
 			cell.accessoryType = .checkmark
@@ -59,7 +53,7 @@ extension GroupSelectTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		guard groupSelectTableViewControllerDataSource.document.groups[indexPath.row].id != NotSetGroup.id else {
+		guard documentHandler.getDocument().groups[indexPath.row].id != NotSetGroup.id else {
 			return false
 		}
 		return true
@@ -67,8 +61,9 @@ extension GroupSelectTableViewController {
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (deleteAction, indexPath) in
-			let groupToDelete = self.groupSelectTableViewControllerDataSource.document.groups[indexPath.row]
-			if self.groupSelectTableViewControllerDataSource.document.hasCostSheets(in: groupToDelete) {
+			let document = self.documentHandler.getDocument()
+			let groupToDelete = document.groups[indexPath.row]
+			if document.hasCostSheets(in: groupToDelete) {
 				self.showAlertForGroupDeletionConfirmation(deletionIndexPath: indexPath)
 			} else {
 				self.deleteGroup(at: indexPath)
@@ -78,14 +73,14 @@ extension GroupSelectTableViewController {
 	}
 
 	private func deleteGroup(at indexPath: IndexPath) {
-		let document = groupSelectTableViewControllerDataSource.document
+		let document = documentHandler.getDocument()
 
 		// Delta Component
 		let deleteGroupComp = DeltaUtil.getComponentToDeleteGroup(at: indexPath.row, in: document)
 		let moveCostSheetsComps = DeltaUtil.getComponentsToMoveCostSheets(from: document.groups[indexPath.row], to: NotSetGroup, in: document)
 		var deltaComps = [deleteGroupComp]
 		deltaComps.append(contentsOf: moveCostSheetsComps)
-		deltaDelegate.sendDeltaComponents(deltaComps)
+		documentHandler.sendDeltaComponents(deltaComps)
 
 		if indexPath.row > 0 {
 			selectedGroupID = document.groups[indexPath.row - 1].id
@@ -96,8 +91,9 @@ extension GroupSelectTableViewController {
 	}
 
 	private func showAlertForGroupDeletionConfirmation(deletionIndexPath: IndexPath) {
-		let deletionGroup = groupSelectTableViewControllerDataSource.document.groups[deletionIndexPath.row]
-		let costSheetCount = groupSelectTableViewControllerDataSource.document.numberOfCostSheets(in: deletionGroup)
+		let document = documentHandler.getDocument()
+		let deletionGroup = document.groups[deletionIndexPath.row]
+		let costSheetCount = document.numberOfCostSheets(in: deletionGroup)
 
 		let message: String
 		if costSheetCount == 1 {
@@ -123,7 +119,7 @@ extension GroupSelectTableViewController {
 extension GroupSelectTableViewController {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let group = groupSelectTableViewControllerDataSource.document.groups[indexPath.row]
+		let group = documentHandler.getDocument().groups[indexPath.row]
 		selectedGroupID = group.id
 		tableView.reloadData()
 	}
@@ -148,7 +144,7 @@ private extension GroupSelectTableViewController {
 					assertionFailure()
 					return
 			}
-			let document = self.groupSelectTableViewControllerDataSource.document
+			let document = self.documentHandler.getDocument()
 
 			guard document.isGroupNameNew(groupName) else {
 				self.showAlertSaying("\'\(groupName)\' already exists. Please enter a different name.")
@@ -162,7 +158,7 @@ private extension GroupSelectTableViewController {
 
 			// Delta Component
 			let insertGroupComponent = DeltaUtil.getComponentToInsertGroup(newGroup, in: document)
-			self.deltaDelegate.sendDeltaComponents([insertGroupComponent])
+			self.documentHandler.sendDeltaComponents([insertGroupComponent])
 
 			self.selectedGroupID = newGroup.id
 			self.tableView.reloadData()

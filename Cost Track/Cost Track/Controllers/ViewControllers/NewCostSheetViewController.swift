@@ -8,21 +8,15 @@
 
 import UIKit
 
-protocol NewCostSheetViewControllerDataSource: class {
-	var document: Document { get }
-}
-
 class NewCostSheetViewController: UIViewController {
 
 	// MARK: IBOutlets
 	@IBOutlet weak var settingsTableView: CostSheetSettingsTableView!
 
 	// MARK: Properties
-	private weak var dataSource: NewCostSheetViewControllerDataSource!
-	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: NewCostSheetViewControllerDataSource, deltaDelegate: DeltaDelegate) {
-		self.dataSource = dataSource
-		self.deltaDelegate = deltaDelegate
+	private weak var documentHandler: DocumentHandler!
+	func setup(documentHandler: DocumentHandler) {
+		self.documentHandler = documentHandler
 	}
 	var selectedGroupId = NotSetGroup.id
 
@@ -34,7 +28,7 @@ class NewCostSheetViewController: UIViewController {
 		settingsTableView.costSheetSettingsTableViewDelegate = self
 
 		var newCostSheet = CostSheet()
-		newCostSheet.name = dataSource.document.defaultNewCostSheetName
+		newCostSheet.name = documentHandler.getDocument().defaultNewCostSheetName
 		newCostSheet.initialBalance = 0
 		newCostSheet.includeInOverallTotal = true
 		newCostSheet.id = UUID().uuidString
@@ -52,7 +46,7 @@ class NewCostSheetViewController: UIViewController {
 				return
 			}
 			groupSelectTableViewController.selectedGroupID = selectedGroupId
-			groupSelectTableViewController.setup(dataSource: self, delegate: self, deltaDelegate: deltaDelegate)
+			groupSelectTableViewController.setup(documentHandler: documentHandler, delegate: self)
 		}
 	}
 
@@ -62,7 +56,7 @@ class NewCostSheetViewController: UIViewController {
 private extension NewCostSheetViewController {
 
 	@IBAction func createButtonPressed(_ sender: Any) {
-		let document = dataSource.document
+		let document = documentHandler.getDocument()
 
 		settingsTableView.updateCostSheet()
 		var costSheet = settingsTableView.costSheet
@@ -80,7 +74,7 @@ private extension NewCostSheetViewController {
 
 		// Delta
 		let insertCostSheetComp = DeltaUtil.getComponentToInsertCostSheet(costSheet, in: document)
-		deltaDelegate.sendDeltaComponents([insertCostSheetComp])
+		documentHandler.sendDeltaComponents([insertCostSheetComp])
 
 		navigationController?.popViewController(animated: true)
 	}
@@ -96,20 +90,11 @@ extension NewCostSheetViewController: CostSheetSettingsTableViewDelegate {
 
 }
 
-// MARK: GroupSelectTableViewControllerDataSource
-extension NewCostSheetViewController: GroupSelectTableViewControllerDataSource {
-
-	var document: Document {
-		return dataSource.document
-	}
-
-}
-
 // MARK: GroupSelectTableViewControllerDelegate
 extension NewCostSheetViewController: GroupSelectTableViewControllerDelegate {
 
 	func didSelectGroup(id: String) {
-		guard let group = dataSource.document.getGroup(withId: id) else {
+		guard let group = documentHandler.getDocument().getGroup(withId: id) else {
 			assertionFailure()
 			return
 		}
