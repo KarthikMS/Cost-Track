@@ -19,7 +19,7 @@ extension Category {
 		var vehicleAndTransport = Category()
 		vehicleAndTransport.name = "Vehicle & Transport"
 		vehicleAndTransport.iconType = .vehicleAndTransport
-		vehicleAndTransport.entryTypes.append(EntryType.income)
+		vehicleAndTransport.entryTypes.append(EntryType.expense)
 
 		var household = Category()
 		household.name = "Household"

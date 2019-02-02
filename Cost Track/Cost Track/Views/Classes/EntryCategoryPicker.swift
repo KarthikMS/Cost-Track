@@ -84,6 +84,7 @@ extension EntryCategoryPicker: UIPickerViewDataSource {
 	}
 
 	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		// TODO: This filtering happens every time. Change the flow.
 		guard let categories = dataSource?.categoriesFilteredByEntryType else {
 			assertionFailure()
 			return -1
