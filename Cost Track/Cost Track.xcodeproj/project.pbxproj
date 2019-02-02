@@ -20,12 +20,12 @@
 		D9032EBF20FB7806009EF5FC /* CostSheetSettingsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9032EBE20FB7806009EF5FC /* CostSheetSettingsTableView.swift */; };
 		D910AE772205848600A83C4E /* DocumentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE762205848600A83C4E /* DocumentModel.swift */; };
 		D910AE792205872000A83C4E /* DocumentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE782205872000A83C4E /* DocumentHandler.swift */; };
+		D910AE7B2205B4E100A83C4E /* AllPlacesTableViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE7A2205B4E100A83C4E /* AllPlacesTableViewControllerTests.swift */; };
 		D955C66A21AA826700223AD9 /* CostSheetEntry+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */; };
 		D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F3F120F9BE81003C7C58 /* AppDelegate.swift */; };
 		D962F3F720F9BE81003C7C58 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F520F9BE81003C7C58 /* Main.storyboard */; };
 		D962F3F920F9BE81003C7C58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F820F9BE81003C7C58 /* Assets.xcassets */; };
 		D962F3FC20F9BE81003C7C58 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D962F3FA20F9BE81003C7C58 /* LaunchScreen.storyboard */; };
-		D962F40720F9BE81003C7C58 /* Cost_TrackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F40620F9BE81003C7C58 /* Cost_TrackTests.swift */; };
 		D962F41220F9BE81003C7C58 /* Cost_TrackUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F41120F9BE81003C7C58 /* Cost_TrackUITests.swift */; };
 		D962F42820F9C152003C7C58 /* MyCostSheetsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F42620F9C152003C7C58 /* MyCostSheetsViewController.swift */; };
 		D962F42920F9C152003C7C58 /* MyCostSheetsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D962F42720F9C152003C7C58 /* MyCostSheetsViewController.xib */; };
@@ -106,6 +106,7 @@
 		D9032EBE20FB7806009EF5FC /* CostSheetSettingsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSheetSettingsTableView.swift; sourceTree = "<group>"; };
 		D910AE762205848600A83C4E /* DocumentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentModel.swift; sourceTree = "<group>"; };
 		D910AE782205872000A83C4E /* DocumentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentHandler.swift; sourceTree = "<group>"; };
+		D910AE7A2205B4E100A83C4E /* AllPlacesTableViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllPlacesTableViewControllerTests.swift; sourceTree = "<group>"; };
 		D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CostSheetEntry+Util.swift"; sourceTree = "<group>"; };
 		D962F3EE20F9BE81003C7C58 /* Cost Track.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cost Track.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D962F3F120F9BE81003C7C58 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -114,7 +115,6 @@
 		D962F3FB20F9BE81003C7C58 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D962F3FD20F9BE81003C7C58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D962F40220F9BE81003C7C58 /* Cost TrackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cost TrackTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D962F40620F9BE81003C7C58 /* Cost_TrackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cost_TrackTests.swift; sourceTree = "<group>"; };
 		D962F40820F9BE81003C7C58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D962F40D20F9BE81003C7C58 /* Cost TrackUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cost TrackUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D962F41120F9BE81003C7C58 /* Cost_TrackUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cost_TrackUITests.swift; sourceTree = "<group>"; };
@@ -268,7 +268,7 @@
 		D962F40520F9BE81003C7C58 /* Cost TrackTests */ = {
 			isa = PBXGroup;
 			children = (
-				D962F40620F9BE81003C7C58 /* Cost_TrackTests.swift */,
+				D910AE7A2205B4E100A83C4E /* AllPlacesTableViewControllerTests.swift */,
 				D962F40820F9BE81003C7C58 /* Info.plist */,
 			);
 			path = "Cost TrackTests";
@@ -748,7 +748,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D962F40720F9BE81003C7C58 /* Cost_TrackTests.swift in Sources */,
+				D910AE7B2205B4E100A83C4E /* AllPlacesTableViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

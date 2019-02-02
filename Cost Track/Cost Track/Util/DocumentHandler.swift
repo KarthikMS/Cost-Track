@@ -6,6 +6,8 @@
 //  Copyright © 2019 Karthik M S. All rights reserved.
 //
 
+import Foundation
+
 class DocumentHandler {
 
 	private var document: Document
@@ -23,13 +25,42 @@ extension DocumentHandler: DocumentModel {
 	}
 
 	func deleteDocument() {
-		CTFileManager.deleteDocument()
+		if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
+			// Code only executes when tests are running
+			CTFileManager.deleteDocument()
+		}
+
 		(document, _) = CTFileManager.getDocument()
-		CTFileManager.saveDocument(document)
+
+		if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
+			// Code only executes when tests are running
+			CTFileManager.saveDocument(document)
+		}
 	}
 
 	func insertPlaceWithName(_ name: String) {
+		var newPlace = Place()
+		newPlace.name = name
+		newPlace.id = UUID().uuidString
 
+		// Delta Component
+		let insertPlaceComponent = DeltaUtil.getComponentToInsertPlace(newPlace, in: document)
+		sendDeltaComponents([insertPlaceComponent])
+	}
+
+	func deletePlaceAndClearRelatedPlaceIds(index: Int) {
+		let deletePlaceComp = DeltaUtil.getComponentToDeletePlace(at: index, in: document)
+
+		let placeToDelete = document.places[index]
+		let clearPlaceIdComps = DeltaUtil.getComponentToClearPlaceIdsForEntries(withPlaceId: placeToDelete.id, in: document)
+
+		let deltaComps = [deletePlaceComp] + clearPlaceIdComps
+		sendDeltaComponents(deltaComps)
+	}
+
+	func updatePlace(at index: Int, with updatedPlace: Place) {
+		let updatePlaceComponent = DeltaUtil.getComponentToUpdatePlace(updatedPlace, in: document, at: index)
+		sendDeltaComponents([updatePlaceComponent])
 	}
 
 }
@@ -46,7 +77,10 @@ extension DocumentHandler: DeltaDelegate {
 				assertionFailure(error.localizedDescription)
 			}
 		}
-		CTFileManager.saveDocument(document)
+		if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
+			// Code only executes when tests are running
+			CTFileManager.saveDocument(document)
+		}
 	}
 
 }

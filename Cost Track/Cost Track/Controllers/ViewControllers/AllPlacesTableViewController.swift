@@ -21,7 +21,6 @@ class AllPlacesTableViewController: UITableViewController {
 
 	// MARK: Global parameters
 	private weak var documentHandler: DocumentHandler!
-	private weak var deltaDelegate: DeltaDelegate!
 	private weak var placeSelectionDelegate: PlaceSelectionDelegate?
 	private var newPlaceAlertOkAction: UIAlertAction?
 	private var renamePlaceAlertOkAction: UIAlertAction?
@@ -79,7 +78,7 @@ extension AllPlacesTableViewController {
 		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (deleteAction, indexPath) in
 			let document = self.documentHandler.getDocument()
 			let placeToDelete = document.places[indexPath.row]
-			if document.hasEntriesWithPlace(placeToDelete) {
+			if document.hasEntriesWithPlaceId(placeToDelete.id) {
 				self.showAlertForPlaceDeletionConfirmation(indexPath: indexPath)
 			} else {
 				self.deletePlace(at: indexPath)
@@ -89,23 +88,14 @@ extension AllPlacesTableViewController {
 	}
 
 	private func deletePlace(at indexPath: IndexPath) {
-		let document = documentHandler.getDocument()
-		let placeToDelete = document.places[indexPath.row]
-
-		// Delta
-		let deletePlaceComp = DeltaUtil.getComponentToDeletePlace(at: indexPath.row, in: document)
-		let clearPlaceIdComps = DeltaUtil.getComponentToClearPlaceIdsForEntries(withPlaceId: placeToDelete.id, in: document)
-		var deltaComps = [deletePlaceComp]
-		deltaComps.append(contentsOf: clearPlaceIdComps)
-		deltaDelegate.sendDeltaComponents(deltaComps)
-
+		documentHandler.deletePlaceAndClearRelatedPlaceIds(index: indexPath.row)
 		tableView.reloadData()
 	}
 
 	private func showAlertForPlaceDeletionConfirmation(indexPath: IndexPath) {
 		let document = documentHandler.getDocument()
 		let placeToDelete = document.places[indexPath.row]
-		let entryCount = document.numberOfEntriesWithPlace(placeToDelete)
+		let entryCount = document.entriesWithPlaceId(placeToDelete.id).count
 
 		let message: String
 		if entryCount == 1 {
@@ -160,6 +150,7 @@ extension AllPlacesTableViewController {
 					return
 			}
 
+			// TODO: Modify condition to take into account address.
 			guard document.isPlaceNameNew(newPlaceName) else {
 				self.showAlertSaying("\'\(newPlaceName)\' already exists. Please enter a different name.")
 				return
@@ -168,10 +159,7 @@ extension AllPlacesTableViewController {
 			// Updated place
 			var updatedPlace = place
 			updatedPlace.name = newPlaceName
-
-			// Delta Component
-			let updatePlaceComponent = DeltaUtil.getComponentToUpdatePlace(updatedPlace, in: document, at: index)
-			self.deltaDelegate.sendDeltaComponents([updatePlaceComponent])
+			self.documentHandler.updatePlace(at: index, with: updatedPlace)
 
 			self.tableView.reloadData()
 			alertController.dismiss(animated: true)
@@ -222,14 +210,7 @@ extension AllPlacesTableViewController {
 				return
 			}
 
-			// New place
-			var newPlace = Place()
-			newPlace.name = placeName
-			newPlace.id = UUID().uuidString
-
-			// Delta Component
-			let insertPlaceComponent = DeltaUtil.getComponentToInsertPlace(newPlace, in: document)
-			self.deltaDelegate.sendDeltaComponents([insertPlaceComponent])
+			self.documentHandler.insertPlaceWithName(placeName)
 
 			self.tableView.reloadData()
 			alertController.dismiss(animated: true)

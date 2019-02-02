@@ -12,7 +12,10 @@ protocol DocumentModelSource {
 }
 
 protocol DocumentModelInput {
+	// Place
 	func insertPlaceWithName(_ name: String)
+	func deletePlaceAndClearRelatedPlaceIds(index: Int)
+	func updatePlace(at index: Int, with newPlace: Place)
 }
 
 protocol DocumentModel: DocumentModelSource, DocumentModelInput {

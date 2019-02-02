@@ -187,12 +187,8 @@ extension CostSheet {
 		entries.remove(at: index)
 	}
 
-	func numberOfEntriesWithPlace(_ place: Place) -> Int {
-		var count = 0
-		for entry in entries where entry.placeID == place.id {
-			count += 1
-		}
-		return count
+	func entriesWithPlaceId(_ id: String) -> [CostSheetEntry] {
+		return entries.filter { $0.placeID == id }
 	}
 
 }

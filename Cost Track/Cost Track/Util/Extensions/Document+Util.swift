@@ -57,27 +57,17 @@ extension Document {
 		return nil
 	}
 
-	func numberOfEntriesWithPlace(_ place: Place) -> Int {
-		var count = 0
+	func hasEntriesWithPlaceId(_ id: String) -> Bool {
 		for costSheet in costSheets {
-			count += costSheet.numberOfEntriesWithPlace(place)
-		}
-		return count
-	}
-
-	func hasEntriesWithPlace(_ place: Place) -> Bool {
-		for costSheet in costSheets {
-			for entry in costSheet.entries {
-				guard let entryPlace = getPlace(withId: entry.placeID) else {
-					assertionFailure("Could not get place by Id")
-					return false
-				}
-				if entryPlace == place {
-					return true
-				}
+			for entry in costSheet.entries where entry.placeID == id {
+				return true
 			}
 		}
 		return false
+	}
+
+	func entriesWithPlaceId(_ id: String) -> [CostSheetEntry] {
+		return costSheets.flatMap { $0.entriesWithPlaceId(id) }
 	}
 
 	var groupsWithCostSheets: [CostSheetGroup] {
