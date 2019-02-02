@@ -144,6 +144,13 @@ extension Document {
 		return true
 	}
 
+	func isAddressNew(address: String, forPlaceName placeName: String ) -> Bool {
+		for place in places where place.name == placeName && place.address == address {
+			return false
+		}
+		return true
+	}
+
 	func indexOfCostSheetWithId(_ id: String) -> Int? {
 		for i in 0..<costSheets.count {
 			if costSheets[i].id == id {

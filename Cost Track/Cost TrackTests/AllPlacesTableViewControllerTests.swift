@@ -20,20 +20,20 @@ class AllPlacesTableViewControllerTests: XCTestCase {
     }
 
 	func testAddPlace() {
-		// TODO: Modify once new place name condition is changed.
 		let oldPlaces = documentHandler.getDocument().places
 		let placeName = "Star Briyani"
+		let placeAddress = "Guduvanchery"
 
-		documentHandler.insertPlaceWithName(placeName)
+		documentHandler.insertPlace(name: placeName, address: placeAddress)
 
 		let newPlaces = documentHandler.getDocument().places
 		XCTAssert(newPlaces.count == oldPlaces.count + 1, "New place not added.")
-		XCTAssert(newPlaces.map { $0.name }.contains(placeName), "New place name not found.")
+		XCTAssert(newPlaces[newPlaces.count - 1].name == placeName, "New place name not found.")
+		XCTAssert(newPlaces[newPlaces.count - 1].address == placeAddress, "New place address not found.")
 	}
 
 	func testDeletePlace() {
-		// TODO: Modify once new place name condition is changed.
-		documentHandler.insertPlaceWithName("placeName")
+		documentHandler.insertPlace(name: "placeName", address: "placeAdd")
 		let deleteindex = 0
 		let oldPlaces = documentHandler.getDocument().places
 		let placeToDelete = oldPlaces[deleteindex]
@@ -56,8 +56,7 @@ class AllPlacesTableViewControllerTests: XCTestCase {
 	}
 
 	func testUpdatePlace() {
-		// TODO: Modify once new place name condition is changed.
-		documentHandler.insertPlaceWithName("placeName")
+		documentHandler.insertPlace(name: "placeName", address: "placeAdd")
 		let updateindex = 0
 		let oldPlaces = documentHandler.getDocument().places
 		let placeToUpdate = oldPlaces[updateindex]

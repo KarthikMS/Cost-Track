@@ -38,9 +38,10 @@ extension DocumentHandler: DocumentModel {
 		}
 	}
 
-	func insertPlaceWithName(_ name: String) {
+	func insertPlace(name: String, address: String) {
 		var newPlace = Place()
 		newPlace.name = name
+		newPlace.address = address
 		newPlace.id = UUID().uuidString
 
 		// Delta Component

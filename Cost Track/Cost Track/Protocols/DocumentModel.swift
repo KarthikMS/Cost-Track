@@ -13,7 +13,7 @@ protocol DocumentModelSource {
 
 protocol DocumentModelInput {
 	// Place
-	func insertPlaceWithName(_ name: String)
+	func insertPlace(name: String, address: String)
 	func deletePlaceAndClearRelatedPlaceIds(index: Int)
 	func updatePlace(at index: Int, with newPlace: Place)
 }
