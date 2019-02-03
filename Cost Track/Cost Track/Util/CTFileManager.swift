@@ -7,11 +7,8 @@
 //
 
 import Foundation
-import FirebaseDatabase
 
 class CTFileManager {
-
-	private static var databaseRef = Database.database().reference()
 
 	private static var userDocumentUrl: URL? {
 		let directories = NSSearchPathForDirectoriesInDomains(.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
@@ -58,16 +55,6 @@ class CTFileManager {
 		}
 		let documentData = document.safeSerializedData as NSData
 		documentData.write(toFile: userDocumentUrl.path, atomically: true)
-		saveToFirebaseDatabase(document: document)
-	}
-
-	private static func saveToFirebaseDatabase(document: Document) {
-		do {
-			let documentJson = try document.jsonString()
-			databaseRef.child("documentJson").setValue(documentJson)
-		} catch {
-			assertionFailure("Error converting document to json: \(error.localizedDescription)")
-		}
 	}
 
 	static func deleteDocument() {

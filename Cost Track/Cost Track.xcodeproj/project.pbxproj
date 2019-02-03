@@ -25,6 +25,9 @@
 		D910AE832206D64000A83C4E /* GroupTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE822206D64000A83C4E /* GroupTableViewController.swift */; };
 		D910AE852206F79D00A83C4E /* GroupTableViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE842206F79D00A83C4E /* GroupTableViewControllerTests.swift */; };
 		D910AE87220724E200A83C4E /* DocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE86220724E200A83C4E /* DocumentTests.swift */; };
+		D910AE8922072DF100A83C4E /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE8822072DF100A83C4E /* Networking.swift */; };
+		D910AE8B22072E6500A83C4E /* NetworkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE8A22072E6500A83C4E /* NetworkHandler.swift */; };
+		D910AE8E22072E7900A83C4E /* FirebaseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE8D22072E7900A83C4E /* FirebaseHandler.swift */; };
 		D955C66A21AA826700223AD9 /* CostSheetEntry+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */; };
 		D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F3F120F9BE81003C7C58 /* AppDelegate.swift */; };
 		D962F3F720F9BE81003C7C58 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F520F9BE81003C7C58 /* Main.storyboard */; };
@@ -114,6 +117,9 @@
 		D910AE822206D64000A83C4E /* GroupTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableViewController.swift; sourceTree = "<group>"; };
 		D910AE842206F79D00A83C4E /* GroupTableViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableViewControllerTests.swift; sourceTree = "<group>"; };
 		D910AE86220724E200A83C4E /* DocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTests.swift; sourceTree = "<group>"; };
+		D910AE8822072DF100A83C4E /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
+		D910AE8A22072E6500A83C4E /* NetworkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHandler.swift; sourceTree = "<group>"; };
+		D910AE8D22072E7900A83C4E /* FirebaseHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseHandler.swift; sourceTree = "<group>"; };
 		D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CostSheetEntry+Util.swift"; sourceTree = "<group>"; };
 		D962F3EE20F9BE81003C7C58 /* Cost Track.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cost Track.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D962F3F120F9BE81003C7C58 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -230,8 +236,18 @@
 			isa = PBXGroup;
 			children = (
 				D910AE762205848600A83C4E /* DocumentModel.swift */,
+				D910AE8822072DF100A83C4E /* Networking.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		D910AE8C22072E6A00A83C4E /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				D910AE8A22072E6500A83C4E /* NetworkHandler.swift */,
+				D910AE8D22072E7900A83C4E /* FirebaseHandler.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		D962F3E520F9BE81003C7C58 = {
@@ -424,6 +440,7 @@
 				D9B119A5213C3C400007CDA1 /* ProtoExtensions.swift */,
 				D9B119B521516A670007CDA1 /* CTFileManager.swift */,
 				D910AE782205872000A83C4E /* DocumentHandler.swift */,
+				D910AE8C22072E6A00A83C4E /* Network */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -727,10 +744,13 @@
 				D9EED51421B2F64D00F969A8 /* AllPlacesTableViewController.swift in Sources */,
 				D9AC8184217AFD49002FCA94 /* Category.pb.swift in Sources */,
 				D989740C21173E9A0051F809 /* EntryCategoryPicker.swift in Sources */,
+				D910AE8922072DF100A83C4E /* Networking.swift in Sources */,
 				D9F249FF218D927400D0C81A /* CommonUtil.swift in Sources */,
 				D910AE832206D64000A83C4E /* GroupTableViewController.swift in Sources */,
 				D962F42820F9C152003C7C58 /* MyCostSheetsViewController.swift in Sources */,
+				D910AE8B22072E6500A83C4E /* NetworkHandler.swift in Sources */,
 				D9AC8189217B0085002FCA94 /* Category+Util.swift in Sources */,
+				D910AE8E22072E7900A83C4E /* FirebaseHandler.swift in Sources */,
 				D9B119A8213D9D5E0007CDA1 /* FieldStringUtil.swift in Sources */,
 				D9A42AC821915B8B0036D9AE /* EntryPhotoViewController.swift in Sources */,
 				D9F5E5F420FEF77300454FA9 /* CostSheetEntryViewController.swift in Sources */,
