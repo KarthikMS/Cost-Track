@@ -72,7 +72,7 @@ extension GroupTableViewController {
 		guard sourceIndexPath.row != destinationIndexPath.row else {
 			return
 		}
-		// TODO: Finish this.
+		documentHandler.reorderGroup(from: sourceIndexPath.row, to: destinationIndexPath.row)
 	}
 
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

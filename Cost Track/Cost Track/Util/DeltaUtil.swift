@@ -64,6 +64,21 @@ class DeltaUtil {
 		return getComponent(opType: .delete, fieldString: fieldString, oldValue: group.safeSerializedData)
 	}
 
+	static func getComponentToReorderGroup(from fromIndex: Int, to toIndex: Int, in document: Document) -> [DocumentContentOperation.Component] {
+		let group = document.groups[fromIndex]
+		let deleteComp = getComponent(
+			opType: .delete,
+			fieldString: "2,arr:\(fromIndex)",
+			oldValue: group.safeSerializedData
+		)
+		let insertComp = getComponent(
+			opType: .insert,
+			fieldString: "2,arr:\(toIndex)",
+			newValue: group.safeSerializedData
+		)
+		return [deleteComp, insertComp]
+	}
+
 	static func getComponentToRenameGroup(at index: Int, to newName: String, in document: Document) -> DocumentContentOperation.Component {
 		let oldName = document.groups[index].name
 		return getComponent(

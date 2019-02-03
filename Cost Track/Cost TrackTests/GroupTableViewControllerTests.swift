@@ -62,9 +62,30 @@ class GroupTableViewControllerTests: XCTestCase {
 		XCTAssert(renamedGroup.id == groupToRename.id, "GroupId has changed.")
 	}
 
-	// TODO: Finish this.
-	func testReorderGroup() {
+	func testReorderGroupFromHigherIndexToLowerIndex() {
+		let fromIndex = 3
+		let toIndex = 1
+		let oldGroups = documentHandler.getDocument().groups
 
+		documentHandler.reorderGroup(from: fromIndex, to: toIndex)
+
+		let newGroups = documentHandler.getDocument().groups
+		XCTAssert(newGroups.count == oldGroups.count, "Group counts are not the same.")
+		XCTAssert(newGroups[toIndex].id == oldGroups[fromIndex].id, "Group ids are not the same.")
+		XCTAssert(newGroups[fromIndex].id == oldGroups[fromIndex - 1].id, "Groups not ordered correctly.")
+	}
+
+	func testReorderGroupFromLowerIndexToHigherIndex() {
+		let fromIndex = 1
+		let toIndex = 3
+		let oldGroups = documentHandler.getDocument().groups
+
+		documentHandler.reorderGroup(from: fromIndex, to: toIndex)
+
+		let newGroups = documentHandler.getDocument().groups
+		XCTAssert(newGroups.count == oldGroups.count, "Group counts are not the same.")
+		XCTAssert(newGroups[toIndex].id == oldGroups[fromIndex].id, "Group ids are not the same.")
+		XCTAssert(newGroups[fromIndex].id == oldGroups[fromIndex + 1].id, "Groups not ordered correctly.")
 	}
 
 }
