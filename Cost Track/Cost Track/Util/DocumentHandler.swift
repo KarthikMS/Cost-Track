@@ -91,8 +91,8 @@ extension DocumentHandler: DocumentModel {
 	}
 
 	func renameGroupAt(_ index: Int, to newName: String) {
-		let groupToRename = getDocument().groups[index]
-		// TODO: Finish this.
+		let renameComp = DeltaUtil.getComponentToRenameGroup(at: index, to: newName, in: getDocument())
+		sendDeltaComponents([renameComp])
 	}
 
 }

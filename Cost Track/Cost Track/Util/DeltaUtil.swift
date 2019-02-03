@@ -58,6 +58,22 @@ class DeltaUtil {
 		return getComponent(opType: .insert, fieldString: fieldString, newValue: group.safeSerializedData)
 	}
 
+	static func getComponentToDeleteGroup(at index: Int, in document: Document) -> DocumentContentOperation.Component {
+		let group = document.groups[index]
+		let fieldString = "2,arr:\(index)"
+		return getComponent(opType: .delete, fieldString: fieldString, oldValue: group.safeSerializedData)
+	}
+
+	static func getComponentToRenameGroup(at index: Int, to newName: String, in document: Document) -> DocumentContentOperation.Component {
+		let oldName = document.groups[index].name
+		return getComponent(
+			opType: .update,
+			fieldString: "2,arr:\(index),1",
+			oldValue: oldName.data(using: String.Encoding.utf8),
+			newValue: newName.data(using: String.Encoding.utf8)
+		)
+	}
+
 	static func getComponentToInsertPlace(_ place: Place, in document: Document, at index: Int? = nil) -> DocumentContentOperation.Component {
 		var insertIndex: Int
 		if let index = index {
@@ -115,12 +131,6 @@ class DeltaUtil {
 		}
 
 		return comps
-	}
-
-	static func getComponentToDeleteGroup(at index: Int, in document: Document) -> DocumentContentOperation.Component {
-		let group = document.groups[index]
-		let fieldString = "2,arr:\(index)"
-		return getComponent(opType: .delete, fieldString: fieldString, oldValue: group.safeSerializedData)
 	}
 
 	static func getComponentToInsertCostSheet(_ costSheet: CostSheet, in document: Document, at index: Int? = nil) -> DocumentContentOperation.Component {

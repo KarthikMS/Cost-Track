@@ -1,5 +1,5 @@
 //
-//  GroupSelectTableViewControllerTests.swift
+//  GroupTableViewControllerTests.swift
 //  Cost TrackTests
 //
 //  Created by Karthik M S on 03/02/19.
@@ -9,7 +9,7 @@
 @testable import Cost_Track
 import XCTest
 
-class GroupSelectTableViewControllerTests: XCTestCase {
+class GroupTableViewControllerTests: XCTestCase {
 
 	var documentHandler: DocumentHandler!
 
@@ -50,9 +50,16 @@ class GroupSelectTableViewControllerTests: XCTestCase {
 		XCTAssert(costSheetsInDeletedGroup.isEmpty, "Related cost sheets not moved to default group.")
 	}
 
-	// TODO: Finis this.
-	func testEditGroup() {
-			
+	func testRenameGroup() {
+		let updateIndex = 1
+		let groupToRename = documentHandler.getDocument().groups[updateIndex]
+		let newGroupName = groupToRename.name + "modified"
+
+		documentHandler.renameGroupAt(updateIndex, to: newGroupName)
+
+		let renamedGroup = documentHandler.getDocument().groups[updateIndex]
+		XCTAssert(renamedGroup.name == newGroupName, "Group name not updated.")
+		XCTAssert(renamedGroup.id == groupToRename.id, "GroupId has changed.")
 	}
 
 	// TODO: Finish this.
