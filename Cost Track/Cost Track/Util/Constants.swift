@@ -34,6 +34,7 @@ let SelectPlaceSegue = "SelectPlaceSegue"
 
 // Settings Storyboard
 let AllPlacesSegue = "AllPlacesSegue"
+let GroupEditSegue = "GroupEditSegue"
 
 // MARK: Strings
 let BalanceCarryOver = "BalanceCarryOver"

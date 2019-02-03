@@ -10,7 +10,8 @@ import UIKit
 
 // MARK: Constants
 private let ClearDataSection = 0
-private let AllPlacesSection = 1
+private let PlaceSection = 1
+private let GroupSection = 2
 
 class SettingsTableViewController: UITableViewController {
 
@@ -32,6 +33,12 @@ class SettingsTableViewController: UITableViewController {
 				return
 			}
 			allPlacesTableViewController.setup(documentHandler: documentHandler, placeSelectionDelegate: nil, mode: .view)
+		case GroupEditSegue:
+			guard let groupEditTableViewController = segue.destination as? GroupTableViewController else {
+				assertionFailure()
+				return
+			}
+			groupEditTableViewController.setup(documentHandler: documentHandler, selectionDelegate: nil, mode: .edit)
 		default:
 			return
 		}
@@ -59,12 +66,12 @@ class SettingsTableViewController: UITableViewController {
 extension SettingsTableViewController {
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		// Temp
-		return 2
+		// TODO: Settings: Finish this
+		return 3
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		// Temp
+		// TODO: Settings: Finish this
 		return 1
 	}
 
@@ -73,8 +80,10 @@ extension SettingsTableViewController {
 		switch indexPath.section {
 		case ClearDataSection:
 			cell.textLabel?.text = "Clear data"
-		case AllPlacesSection:
+		case PlaceSection:
 			cell.textLabel?.text = "Places"
+		case GroupSection:
+			cell.textLabel?.text = "Groups"
 		default:
 			assertionFailure()
 			break
@@ -91,8 +100,10 @@ extension SettingsTableViewController {
 		switch indexPath.section {
 		case ClearDataSection:
 			showActionSheetToClearData()
-		case AllPlacesSection:
+		case PlaceSection:
 			performSegue(withIdentifier: AllPlacesSegue, sender: nil)
+		case GroupSection:
+			performSegue(withIdentifier: GroupEditSegue, sender: nil)
 		default:
 			assertionFailure()
 			break

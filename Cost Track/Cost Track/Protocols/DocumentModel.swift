@@ -20,6 +20,7 @@ protocol DocumentModelInput {
 	// Group
 	func insertGroupWithName(_ name: String)
 	func deleteGroupAndMoveRelatedCostSheetsToDefaultGroup(index: Int)
+	func renameGroupAt(_ index: Int, to newName: String)
 }
 
 protocol DocumentModel: DocumentModelSource, DocumentModelInput {

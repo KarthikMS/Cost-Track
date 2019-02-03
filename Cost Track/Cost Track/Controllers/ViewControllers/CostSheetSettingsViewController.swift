@@ -40,12 +40,12 @@ class CostSheetSettingsViewController: UIViewController {
 	// MARK: Navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == GroupSelectFromCostSheetSettingsSegue {
-			guard let groupSelectTableViewController = segue.destination as? GroupSelectTableViewController else {
+			guard let groupSelectTableViewController = segue.destination as? GroupTableViewController else {
 				assertionFailure()
 				return
 			}
 			groupSelectTableViewController.selectedGroupID = selectedGroupId
-			groupSelectTableViewController.setup(documentHandler: documentHandler, delegate: self)
+			groupSelectTableViewController.setup(documentHandler: documentHandler, selectionDelegate: self, mode: .select)
 		}
 	}
 	
@@ -54,14 +54,14 @@ class CostSheetSettingsViewController: UIViewController {
 // MARK: CostSheetSettingsTableViewDelegate
 extension CostSheetSettingsViewController: CostSheetSettingsTableViewDelegate {
 
-	func didSelectGroupCell() {
+	func didGroupTableViewCell() {
 		performSegue(withIdentifier: GroupSelectFromCostSheetSettingsSegue, sender: nil)
 	}
 
 }
 
 // MARK: GroupSelectTableViewControllerDelegate
-extension CostSheetSettingsViewController: GroupSelectTableViewControllerDelegate {
+extension CostSheetSettingsViewController: GroupSelectionDelegate {
 
 	func didSelectGroup(id: String) {
 		guard let group = documentHandler.getDocument().getGroup(withId: id) else {
