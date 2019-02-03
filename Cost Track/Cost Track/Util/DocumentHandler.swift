@@ -20,6 +20,7 @@ class DocumentHandler {
 
 extension DocumentHandler: DocumentModel {
 
+	// MARK: Place
 	func getDocument() -> Document {
 		return document
 	}
@@ -62,6 +63,23 @@ extension DocumentHandler: DocumentModel {
 	func updatePlace(at index: Int, with updatedPlace: Place) {
 		let updatePlaceComponent = DeltaUtil.getComponentToUpdatePlace(updatedPlace, in: document, at: index)
 		sendDeltaComponents([updatePlaceComponent])
+	}
+
+	// MARK: Group
+	func insertGroupWithName(_ name: String) {
+		var newGroup = CostSheetGroup()
+		newGroup.name = name
+		newGroup.id = UUID().uuidString
+
+		let insertGroupComponent = DeltaUtil.getComponentToInsertGroup(newGroup, in: document)
+		sendDeltaComponents([insertGroupComponent])
+	}
+
+	func deleteGroupAndMoveRelatedCostSheetsToDefaultGroup(index: Int) {
+		let deleteGroupComp = DeltaUtil.getComponentToDeleteGroup(at: index, in: document)
+		let moveCostSheetsComps = DeltaUtil.getComponentsToMoveCostSheets(from: document.groups[index], to: NotSetGroup, in: document)
+		let deltaComps = [deleteGroupComp] + moveCostSheetsComps
+		sendDeltaComponents(deltaComps)
 	}
 
 }

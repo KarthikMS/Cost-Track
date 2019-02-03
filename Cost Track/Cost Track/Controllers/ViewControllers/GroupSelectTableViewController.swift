@@ -74,14 +74,7 @@ extension GroupSelectTableViewController {
 
 	private func deleteGroup(at indexPath: IndexPath) {
 		let document = documentHandler.getDocument()
-
-		// Delta Component
-		let deleteGroupComp = DeltaUtil.getComponentToDeleteGroup(at: indexPath.row, in: document)
-		let moveCostSheetsComps = DeltaUtil.getComponentsToMoveCostSheets(from: document.groups[indexPath.row], to: NotSetGroup, in: document)
-		var deltaComps = [deleteGroupComp]
-		deltaComps.append(contentsOf: moveCostSheetsComps)
-		documentHandler.sendDeltaComponents(deltaComps)
-
+		documentHandler.deleteGroupAndMoveRelatedCostSheetsToDefaultGroup(index: indexPath.row)
 		if indexPath.row > 0 {
 			selectedGroupID = document.groups[indexPath.row - 1].id
 		} else {
@@ -144,23 +137,12 @@ private extension GroupSelectTableViewController {
 					assertionFailure()
 					return
 			}
-			let document = self.documentHandler.getDocument()
-
-			guard document.isGroupNameNew(groupName) else {
+			guard self.documentHandler.getDocument().isGroupNameNew(groupName) else {
 				self.showAlertSaying("\'\(groupName)\' already exists. Please enter a different name.")
 				return
 			}
-
-			// New group
-			var newGroup = CostSheetGroup()
-			newGroup.name = groupName
-			newGroup.id = UUID().uuidString
-
-			// Delta Component
-			let insertGroupComponent = DeltaUtil.getComponentToInsertGroup(newGroup, in: document)
-			self.documentHandler.sendDeltaComponents([insertGroupComponent])
-
-			self.selectedGroupID = newGroup.id
+			self.documentHandler.insertGroupWithName(groupName)
+			self.selectedGroupID = self.documentHandler.getDocument().groups.last!.id
 			self.tableView.reloadData()
 			alertController.dismiss(animated: true)
 		})

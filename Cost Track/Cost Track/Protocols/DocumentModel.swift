@@ -16,6 +16,10 @@ protocol DocumentModelInput {
 	func insertPlace(name: String, address: String)
 	func deletePlaceAndClearRelatedPlaceIds(index: Int)
 	func updatePlace(at index: Int, with newPlace: Place)
+
+	// Group
+	func insertGroupWithName(_ name: String)
+	func deleteGroupAndMoveRelatedCostSheetsToDefaultGroup(index: Int)
 }
 
 protocol DocumentModel: DocumentModelSource, DocumentModelInput {
