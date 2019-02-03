@@ -38,6 +38,7 @@ class GroupTableViewController: UITableViewController {
 
 		if mode == .edit {
 			tableView.isEditing = true
+			tableView.allowsSelectionDuringEditing = true
 		}
 	}
 
@@ -137,6 +138,7 @@ extension GroupTableViewController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		switch mode! {
 		case .edit:
+			showAlertToRenameGroup(at: indexPath)
 			tableView.deselectRow(at: indexPath, animated: true)
 		case .select:
 			let group = documentHandler.getDocument().groups[indexPath.row]
@@ -145,7 +147,7 @@ extension GroupTableViewController {
 		}
 	}
 
-	private func renameGroup(at indexPath: IndexPath) {
+	private func showAlertToRenameGroup(at indexPath: IndexPath) {
 		let groupToRename = documentHandler.getDocument().groups[indexPath.row]
 		let alertController = UIAlertController(title: "Rename group", message: "Please enter a new name for \(groupToRename.name)", preferredStyle: .alert)
 		alertController.addTextField { (textField) in
