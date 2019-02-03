@@ -25,5 +25,5 @@ protocol DocumentModelInput {
 }
 
 protocol DocumentModel: DocumentModelSource, DocumentModelInput {
-//	func setUpWithDocument(_ document: Document)
+
 }

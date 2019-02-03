@@ -13,7 +13,7 @@ class DocumentHandler {
 	private var document: Document
 
 	init(document: Document) {
-		// Uncomment and use the next block of code to use json document
+		// Comment and use the next block of code to use json document
 		self.document = document
 
 		// JSON
@@ -34,15 +34,9 @@ extension DocumentHandler: DocumentModel {
 	}
 
 	func deleteDocument() {
+		document = Document.new
 		if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-			// Code only executes when tests are running
-			CTFileManager.deleteDocument()
-		}
-
-		(document, _) = CTFileManager.getDocument()
-
-		if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-			// Code only executes when tests are running
+			// Code does not execute when tests are running
 			CTFileManager.saveDocument(document)
 		}
 	}
@@ -115,7 +109,7 @@ extension DocumentHandler: DeltaDelegate {
 			}
 		}
 		if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
-			// Code only executes when tests are running
+			// Code does not execute when tests are running
 			CTFileManager.saveDocument(document)
 		}
 	}

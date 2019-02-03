@@ -24,6 +24,7 @@
 		D910AE7D2205ECF400A83C4E /* HardcodedTestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE7C2205ECF400A83C4E /* HardcodedTestData.swift */; };
 		D910AE832206D64000A83C4E /* GroupTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE822206D64000A83C4E /* GroupTableViewController.swift */; };
 		D910AE852206F79D00A83C4E /* GroupTableViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE842206F79D00A83C4E /* GroupTableViewControllerTests.swift */; };
+		D910AE87220724E200A83C4E /* DocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D910AE86220724E200A83C4E /* DocumentTests.swift */; };
 		D955C66A21AA826700223AD9 /* CostSheetEntry+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */; };
 		D962F3F220F9BE81003C7C58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D962F3F120F9BE81003C7C58 /* AppDelegate.swift */; };
 		D962F3F720F9BE81003C7C58 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D962F3F520F9BE81003C7C58 /* Main.storyboard */; };
@@ -112,6 +113,7 @@
 		D910AE7C2205ECF400A83C4E /* HardcodedTestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardcodedTestData.swift; sourceTree = "<group>"; };
 		D910AE822206D64000A83C4E /* GroupTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableViewController.swift; sourceTree = "<group>"; };
 		D910AE842206F79D00A83C4E /* GroupTableViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableViewControllerTests.swift; sourceTree = "<group>"; };
+		D910AE86220724E200A83C4E /* DocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTests.swift; sourceTree = "<group>"; };
 		D955C66921AA826700223AD9 /* CostSheetEntry+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CostSheetEntry+Util.swift"; sourceTree = "<group>"; };
 		D962F3EE20F9BE81003C7C58 /* Cost Track.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cost Track.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D962F3F120F9BE81003C7C58 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 			children = (
 				D910AE7A2205B4E100A83C4E /* AllPlacesTableViewControllerTests.swift */,
 				D910AE842206F79D00A83C4E /* GroupTableViewControllerTests.swift */,
+				D910AE86220724E200A83C4E /* DocumentTests.swift */,
 				D910AE7C2205ECF400A83C4E /* HardcodedTestData.swift */,
 				D962F40820F9BE81003C7C58 /* Info.plist */,
 			);
@@ -754,6 +757,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D910AE87220724E200A83C4E /* DocumentTests.swift in Sources */,
 				D910AE7D2205ECF400A83C4E /* HardcodedTestData.swift in Sources */,
 				D910AE852206F79D00A83C4E /* GroupTableViewControllerTests.swift in Sources */,
 				D910AE7B2205B4E100A83C4E /* AllPlacesTableViewControllerTests.swift in Sources */,
