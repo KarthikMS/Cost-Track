@@ -8,7 +8,7 @@
 
 import UIKit
 
-var NotSetGroup = CostSheetGroup()
+var NotSetGroupId = ""
 var TransferCategory = Category()
 
 // MARK: Colors

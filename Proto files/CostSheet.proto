@@ -3,14 +3,13 @@ syntax = "proto2";
 option swift_prefix = "";
 
 import "CostSheetEntry.proto";
-import "CostSheetGroup.proto";
 
 message CostSheet {
 
   required string name = 1;
   required float initialBalance = 2;
   required bool includeInOverallTotal = 3;
-  required CostSheetGroup group = 4;
+  required string groupId = 4;
   repeated CostSheetEntry entries = 5;
   required bytes lastModifiedDate = 6;
   required bytes createdOnDate = 7;

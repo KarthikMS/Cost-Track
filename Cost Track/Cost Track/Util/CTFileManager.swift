@@ -34,9 +34,9 @@ class CTFileManager {
 			let loadedDocData = try NSData(contentsOfFile: userDocumentUrl.path) as Data
 			let loadedDoc = try Document(serializedData: loadedDocData)
 
-			// Setting NotSetGroup
+			// Setting NotSetGroupId
 			for group in loadedDoc.groups where group.name == "Not set" {
-				NotSetGroup = group
+				NotSetGroupId = group.id
 			}
 
 			// Setting TransferCategory

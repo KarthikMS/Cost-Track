@@ -76,7 +76,7 @@ extension GroupTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		guard documentHandler.getDocument().groups[indexPath.row].id != NotSetGroup.id else {
+		guard documentHandler.getDocument().groups[indexPath.row].id != NotSetGroupId else {
 			return false
 		}
 		return true
@@ -86,7 +86,7 @@ extension GroupTableViewController {
 		let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (deleteAction, indexPath) in
 			let document = self.documentHandler.getDocument()
 			let groupToDelete = document.groups[indexPath.row]
-			if document.hasCostSheets(in: groupToDelete) {
+			if document.hasCostSheetsInGroupWithId(groupToDelete.id) {
 				self.showAlertForGroupDeletionConfirmation(deleteIndexPath: indexPath)
 			} else {
 				self.deleteGroup(at: indexPath)
@@ -109,7 +109,7 @@ extension GroupTableViewController {
 	private func showAlertForGroupDeletionConfirmation(deleteIndexPath: IndexPath) {
 		let document = documentHandler.getDocument()
 		let deletionGroup = document.groups[deleteIndexPath.row]
-		let costSheetCount = document.numberOfCostSheets(in: deletionGroup)
+		let costSheetCount = document.numberOfCostSheetsInGroupWithId(deletionGroup.id)
 
 		let message: String
 		if costSheetCount == 1 {

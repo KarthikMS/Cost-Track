@@ -14,9 +14,11 @@ extension Document {
 		var newDoc = Document()
 
 		// Setting NotSetGroup
-		NotSetGroup.name = "Not set"
-		NotSetGroup.id = UUID().uuidString
-		newDoc.groups.append(NotSetGroup)
+		NotSetGroupId = UUID().uuidString
+		var notSetGroup = CostSheetGroup()
+		notSetGroup.name = "Not set"
+		notSetGroup.id = NotSetGroupId
+		newDoc.groups.append(notSetGroup)
 
 		newDoc.categories = Category.defaultCategories()
 		newDoc.createdOnDate = Date().data
@@ -24,20 +26,20 @@ extension Document {
 		return newDoc
 	}
 
-	func costSheetsInGroup(_ group: CostSheetGroup) -> [CostSheet] {
+	func costSheetsInGroupWithId(_ id: String) -> [CostSheet] {
 		var costSheetsInGroup = [CostSheet]()
-		for costSheet in costSheets where costSheet.group.id == group.id {
+		for costSheet in costSheets where costSheet.groupID == id {
 			costSheetsInGroup.append(costSheet)
 		}
 		return costSheetsInGroup
 	}
 
-	func numberOfCostSheets(in group: CostSheetGroup) -> Int {
-		return costSheetsInGroup(group).count
+	func numberOfCostSheetsInGroupWithId(_ id: String) -> Int {
+		return costSheetsInGroupWithId(id).count
 	}
 
-	func hasCostSheets(in group: CostSheetGroup) -> Bool {
-		for costSheet in costSheets where costSheet.group.id == group.id {
+	func hasCostSheetsInGroupWithId(_ id: String) -> Bool {
+		for costSheet in costSheets where costSheet.groupID == id {
 			return true
 		}
 		return false
@@ -70,31 +72,19 @@ extension Document {
 		return costSheets.flatMap { $0.entriesWithPlaceId(id) }
 	}
 
-	var groupsWithCostSheets: [CostSheetGroup] {
-		var groupsWithCostSheets = [CostSheetGroup]()
-		for group in groups {
-			if costSheetsInGroup(group).count > 0 {
-				groupsWithCostSheets.append(group)
-			}
+	var groupIdsWithCostSheets: [String] {
+		var groupIdsWithCostSheets = [String]()
+		for group in groups where !costSheetsInGroupWithId(group.id).isEmpty {
+			groupIdsWithCostSheets.append(group.id)
 		}
-		return groupsWithCostSheets
+		return groupIdsWithCostSheets
 	}
 
 	var hasCostSheetsInOtherGroups: Bool {
-		for costSheet in costSheets where costSheet.group.id != NotSetGroup.id {
+		for costSheet in costSheets where costSheet.groupID != NotSetGroupId {
 			return true
 		}
 		return false
-	}
-
-	mutating func moveCostSheets(from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup) {
-		for costSheet in costSheetsInGroup(fromGroup) {
-			guard let index = indexOfCostSheetWithId(costSheet.id) else {
-				assertionFailure()
-				return
-			}
-			costSheets[index].group = toGroup
-		}
 	}
 
 	var totalAmount: Float {

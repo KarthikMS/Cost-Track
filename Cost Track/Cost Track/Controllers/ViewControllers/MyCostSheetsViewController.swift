@@ -144,8 +144,8 @@ class MyCostSheetsViewController: UIViewController {
 	// MARK: Misc. functions
 	private func costSheetAtIndexPath(_ indexPath: IndexPath) -> CostSheet {
 		let document = documentHandler.getDocument()
-		let groupsWithCostSheets = document.groupsWithCostSheets
-		return document.costSheetsInGroup(groupsWithCostSheets[indexPath.section])[indexPath.row]
+		let groupIdsWithCostSheets = document.groupIdsWithCostSheets
+		return document.costSheetsInGroupWithId(groupIdsWithCostSheets[indexPath.section])[indexPath.row]
 	}
 
 	private func showAlertForDeletingCostSheet(withId id: String, at indexPath: IndexPath) {
@@ -225,7 +225,7 @@ private extension MyCostSheetsViewController {
 extension MyCostSheetsViewController: UITableViewDataSource {
 
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return documentHandler.getDocument().groupsWithCostSheets.count
+		return documentHandler.getDocument().groupIdsWithCostSheets.count
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -233,8 +233,8 @@ extension MyCostSheetsViewController: UITableViewDataSource {
 			return 0
 		}
 		let document = documentHandler.getDocument()
-		let groupsWithCostSheets = document.groupsWithCostSheets
-		return document.costSheetsInGroup(groupsWithCostSheets[section]).count
+		let groupIdsWithCostSheets = document.groupIdsWithCostSheets
+		return document.costSheetsInGroupWithId(groupIdsWithCostSheets[section]).count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -287,8 +287,12 @@ extension MyCostSheetsViewController: UITableViewDelegate {
 		var frame = tableView.frame
 		frame.origin.y = 0
 		frame.size.height = 40
-		let title = document.groupsWithCostSheets[section].name
-		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: title, balance: nil, delegate: self)
+		let groupId = document.groupIdsWithCostSheets[section]
+		guard let groupName = document.getGroup(withId: groupId)?.name else {
+			assertionFailure("Could not get group.")
+			return nil
+		}
+		let headerView = TableViewSectionHeaderView(frame: frame, section: section, text: groupName, balance: nil, delegate: self)
 		return headerView
 	}
 

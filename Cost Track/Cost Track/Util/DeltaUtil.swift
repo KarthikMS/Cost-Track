@@ -165,7 +165,7 @@ class DeltaUtil {
 	}
 
 	// TODO: Fix this
-	static func getComponentsToUpdatePropertiesOfCostSheet(withId costSheetId: String, in document: Document, name: String?, initialBalance: Float?, includeInOverallTotal: Bool?, group: CostSheetGroup?, lastModifiedData: Data) -> [DocumentContentOperation.Component] {
+	static func getComponentsToUpdatePropertiesOfCostSheet(withId costSheetId: String, in document: Document, name: String?, initialBalance: Float?, includeInOverallTotal: Bool?, groupId: String?, lastModifiedData: Data) -> [DocumentContentOperation.Component] {
 		guard let index = document.indexOfCostSheetWithId(costSheetId) else {
 			assertionFailure()
 			return []
@@ -200,12 +200,12 @@ class DeltaUtil {
 			)
 			deltaComps.append(updateIncludeInOverallTotal)
 		}
-		if let group = group {
+		if let groupId = groupId {
 			let updateIncludeInOverallTotal = getComponent(
 				opType: .update,
 				fieldString: costSheetFieldString + ",4",
-				oldValue: oldCostSheet.group.safeSerializedData,
-				newValue: group.safeSerializedData
+				oldValue: oldCostSheet.groupID.data(using: String.Encoding.utf8),
+				newValue: groupId.data(using: String.Encoding.utf8)
 			)
 			deltaComps.append(updateIncludeInOverallTotal)
 		}
@@ -219,20 +219,20 @@ class DeltaUtil {
 		return deltaComps
 	}
 
-	static func getComponentToUpdateGroupOfCostSheet(at index: Int, from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in document: Document) -> DocumentContentOperation.Component {
+	static func getComponentToUpdateGroupIdOfCostSheet(at index: Int, from fromId: String, to toId: String, in document: Document) -> DocumentContentOperation.Component {
 		let fieldString = "1,arr:\(index),4"
 		return getComponent(
 			opType: .update,
 			fieldString: fieldString,
-			oldValue: fromGroup.safeSerializedData,
-			newValue: toGroup.safeSerializedData
+			oldValue: fromId.data(using: String.Encoding.utf8),
+			newValue: toId.data(using: String.Encoding.utf8)
 		)
 	}
 
-	static func getComponentsToMoveCostSheets(from fromGroup: CostSheetGroup, to toGroup: CostSheetGroup, in document: Document) -> [DocumentContentOperation.Component] {
+	static func getComponentsToMoveCostSheets(fromGroupWithId fromGroupId: String, toGroupWithId toGroupId: String, in document: Document) -> [DocumentContentOperation.Component] {
 		var comps = [DocumentContentOperation.Component]()
-		for i in 0..<document.costSheets.count where document.costSheets[i].group.id == fromGroup.id {
-			let updateGroupComp = getComponentToUpdateGroupOfCostSheet(at: i, from: fromGroup, to: toGroup, in: document)
+		for (i, costSheet) in document.costSheets.enumerated() where costSheet.groupID == fromGroupId {
+			let updateGroupComp = getComponentToUpdateGroupIdOfCostSheet(at: i, from: fromGroupId, to: toGroupId, in: document)
 			comps.append(updateGroupComp)
 		}
 		return comps

@@ -46,13 +46,13 @@ class GroupSelectTableViewControllerTests: XCTestCase {
 		XCTAssert(!newGroups.map { $0.name }.contains(groupToDelete.name), "Delete group name still exists.")
 		XCTAssert(!newGroups.map { $0.id }.contains(groupToDelete.id), "Delete group id still exists.")
 
-		let costSheetsInDeletedGroup = newDocument.costSheetsInGroup(groupToDelete)
+		let costSheetsInDeletedGroup = newDocument.costSheetsInGroupWithId(groupToDelete.id)
 		XCTAssert(costSheetsInDeletedGroup.isEmpty, "Related cost sheets not moved to default group.")
 	}
 
 	// TODO: Finis this.
 	func testEditGroup() {
-		
+			
 	}
 
 	// TODO: Finish this.

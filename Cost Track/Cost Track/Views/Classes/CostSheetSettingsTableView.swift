@@ -20,6 +20,7 @@ enum CostSheetSettingsTableViewMode {
 class CostSheetSettingsTableView: UITableView {
 
 	// MARK: Properties
+	private var documentHandler: DocumentHandler!
 	private var mode = CostSheetSettingsTableViewMode.newCostSheet
 	weak var costSheetSettingsTableViewDelegate: CostSheetSettingsTableViewDelegate?
 	var costSheet = CostSheet()
@@ -29,7 +30,8 @@ class CostSheetSettingsTableView: UITableView {
 	private var initalBalanceTextView = UITextView()
 
 	// MARK: Functions
-	func setMode(_ mode: CostSheetSettingsTableViewMode) {
+	func setUp(documentHandler: DocumentHandler, mode: CostSheetSettingsTableViewMode) {
+		self.documentHandler = documentHandler
 		self.mode = mode
 
 		costSheet.id = UUID().uuidString
@@ -131,7 +133,11 @@ extension CostSheetSettingsTableView: UITableViewDataSource {
 			cell.accessoryView = switchView
 		case 4:
 			cell.textLabel?.text = "Group"
-			cell.addAccessoryLabel(text: costSheet.group.name)
+			guard let groupName = documentHandler.getDocument().getGroup(withId: costSheet.groupID)?.name else {
+				assertionFailure("Could not get group.")
+				return cell
+			}
+			cell.addAccessoryLabel(text: groupName)
 		default:
 			cell.textLabel?.text = "Export Sheet"
 		}

@@ -18,13 +18,13 @@ class NewCostSheetViewController: UIViewController {
 	func setup(documentHandler: DocumentHandler) {
 		self.documentHandler = documentHandler
 	}
-	var selectedGroupId = NotSetGroup.id
+	var selectedGroupId = NotSetGroupId
 
 	// MARK: UIViewController functions
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		settingsTableView.setMode(.newCostSheet)
+		settingsTableView.setUp(documentHandler: documentHandler, mode: .newCostSheet)
 		settingsTableView.costSheetSettingsTableViewDelegate = self
 
 		var newCostSheet = CostSheet()
@@ -32,9 +32,7 @@ class NewCostSheetViewController: UIViewController {
 		newCostSheet.initialBalance = 0
 		newCostSheet.includeInOverallTotal = true
 		newCostSheet.id = UUID().uuidString
-		newCostSheet.group = CostSheetGroup()
-		newCostSheet.group.name = NotSetGroup.name
-		newCostSheet.group.id = selectedGroupId
+		newCostSheet.groupID = selectedGroupId
 		settingsTableView.costSheet = newCostSheet
     }
 
@@ -84,7 +82,7 @@ private extension NewCostSheetViewController {
 // MARK: CostSheetSettingsTableViewDelegate
 extension NewCostSheetViewController: CostSheetSettingsTableViewDelegate {
 
-	func didGroupTableViewCell() {
+	func didSelectGroupCell() {
 		performSegue(withIdentifier: GroupSelectSegue, sender: nil)
 	}
 
@@ -94,12 +92,8 @@ extension NewCostSheetViewController: CostSheetSettingsTableViewDelegate {
 extension NewCostSheetViewController: GroupSelectionDelegate {
 
 	func didSelectGroup(id: String) {
-		guard let group = documentHandler.getDocument().getGroup(withId: id) else {
-			assertionFailure()
-			return
-		}
 		selectedGroupId = id
-		settingsTableView.costSheet.group = group
+		settingsTableView.costSheet.groupID = id
 		settingsTableView.updateCostSheet()
 		settingsTableView.reloadData()
 	}

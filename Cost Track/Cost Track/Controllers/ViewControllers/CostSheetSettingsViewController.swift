@@ -26,7 +26,7 @@ class CostSheetSettingsViewController: UIViewController {
 	override func viewDidLoad() {
         super.viewDidLoad()
 
-		settingsTableView.setMode(.costSheetSettings)
+		settingsTableView.setUp(documentHandler: documentHandler, mode: .costSheetSettings)
 		settingsTableView.costSheetSettingsTableViewDelegate = self
 		guard let costSheet = documentHandler.getDocument().costSheetWithId(costSheetId) else {
 			assertionFailure()
@@ -34,7 +34,7 @@ class CostSheetSettingsViewController: UIViewController {
 		}
 		settingsTableView.costSheet = costSheet
 
-		selectedGroupId = costSheet.group.id
+		selectedGroupId = costSheet.groupID
     }
 
 	// MARK: Navigation
@@ -54,7 +54,7 @@ class CostSheetSettingsViewController: UIViewController {
 // MARK: CostSheetSettingsTableViewDelegate
 extension CostSheetSettingsViewController: CostSheetSettingsTableViewDelegate {
 
-	func didGroupTableViewCell() {
+	func didSelectGroupCell() {
 		performSegue(withIdentifier: GroupSelectFromCostSheetSettingsSegue, sender: nil)
 	}
 
@@ -64,12 +64,8 @@ extension CostSheetSettingsViewController: CostSheetSettingsTableViewDelegate {
 extension CostSheetSettingsViewController: GroupSelectionDelegate {
 
 	func didSelectGroup(id: String) {
-		guard let group = documentHandler.getDocument().getGroup(withId: id) else {
-			assertionFailure()
-			return
-		}
 		selectedGroupId = id
-		settingsTableView.costSheet.group = group
+		settingsTableView.costSheet.groupID = id
 		settingsTableView.updateCostSheet()
 		settingsTableView.reloadData()
 	}
