@@ -60,14 +60,14 @@ struct CostSheetEntry {
   /// Clears the value of `image`. Subsequent reads from it will return its default value.
   mutating func clearImage() {_uniqueStorage()._image = nil}
 
-  var place: Place {
-    get {return _storage._place ?? Place()}
-    set {_uniqueStorage()._place = newValue}
+  var placeID: String {
+    get {return _storage._placeID ?? String()}
+    set {_uniqueStorage()._placeID = newValue}
   }
-  /// Returns true if `place` has been explicitly set.
-  var hasPlace: Bool {return _storage._place != nil}
-  /// Clears the value of `place`. Subsequent reads from it will return its default value.
-  mutating func clearPlace() {_uniqueStorage()._place = nil}
+  /// Returns true if `placeID` has been explicitly set.
+  var hasPlaceID: Bool {return _storage._placeID != nil}
+  /// Clears the value of `placeID`. Subsequent reads from it will return its default value.
+  mutating func clearPlaceID() {_uniqueStorage()._placeID = nil}
 
   var date: Data {
     get {return _storage._date ?? SwiftProtobuf.Internal.emptyData}
@@ -130,7 +130,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     2: .same(proto: "amount"),
     3: .same(proto: "category"),
     4: .same(proto: "image"),
-    5: .same(proto: "place"),
+    5: .same(proto: "placeId"),
     6: .same(proto: "date"),
     7: .same(proto: "description"),
     8: .same(proto: "id"),
@@ -143,7 +143,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     var _amount: Float? = nil
     var _category: Category? = nil
     var _image: Data? = nil
-    var _place: Place? = nil
+    var _placeID: String? = nil
     var _date: Data? = nil
     var _description_p: String? = nil
     var _id: String? = nil
@@ -159,7 +159,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       _amount = source._amount
       _category = source._category
       _image = source._image
-      _place = source._place
+      _placeID = source._placeID
       _date = source._date
       _description_p = source._description_p
       _id = source._id
@@ -183,7 +183,6 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       if _storage._date == nil {return false}
       if _storage._id == nil {return false}
       if let v = _storage._category, !v.isInitialized {return false}
-      if let v = _storage._place, !v.isInitialized {return false}
       return true
     }
   }
@@ -197,7 +196,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
         case 2: try decoder.decodeSingularFloatField(value: &_storage._amount)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._category)
         case 4: try decoder.decodeSingularBytesField(value: &_storage._image)
-        case 5: try decoder.decodeSingularMessageField(value: &_storage._place)
+        case 5: try decoder.decodeSingularStringField(value: &_storage._placeID)
         case 6: try decoder.decodeSingularBytesField(value: &_storage._date)
         case 7: try decoder.decodeSingularStringField(value: &_storage._description_p)
         case 8: try decoder.decodeSingularStringField(value: &_storage._id)
@@ -223,8 +222,8 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
       if let v = _storage._image {
         try visitor.visitSingularBytesField(value: v, fieldNumber: 4)
       }
-      if let v = _storage._place {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+      if let v = _storage._placeID {
+        try visitor.visitSingularStringField(value: v, fieldNumber: 5)
       }
       if let v = _storage._date {
         try visitor.visitSingularBytesField(value: v, fieldNumber: 6)
@@ -254,7 +253,7 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
         if _storage._amount != rhs_storage._amount {return false}
         if _storage._category != rhs_storage._category {return false}
         if _storage._image != rhs_storage._image {return false}
-        if _storage._place != rhs_storage._place {return false}
+        if _storage._placeID != rhs_storage._placeID {return false}
         if _storage._date != rhs_storage._date {return false}
         if _storage._description_p != rhs_storage._description_p {return false}
         if _storage._id != rhs_storage._id {return false}

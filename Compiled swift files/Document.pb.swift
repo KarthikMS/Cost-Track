@@ -41,11 +41,21 @@ struct Document {
   /// Clears the value of `createdOnDate`. Subsequent reads from it will return its default value.
   mutating func clearCreatedOnDate() {self._createdOnDate = nil}
 
+  var lastModifiedOnDate: Data {
+    get {return _lastModifiedOnDate ?? SwiftProtobuf.Internal.emptyData}
+    set {_lastModifiedOnDate = newValue}
+  }
+  /// Returns true if `lastModifiedOnDate` has been explicitly set.
+  var hasLastModifiedOnDate: Bool {return self._lastModifiedOnDate != nil}
+  /// Clears the value of `lastModifiedOnDate`. Subsequent reads from it will return its default value.
+  mutating func clearLastModifiedOnDate() {self._lastModifiedOnDate = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
 
   fileprivate var _createdOnDate: Data? = nil
+  fileprivate var _lastModifiedOnDate: Data? = nil
 }
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -58,10 +68,12 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     3: .same(proto: "categories"),
     4: .same(proto: "places"),
     5: .same(proto: "createdOnDate"),
+    6: .same(proto: "lastModifiedOnDate"),
   ]
 
   public var isInitialized: Bool {
     if self._createdOnDate == nil {return false}
+    if self._lastModifiedOnDate == nil {return false}
     if !SwiftProtobuf.Internal.areAllInitialized(self.costSheets) {return false}
     if !SwiftProtobuf.Internal.areAllInitialized(self.groups) {return false}
     if !SwiftProtobuf.Internal.areAllInitialized(self.categories) {return false}
@@ -77,6 +89,7 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       case 3: try decoder.decodeRepeatedMessageField(value: &self.categories)
       case 4: try decoder.decodeRepeatedMessageField(value: &self.places)
       case 5: try decoder.decodeSingularBytesField(value: &self._createdOnDate)
+      case 6: try decoder.decodeSingularBytesField(value: &self._lastModifiedOnDate)
       default: break
       }
     }
@@ -98,6 +111,9 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if let v = self._createdOnDate {
       try visitor.visitSingularBytesField(value: v, fieldNumber: 5)
     }
+    if let v = self._lastModifiedOnDate {
+      try visitor.visitSingularBytesField(value: v, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -107,6 +123,7 @@ extension Document: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if lhs.categories != rhs.categories {return false}
     if lhs.places != rhs.places {return false}
     if lhs._createdOnDate != rhs._createdOnDate {return false}
+    if lhs._lastModifiedOnDate != rhs._lastModifiedOnDate {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

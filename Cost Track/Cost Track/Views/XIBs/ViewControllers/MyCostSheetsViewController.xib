@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyCostSheetsViewController" customModule="Cost_Track" customModuleProvider="target">
             <connections>
+                <outlet property="costSheetView" destination="M94-eP-jZt" id="hmL-US-VFn"/>
+                <outlet property="infoLabel" destination="8RD-Ut-CS8" id="5cB-LK-tw6"/>
                 <outlet property="noCostSheetsTextView" destination="Bu8-8y-Ll5" id="qyQ-vf-Te0"/>
                 <outlet property="tableView" destination="f9Z-ur-bCM" id="lf6-w1-f2M"/>
                 <outlet property="topBar" destination="lV6-EZ-y31" id="jky-aI-BWX"/>
@@ -54,7 +55,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 INR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Ww-um-mi6">
-                            <rect key="frame" x="80" y="0.5" width="215" height="80"/>
+                            <rect key="frame" x="80" y="0.0" width="215" height="80"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                             <nil key="highlightedColor"/>
@@ -75,16 +76,50 @@
                         <constraint firstAttribute="trailing" secondItem="udg-5A-gdJ" secondAttribute="trailing" id="sIH-1G-Icw"/>
                     </constraints>
                 </view>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f9Z-ur-bCM">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M94-eP-jZt">
                     <rect key="frame" x="0.0" y="144" width="375" height="523"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="ULt-Mf-i2C"/>
-                        <outlet property="delegate" destination="-1" id="Kw9-oZ-t6Z"/>
-                    </connections>
-                </tableView>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kQ6-Lx-xNm" userLabel="Info Container">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last modified a few hours ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8RD-Ut-CS8">
+                                    <rect key="frame" x="5" y="3" width="365" height="24"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="8RD-Ut-CS8" secondAttribute="trailing" constant="5" id="0Hq-hG-yOf"/>
+                                <constraint firstItem="8RD-Ut-CS8" firstAttribute="top" secondItem="kQ6-Lx-xNm" secondAttribute="top" constant="3" id="2Ku-m6-AMt"/>
+                                <constraint firstAttribute="height" constant="30" id="ShM-2L-YOG"/>
+                                <constraint firstItem="8RD-Ut-CS8" firstAttribute="leading" secondItem="kQ6-Lx-xNm" secondAttribute="leading" constant="5" id="byd-42-inh"/>
+                                <constraint firstAttribute="bottom" secondItem="8RD-Ut-CS8" secondAttribute="bottom" constant="3" id="qOw-kG-494"/>
+                            </constraints>
+                        </view>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f9Z-ur-bCM">
+                            <rect key="frame" x="0.0" y="30" width="375" height="493"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="ULt-Mf-i2C"/>
+                                <outlet property="delegate" destination="-1" id="Kw9-oZ-t6Z"/>
+                            </connections>
+                        </tableView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="f9Z-ur-bCM" secondAttribute="bottom" id="Em5-9U-5D3"/>
+                        <constraint firstItem="kQ6-Lx-xNm" firstAttribute="top" secondItem="M94-eP-jZt" secondAttribute="top" id="OxI-jq-3XU"/>
+                        <constraint firstItem="kQ6-Lx-xNm" firstAttribute="width" secondItem="M94-eP-jZt" secondAttribute="width" id="Reh-So-nwC"/>
+                        <constraint firstItem="f9Z-ur-bCM" firstAttribute="centerX" secondItem="M94-eP-jZt" secondAttribute="centerX" id="cHn-BS-yao"/>
+                        <constraint firstItem="f9Z-ur-bCM" firstAttribute="width" secondItem="M94-eP-jZt" secondAttribute="width" id="dG4-hB-c7t"/>
+                        <constraint firstItem="f9Z-ur-bCM" firstAttribute="top" secondItem="kQ6-Lx-xNm" secondAttribute="bottom" id="wa9-k6-SB6"/>
+                        <constraint firstItem="kQ6-Lx-xNm" firstAttribute="centerX" secondItem="M94-eP-jZt" secondAttribute="centerX" id="zsI-DA-Wnl"/>
+                    </constraints>
+                </view>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bu8-8y-Ll5">
-                    <rect key="frame" x="-0.5" y="144" width="375" height="523"/>
+                    <rect key="frame" x="0.0" y="144" width="375" height="523"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <string key="text">
 Create a Cost Sheet using + button to start.
@@ -102,17 +137,18 @@ This screen will always show the overall total across all cost sheets and can sh
                 <constraint firstItem="Bu8-8y-Ll5" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="0oi-R0-iY7"/>
                 <constraint firstItem="lV6-EZ-y31" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="6D9-1W-8iP"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="lV6-EZ-y31" secondAttribute="top" id="9hD-BA-jSh"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="f9Z-ur-bCM" secondAttribute="bottom" id="J38-rj-9Tz"/>
-                <constraint firstItem="f9Z-ur-bCM" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="Tjm-eQ-7TO"/>
-                <constraint firstItem="f9Z-ur-bCM" firstAttribute="top" secondItem="lV6-EZ-y31" secondAttribute="bottom" id="bWE-ok-TGV"/>
+                <constraint firstItem="M94-eP-jZt" firstAttribute="top" secondItem="lV6-EZ-y31" secondAttribute="bottom" id="Kty-IO-hiM"/>
+                <constraint firstItem="M94-eP-jZt" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="Yhp-Qv-adz"/>
                 <constraint firstItem="Bu8-8y-Ll5" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="iba-77-yVg"/>
                 <constraint firstItem="lV6-EZ-y31" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="jrs-jw-LB9"/>
-                <constraint firstItem="f9Z-ur-bCM" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="nMx-j1-Wkb"/>
                 <constraint firstItem="Bu8-8y-Ll5" firstAttribute="top" secondItem="lV6-EZ-y31" secondAttribute="bottom" id="pfK-z6-eNd"/>
+                <constraint firstItem="M94-eP-jZt" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="pxb-Jg-cTb"/>
                 <constraint firstItem="Bu8-8y-Ll5" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="rc0-BK-gth"/>
+                <constraint firstItem="M94-eP-jZt" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="uwV-Yt-uU3"/>
             </constraints>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="138.40000000000001" y="117.39130434782609"/>
         </view>
     </objects>
 </document>

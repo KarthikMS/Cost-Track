@@ -173,16 +173,16 @@ extension CostSheet: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: CostSheet) -> Bool {
-    if self._name != other._name {return false}
-    if self._initialBalance != other._initialBalance {return false}
-    if self._includeInOverallTotal != other._includeInOverallTotal {return false}
-    if self._groupID != other._groupID {return false}
-    if self.entries != other.entries {return false}
-    if self._lastModifiedDate != other._lastModifiedDate {return false}
-    if self._createdOnDate != other._createdOnDate {return false}
-    if self._id != other._id {return false}
-    if self.unknownFields != other.unknownFields {return false}
+  static func ==(lhs: CostSheet, rhs: CostSheet) -> Bool {
+    if lhs._name != rhs._name {return false}
+    if lhs._initialBalance != rhs._initialBalance {return false}
+    if lhs._includeInOverallTotal != rhs._includeInOverallTotal {return false}
+    if lhs._groupID != rhs._groupID {return false}
+    if lhs.entries != rhs.entries {return false}
+    if lhs._lastModifiedDate != rhs._lastModifiedDate {return false}
+    if lhs._createdOnDate != rhs._createdOnDate {return false}
+    if lhs._id != rhs._id {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }

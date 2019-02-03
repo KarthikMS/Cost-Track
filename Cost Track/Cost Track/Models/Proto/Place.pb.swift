@@ -100,11 +100,11 @@ extension Place: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: Place) -> Bool {
-    if self._id != other._id {return false}
-    if self._name != other._name {return false}
-    if self._address != other._address {return false}
-    if self.unknownFields != other.unknownFields {return false}
+  static func ==(lhs: Place, rhs: Place) -> Bool {
+    if lhs._id != rhs._id {return false}
+    if lhs._name != rhs._name {return false}
+    if lhs._address != rhs._address {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }

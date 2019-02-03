@@ -26,6 +26,7 @@ class DocumentHandler {
 	}
 
 	func saveDocument() {
+		document.lastModifiedOnDate = Date().data
 		if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
 			// Code does not execute when tests are running
 			CTFileManager.saveDocument(document)

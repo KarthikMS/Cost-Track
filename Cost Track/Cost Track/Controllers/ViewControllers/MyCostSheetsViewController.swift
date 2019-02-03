@@ -13,10 +13,12 @@ class MyCostSheetsViewController: UIViewController {
 	// MARK: IBOutlets
 	@IBOutlet weak var topBar: UIView!
 	@IBOutlet weak var totalAmountLabel: UILabel!
+	@IBOutlet weak var costSheetView: UIView!
+	@IBOutlet weak var infoLabel: UILabel!
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var noCostSheetsTextView: UITextView!
 	@IBOutlet weak var accountingPeriodLabel: UILabel!
-	
+
 	// MARK: Properties
 //	var (document, isNewDocument) = CTFileManager.getDocument()
 	var documentHandler: DocumentHandler!
@@ -39,11 +41,6 @@ class MyCostSheetsViewController: UIViewController {
 		initAccountingPeriodViewController()
 		updateNavigationBarAccountingLabel()
 
-		if document.costSheets.isEmpty {
-			noCostSheetsTextView.isHidden = false
-		} else {
-			noCostSheetsTextView.isHidden = true
-		}
 		tableView.register(UINib(nibName: "CostSheetTableViewCell", bundle: nil), forCellReuseIdentifier: "CostSheetTableViewCell")
 	}
 
@@ -52,13 +49,8 @@ class MyCostSheetsViewController: UIViewController {
 
 		sectionsToHide.removeAll()
 		updateTopBar()
-		if documentHandler.getDocument().costSheets.isEmpty {
-			noCostSheetsTextView.isHidden = false
-		} else {
-			noCostSheetsTextView.isHidden = true
-			tableView.reloadData()
-		}
-
+		updateInfoLabel()
+		updateCostSheetView()
 		selectedCostSheetId = ""
 	}
 
@@ -98,6 +90,73 @@ class MyCostSheetsViewController: UIViewController {
 			topBar.backgroundColor = DarkIncomeColor
 		}
 		totalAmountLabel.text = String(totalAmount)
+	}
+
+	private enum TimeRepresentation {
+		case seconds
+		case minutes
+		case hours
+		case days
+	}
+
+	private func updateInfoLabel() {
+		guard let lastModifiedDate = documentHandler.getDocument().lastModifiedOnDate.date else {
+			assertionFailure("Could not get date.")
+			return
+		}
+		let now = Date()
+		let (startDate, endDate) = lastModifiedDate.startAndEndDatesOfWeek()
+		let timeString: String
+		if now.isBetween(startDate, and: endDate) {
+			var timeInterval = Int(now.timeIntervalSince(lastModifiedDate))
+			var timeRepresentation = TimeRepresentation.seconds
+			if timeInterval >= 60 {
+				timeInterval /= 60
+				timeRepresentation = .minutes
+				if timeInterval >= 60 {
+					timeInterval /= 60
+					timeRepresentation = .hours
+					if timeInterval >= 24 {
+						timeInterval /= 24
+						timeRepresentation = .days
+					}
+				}
+			}
+			switch timeRepresentation {
+			case .seconds:
+				timeString = "a few seconds ago"
+			case .minutes:
+				if timeInterval == 1 {
+					timeString = "a minute ago"
+				} else {
+					timeString = "\(timeInterval) minutes ago"
+				}
+			case .hours:
+				if timeInterval == 1 {
+					timeString = "an hour ago"
+				} else {
+					timeString = "\(timeInterval) hours ago"
+				}
+			case .days:
+				if timeInterval == 1 {
+					timeString = "a day ago"
+				} else {
+					timeString = "\(timeInterval) days ago"
+				}
+			}
+		} else {
+			timeString = "on " + lastModifiedDate.string(format: "dd-mm-yy")
+		}
+		infoLabel.text = "Last modified " + timeString
+	}
+
+	private func updateCostSheetView() {
+		if documentHandler.getDocument().costSheets.isEmpty {
+			noCostSheetsTextView.isHidden = false
+		} else {
+			noCostSheetsTextView.isHidden = true
+			tableView.reloadData()
+		}
 	}
 
 	private func initAccountingPeriodViewController() {

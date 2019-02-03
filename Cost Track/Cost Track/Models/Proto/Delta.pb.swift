@@ -79,7 +79,7 @@ struct DocumentOperation {
   /// Returns true if `mutateDocument` has been explicitly set.
   var hasMutateDocument: Bool {return _storage._mutateDocument != nil}
   /// Clears the value of `mutateDocument`. Subsequent reads from it will return its default value.
-  mutating func clearMutateDocument() {_storage._mutateDocument = nil}
+  mutating func clearMutateDocument() {_uniqueStorage()._mutateDocument = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -97,7 +97,7 @@ struct DocumentOperation {
     /// Returns true if `mDocID` has been explicitly set.
     var hasMDocID: Bool {return _storage._mDocID != nil}
     /// Clears the value of `mDocID`. Subsequent reads from it will return its default value.
-    mutating func clearMDocID() {_storage._mDocID = nil}
+    mutating func clearMDocID() {_uniqueStorage()._mDocID = nil}
 
     var contentOp: DocumentContentOperation {
       get {return _storage._contentOp ?? DocumentContentOperation()}
@@ -106,7 +106,7 @@ struct DocumentOperation {
     /// Returns true if `contentOp` has been explicitly set.
     var hasContentOp: Bool {return _storage._contentOp != nil}
     /// Clears the value of `contentOp`. Subsequent reads from it will return its default value.
-    mutating func clearContentOp() {_storage._contentOp = nil}
+    mutating func clearContentOp() {_uniqueStorage()._contentOp = nil}
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -141,7 +141,7 @@ struct DocumentContentOperation {
     /// Returns true if `opType` has been explicitly set.
     var hasOpType: Bool {return _storage._opType != nil}
     /// Clears the value of `opType`. Subsequent reads from it will return its default value.
-    mutating func clearOpType() {_storage._opType = nil}
+    mutating func clearOpType() {_uniqueStorage()._opType = nil}
 
     /// The first position in the fields will hold the root element.
     var fields: String {
@@ -151,7 +151,7 @@ struct DocumentContentOperation {
     /// Returns true if `fields` has been explicitly set.
     var hasFields: Bool {return _storage._fields != nil}
     /// Clears the value of `fields`. Subsequent reads from it will return its default value.
-    mutating func clearFields() {_storage._fields = nil}
+    mutating func clearFields() {_uniqueStorage()._fields = nil}
 
     var value: DocumentContentOperation.Component.Value {
       get {return _storage._value ?? DocumentContentOperation.Component.Value()}
@@ -160,7 +160,7 @@ struct DocumentContentOperation {
     /// Returns true if `value` has been explicitly set.
     var hasValue: Bool {return _storage._value != nil}
     /// Clears the value of `value`. Subsequent reads from it will return its default value.
-    mutating func clearValue() {_storage._value = nil}
+    mutating func clearValue() {_uniqueStorage()._value = nil}
 
     var custom: DocumentContentOperation.Component.Custom {
       get {return _storage._custom ?? DocumentContentOperation.Component.Custom()}
@@ -169,7 +169,7 @@ struct DocumentContentOperation {
     /// Returns true if `custom` has been explicitly set.
     var hasCustom: Bool {return _storage._custom != nil}
     /// Clears the value of `custom`. Subsequent reads from it will return its default value.
-    mutating func clearCustom() {_storage._custom = nil}
+    mutating func clearCustom() {_uniqueStorage()._custom = nil}
 
     /// in case of REORDER operation, this will hold the new index position
     var ni: Int32 {
@@ -179,7 +179,7 @@ struct DocumentContentOperation {
     /// Returns true if `ni` has been explicitly set.
     var hasNi: Bool {return _storage._ni != nil}
     /// Clears the value of `ni`. Subsequent reads from it will return its default value.
-    mutating func clearNi() {_storage._ni = nil}
+    mutating func clearNi() {_uniqueStorage()._ni = nil}
 
     var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -232,7 +232,7 @@ struct DocumentContentOperation {
       /// Returns true if `value` has been explicitly set.
       var hasValue: Bool {return _storage._value != nil}
       /// Clears the value of `value`. Subsequent reads from it will return its default value.
-      mutating func clearValue() {_storage._value = nil}
+      mutating func clearValue() {_uniqueStorage()._value = nil}
 
       /// Absent field means that the attribute is absent and/or null.
       var oldValue: String {
@@ -242,7 +242,7 @@ struct DocumentContentOperation {
       /// Returns true if `oldValue` has been explicitly set.
       var hasOldValue: Bool {return _storage._oldValue != nil}
       /// Clears the value of `oldValue`. Subsequent reads from it will return its default value.
-      mutating func clearOldValue() {_storage._oldValue = nil}
+      mutating func clearOldValue() {_uniqueStorage()._oldValue = nil}
 
       /// maintains the fields that needs to be deleted from the message mentioned in "fields" variable
       var deleteData: String {
@@ -252,7 +252,7 @@ struct DocumentContentOperation {
       /// Returns true if `deleteData` has been explicitly set.
       var hasDeleteData: Bool {return _storage._deleteData != nil}
       /// Clears the value of `deleteData`. Subsequent reads from it will return its default value.
-      mutating func clearDeleteData() {_storage._deleteData = nil}
+      mutating func clearDeleteData() {_uniqueStorage()._deleteData = nil}
 
       /// if true, this will replace the current data present in the message with the
       /// json string present in "value" field.
@@ -263,7 +263,7 @@ struct DocumentContentOperation {
       /// Returns true if `replace` has been explicitly set.
       var hasReplace: Bool {return _storage._replace != nil}
       /// Clears the value of `replace`. Subsequent reads from it will return its default value.
-      mutating func clearReplace() {_storage._replace = nil}
+      mutating func clearReplace() {_uniqueStorage()._replace = nil}
 
       /// unique id, can be used for insert operation
       var ids: [String] {
@@ -278,7 +278,7 @@ struct DocumentContentOperation {
       /// Returns true if `inBytes` has been explicitly set.
       var hasInBytes: Bool {return _storage._inBytes != nil}
       /// Clears the value of `inBytes`. Subsequent reads from it will return its default value.
-      mutating func clearInBytes() {_storage._inBytes = nil}
+      mutating func clearInBytes() {_uniqueStorage()._inBytes = nil}
 
       var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -380,10 +380,10 @@ extension DocumentDeltas: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: DocumentDeltas) -> Bool {
-    if self.delta != other.delta {return false}
-    if self._lastSavedVersion != other._lastSavedVersion {return false}
-    if unknownFields != other.unknownFields {return false}
+  static func ==(lhs: DocumentDeltas, rhs: DocumentDeltas) -> Bool {
+    if lhs.delta != rhs.delta {return false}
+    if lhs._lastSavedVersion != rhs._lastSavedVersion {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
@@ -421,10 +421,10 @@ extension DocumentDelta: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementa
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: DocumentDelta) -> Bool {
-    if self._version != other._version {return false}
-    if self.docOp != other.docOp {return false}
-    if unknownFields != other.unknownFields {return false}
+  static func ==(lhs: DocumentDelta, rhs: DocumentDelta) -> Bool {
+    if lhs._version != rhs._version {return false}
+    if lhs.docOp != rhs.docOp {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
@@ -482,17 +482,17 @@ extension DocumentOperation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: DocumentOperation) -> Bool {
-    if _storage !== other._storage {
-      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+  static func ==(lhs: DocumentOperation, rhs: DocumentOperation) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
-        let other_storage = _args.1
-        if _storage._mutateDocument != other_storage._mutateDocument {return false}
+        let rhs_storage = _args.1
+        if _storage._mutateDocument != rhs_storage._mutateDocument {return false}
         return true
       }
       if !storagesAreEqual {return false}
     }
-    if unknownFields != other.unknownFields {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
@@ -559,18 +559,18 @@ extension DocumentOperation.MutateDocument: SwiftProtobuf.Message, SwiftProtobuf
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: DocumentOperation.MutateDocument) -> Bool {
-    if _storage !== other._storage {
-      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+  static func ==(lhs: DocumentOperation.MutateDocument, rhs: DocumentOperation.MutateDocument) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
-        let other_storage = _args.1
-        if _storage._mDocID != other_storage._mDocID {return false}
-        if _storage._contentOp != other_storage._contentOp {return false}
+        let rhs_storage = _args.1
+        if _storage._mDocID != rhs_storage._mDocID {return false}
+        if _storage._contentOp != rhs_storage._contentOp {return false}
         return true
       }
       if !storagesAreEqual {return false}
     }
-    if unknownFields != other.unknownFields {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
@@ -602,9 +602,9 @@ extension DocumentContentOperation: SwiftProtobuf.Message, SwiftProtobuf._Messag
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: DocumentContentOperation) -> Bool {
-    if self.component != other.component {return false}
-    if unknownFields != other.unknownFields {return false}
+  static func ==(lhs: DocumentContentOperation, rhs: DocumentContentOperation) -> Bool {
+    if lhs.component != rhs.component {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
@@ -691,21 +691,21 @@ extension DocumentContentOperation.Component: SwiftProtobuf.Message, SwiftProtob
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: DocumentContentOperation.Component) -> Bool {
-    if _storage !== other._storage {
-      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+  static func ==(lhs: DocumentContentOperation.Component, rhs: DocumentContentOperation.Component) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
-        let other_storage = _args.1
-        if _storage._opType != other_storage._opType {return false}
-        if _storage._fields != other_storage._fields {return false}
-        if _storage._value != other_storage._value {return false}
-        if _storage._custom != other_storage._custom {return false}
-        if _storage._ni != other_storage._ni {return false}
+        let rhs_storage = _args.1
+        if _storage._opType != rhs_storage._opType {return false}
+        if _storage._fields != rhs_storage._fields {return false}
+        if _storage._value != rhs_storage._value {return false}
+        if _storage._custom != rhs_storage._custom {return false}
+        if _storage._ni != rhs_storage._ni {return false}
         return true
       }
       if !storagesAreEqual {return false}
     }
-    if unknownFields != other.unknownFields {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
@@ -801,22 +801,22 @@ extension DocumentContentOperation.Component.Value: SwiftProtobuf.Message, Swift
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: DocumentContentOperation.Component.Value) -> Bool {
-    if _storage !== other._storage {
-      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+  static func ==(lhs: DocumentContentOperation.Component.Value, rhs: DocumentContentOperation.Component.Value) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
-        let other_storage = _args.1
-        if _storage._value != other_storage._value {return false}
-        if _storage._oldValue != other_storage._oldValue {return false}
-        if _storage._deleteData != other_storage._deleteData {return false}
-        if _storage._replace != other_storage._replace {return false}
-        if _storage._ids != other_storage._ids {return false}
-        if _storage._inBytes != other_storage._inBytes {return false}
+        let rhs_storage = _args.1
+        if _storage._value != rhs_storage._value {return false}
+        if _storage._oldValue != rhs_storage._oldValue {return false}
+        if _storage._deleteData != rhs_storage._deleteData {return false}
+        if _storage._replace != rhs_storage._replace {return false}
+        if _storage._ids != rhs_storage._ids {return false}
+        if _storage._inBytes != rhs_storage._inBytes {return false}
         return true
       }
       if !storagesAreEqual {return false}
     }
-    if unknownFields != other.unknownFields {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
@@ -853,11 +853,11 @@ extension DocumentContentOperation.Component.Value.InBytes: SwiftProtobuf.Messag
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: DocumentContentOperation.Component.Value.InBytes) -> Bool {
-    if self._value != other._value {return false}
-    if self._oldValue != other._oldValue {return false}
-    if self._deleteData != other._deleteData {return false}
-    if unknownFields != other.unknownFields {return false}
+  static func ==(lhs: DocumentContentOperation.Component.Value.InBytes, rhs: DocumentContentOperation.Component.Value.InBytes) -> Bool {
+    if lhs._value != rhs._value {return false}
+    if lhs._oldValue != rhs._oldValue {return false}
+    if lhs._deleteData != rhs._deleteData {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
@@ -875,8 +875,8 @@ extension DocumentContentOperation.Component.Custom: SwiftProtobuf.Message, Swif
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: DocumentContentOperation.Component.Custom) -> Bool {
-    if unknownFields != other.unknownFields {return false}
+  static func ==(lhs: DocumentContentOperation.Component.Custom, rhs: DocumentContentOperation.Component.Custom) -> Bool {
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }

@@ -165,11 +165,11 @@ extension Category: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: Category) -> Bool {
-    if self._name != other._name {return false}
-    if self._iconType != other._iconType {return false}
-    if self.entryTypes != other.entryTypes {return false}
-    if self.unknownFields != other.unknownFields {return false}
+  static func ==(lhs: Category, rhs: Category) -> Bool {
+    if lhs._name != rhs._name {return false}
+    if lhs._iconType != rhs._iconType {return false}
+    if lhs.entryTypes != rhs.entryTypes {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }

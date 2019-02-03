@@ -6,7 +6,7 @@ target 'Cost Track' do
   use_frameworks!
 
   # Pods for Cost Track
-  pod ‘SwiftProtobuf’, '1.0.3'
+  pod ‘SwiftProtobuf’, '1.2.0'
   pod 'GooglePlacePicker'
   pod 'Firebase/Core'
   pod 'Firebase/Database'

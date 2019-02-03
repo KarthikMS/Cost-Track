@@ -85,10 +85,10 @@ extension CostSheetGroup: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: CostSheetGroup) -> Bool {
-    if self._name != other._name {return false}
-    if self._id != other._id {return false}
-    if unknownFields != other.unknownFields {return false}
+  static func ==(lhs: CostSheetGroup, rhs: CostSheetGroup) -> Bool {
+    if lhs._name != rhs._name {return false}
+    if lhs._id != rhs._id {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }

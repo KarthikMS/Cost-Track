@@ -22,6 +22,7 @@ extension Document {
 
 		newDoc.categories = Category.defaultCategories()
 		newDoc.createdOnDate = Date().data
+		newDoc.lastModifiedOnDate = newDoc.createdOnDate
 
 		return newDoc
 	}

@@ -67,13 +67,13 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
-  - SwiftProtobuf (1.0.3)
+  - SwiftProtobuf (1.2.0)
 
 DEPENDENCIES:
   - Firebase/Core
   - Firebase/Database
   - GooglePlacePicker
-  - SwiftProtobuf (= 1.0.3)
+  - SwiftProtobuf (= 1.2.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -106,8 +106,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: 95996bea7c7d9b8fb811b7507669a4a8762f80c7
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  SwiftProtobuf: 5ccc0e4054e37c75800e5744acb2aa80bb72b39c
+  SwiftProtobuf: 91a9856079044ef4ec762b2344c763cd9e5a73c1
 
-PODFILE CHECKSUM: f09fc0d6d5d3241093c3c9e9b2dab7b0eeeebada
+PODFILE CHECKSUM: 4c2d8fc4487609110efc18040a8201b282cc789e
 
 COCOAPODS: 1.5.3

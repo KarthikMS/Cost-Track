@@ -14,5 +14,6 @@ message Document {
   repeated Category categories = 3;
   repeated Place places = 4;
   required bytes createdOnDate = 5;
+  required bytes lastModifiedOnDate = 6;
 
 }

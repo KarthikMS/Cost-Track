@@ -244,26 +244,26 @@ extension CostSheetEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplement
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: CostSheetEntry) -> Bool {
-    if self._storage !== other._storage {
-      let storagesAreEqual: Bool = withExtendedLifetime((self._storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+  static func ==(lhs: CostSheetEntry, rhs: CostSheetEntry) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
-        let other_storage = _args.1
-        if _storage._type != other_storage._type {return false}
-        if _storage._amount != other_storage._amount {return false}
-        if _storage._category != other_storage._category {return false}
-        if _storage._image != other_storage._image {return false}
-        if _storage._placeID != other_storage._placeID {return false}
-        if _storage._date != other_storage._date {return false}
-        if _storage._description_p != other_storage._description_p {return false}
-        if _storage._id != other_storage._id {return false}
-        if _storage._transferCostSheetID != other_storage._transferCostSheetID {return false}
-        if _storage._transferEntryID != other_storage._transferEntryID {return false}
+        let rhs_storage = _args.1
+        if _storage._type != rhs_storage._type {return false}
+        if _storage._amount != rhs_storage._amount {return false}
+        if _storage._category != rhs_storage._category {return false}
+        if _storage._image != rhs_storage._image {return false}
+        if _storage._placeID != rhs_storage._placeID {return false}
+        if _storage._date != rhs_storage._date {return false}
+        if _storage._description_p != rhs_storage._description_p {return false}
+        if _storage._id != rhs_storage._id {return false}
+        if _storage._transferCostSheetID != rhs_storage._transferCostSheetID {return false}
+        if _storage._transferEntryID != rhs_storage._transferEntryID {return false}
         return true
       }
       if !storagesAreEqual {return false}
     }
-    if self.unknownFields != other.unknownFields {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }

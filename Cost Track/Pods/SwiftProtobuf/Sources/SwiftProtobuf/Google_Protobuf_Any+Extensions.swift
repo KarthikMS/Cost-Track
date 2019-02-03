@@ -93,9 +93,15 @@ public extension Google_Protobuf_Any {
     return _storage.isA(type)
   }
 
+#if swift(>=4.2)
+  public func hash(into hasher: inout Hasher) {
+    _storage.hash(into: &hasher)
+  }
+#else  // swift(>=4.2)
   public var hashValue: Int {
     return _storage.hashValue
   }
+#endif  // swift(>=4.2)
 }
 
 extension Google_Protobuf_Any {
@@ -125,8 +131,8 @@ extension Google_Protobuf_Any: _CustomJSONCodable {
     }
   }
 
-  internal func encodedJSONString() throws -> String {
-    return try _storage.encodedJSONString()
+  internal func encodedJSONString(options: JSONEncodingOptions) throws -> String {
+    return try _storage.encodedJSONString(options: options)
   }
 
   internal mutating func decodeJSON(from decoder: inout JSONDecoder) throws {
