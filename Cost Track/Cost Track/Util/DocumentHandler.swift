@@ -131,6 +131,13 @@ extension DocumentHandler: DocumentModel {
 		sendDeltaComponents([deleteCostSheetComp])
 	}
 
+	func updateCostSheet(_ updatedCostSheet: CostSheet) {
+		var costSheet = updatedCostSheet
+		costSheet.lastModifiedDate = Date().data
+		let updateCostSheetComp = DeltaUtil.getComponentToUpdateCostSheet(costSheet, in: document)
+		sendDeltaComponents([updateCostSheetComp])
+	}
+
 }
 
 // MARK: DeltaDelegate

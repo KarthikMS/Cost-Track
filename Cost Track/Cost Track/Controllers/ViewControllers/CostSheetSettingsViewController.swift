@@ -77,10 +77,6 @@ private extension CostSheetSettingsViewController {
 
 	@IBAction func saveButtonPressed(_ sender: Any) {
 		settingsTableView.updateCostSheet()
-//		guard let oldCostSheet = dataSource.document.costSheetWithId(dataSource.costSheetId) else {
-//			assertionFailure()
-//			return
-//		}
 		var costSheet = settingsTableView.costSheet
 		guard costSheet.name != "" else {
 			showAlertSaying("Please enter a name for the cost sheet.")
@@ -91,45 +87,7 @@ private extension CostSheetSettingsViewController {
 			showAlertSaying("\'\(costSheet.name)\' already exists. Please enter a different name.")
 			return
 		}
-
-		costSheet.lastModifiedDate = Date().data
-		let updateCostSheetComp = DeltaUtil.getComponentToUpdateCostSheet(withId: costSheetId, with: costSheet, in: document)
-		documentHandler.sendDeltaComponents([updateCostSheetComp])
-		
-		// TODO: Fix this
-		/*
-		var newName: String?
-		var newInitialBalance: Float?
-		var newIncludInOverallTotal: Bool?
-		var newGroup: CostSheetGroup?
-
-		if costSheet.name != oldCostSheet.name {
-			newName = costSheet.name
-		}
-		if costSheet.initialBalance != oldCostSheet.initialBalance {
-			newInitialBalance = costSheet.initialBalance
-		}
-		if costSheet.includeInOverallTotal != oldCostSheet.includeInOverallTotal {
-			newIncludInOverallTotal = costSheet.includeInOverallTotal
-		}
-		if costSheet.group.id != oldCostSheet.group.id {
-			newGroup = costSheet.group
-		}
-
-		if newName != nil || newInitialBalance != nil || newIncludInOverallTotal != nil || newGroup != nil {
-			let deltaComps = DeltaUtil.getComponentsToUpdatePropertiesOfCostSheet(
-				withId: costSheet.id,
-				in: document,
-				name: newName,
-				initialBalance: newInitialBalance,
-				includeInOverallTotal: newIncludInOverallTotal,
-				group: newGroup,
-				lastModifiedData: Date().data
-			)
-			deltaDelegate.sendDeltaComponents(deltaComps)
-		}
-		*/
-
+		documentHandler.updateCostSheet(costSheet)
 		navigationController?.popViewController(animated: true)
 	}
 

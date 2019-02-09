@@ -167,8 +167,8 @@ class DeltaUtil {
 		return getComponentToDeleteCostSheet(at: index, in: document)
 	}
 
-	static func getComponentToUpdateCostSheet(withId costSheetId: String, with updatedCostSheet: CostSheet, in document: Document) -> DocumentContentOperation.Component {
-		guard let index = document.indexOfCostSheetWithId(costSheetId) else {
+	static func getComponentToUpdateCostSheet(_ updatedCostSheet: CostSheet, in document: Document) -> DocumentContentOperation.Component {
+		guard let index = document.indexOfCostSheetWithId(updatedCostSheet.id) else {
 			assertionFailure()
 			return DocumentContentOperation.Component()
 		}

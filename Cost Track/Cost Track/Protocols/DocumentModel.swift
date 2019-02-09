@@ -23,11 +23,14 @@ protocol DocumentModelInput {
 	func renameGroupAt(_ index: Int, to newName: String)
 	func reorderGroup(from fromIndex: Int, to toIndex: Int)
 
+	// Entry
 	func transferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String)
 	func deleteEntry(withId entryId: String, inCostSheetWithId costSheetId: String)
 
+	// CostSheet
 	func addCostSheet(_ costSheet: CostSheet)
 	func deleteCostSheet(withId costSheetId: String)
+	func updateCostSheet(_ updatedCostSheet: CostSheet)
 }
 
 protocol DocumentModel: DocumentModelSource, DocumentModelInput {
