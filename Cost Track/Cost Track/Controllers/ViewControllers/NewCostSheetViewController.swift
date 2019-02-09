@@ -54,26 +54,19 @@ class NewCostSheetViewController: UIViewController {
 private extension NewCostSheetViewController {
 
 	@IBAction func createButtonPressed(_ sender: Any) {
-		let document = documentHandler.getDocument()
-
 		settingsTableView.updateCostSheet()
 		var costSheet = settingsTableView.costSheet
 		guard costSheet.name != "" else {
 			showAlertSaying("Please enter a name for the cost sheet.")
 			return
 		}
-		guard document.isCostSheetNameNew(costSheet.name) else {
+		guard documentHandler.getDocument().isCostSheetNameNew(costSheet.name) else {
 			showAlertSaying("\'\(costSheet.name)\' already exists. Please enter a different name.")
 			return
 		}
-
 		costSheet.createdOnDate = Date().data
 		costSheet.lastModifiedDate = costSheet.createdOnDate
-
-		// Delta
-		let insertCostSheetComp = DeltaUtil.getComponentToInsertCostSheet(costSheet, in: document)
-		documentHandler.sendDeltaComponents([insertCostSheetComp])
-
+		documentHandler.addCostSheet(costSheet)
 		navigationController?.popViewController(animated: true)
 	}
 

@@ -26,6 +26,7 @@ protocol DocumentModelInput {
 	func transferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String)
 	func deleteEntry(withId entryId: String, inCostSheetWithId costSheetId: String)
 
+	func addCostSheet(_ costSheet: CostSheet)
 	func deleteCostSheet(withId costSheetId: String)
 }
 

@@ -92,23 +92,22 @@ extension DocumentHandler: DocumentModel {
 	}
 
 	func renameGroupAt(_ index: Int, to newName: String) {
-		let renameComp = DeltaUtil.getComponentToRenameGroup(at: index, to: newName, in: getDocument())
+		let renameComp = DeltaUtil.getComponentToRenameGroup(at: index, to: newName, in: document)
 		sendDeltaComponents([renameComp])
 	}
 
 	func reorderGroup(from fromIndex: Int, to toIndex: Int) {
-		let deltaComps = DeltaUtil.getComponentToReorderGroup(from: fromIndex, to: toIndex, in: getDocument())
+		let deltaComps = DeltaUtil.getComponentToReorderGroup(from: fromIndex, to: toIndex, in: document)
 		sendDeltaComponents(deltaComps)
 	}
 
 
 	func transferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String) {
-		let transferEntryComps = DeltaUtil.getComponentsToTransferEntry(withId: entryId, fromCostSheetWithId: fromCostSheetId, toCostSheetWithId: toCostSheetId, in: getDocument())
+		let transferEntryComps = DeltaUtil.getComponentsToTransferEntry(withId: entryId, fromCostSheetWithId: fromCostSheetId, toCostSheetWithId: toCostSheetId, in: document)
 		sendDeltaComponents(transferEntryComps)
 	}
 
 	func deleteEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
-		let document = getDocument()
 		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntry(withId: entryId, inCostSheetWithId: costSheetId, document: document)
 		var deltaComps = [deleteEntryComp]
 
@@ -122,9 +121,13 @@ extension DocumentHandler: DocumentModel {
 		sendDeltaComponents(deltaComps)
 	}
 
+	func addCostSheet(_ costSheet: CostSheet) {
+		let insertCostSheetComp = DeltaUtil.getComponentToInsertCostSheet(costSheet, in: document)
+		sendDeltaComponents([insertCostSheetComp])
+	}
 
 	func deleteCostSheet(withId id: String) {
-		let deleteCostSheetComp = DeltaUtil.getComponentToDeleteCostSheet(withId: id, in: getDocument())
+		let deleteCostSheetComp = DeltaUtil.getComponentToDeleteCostSheet(withId: id, in: document)
 		sendDeltaComponents([deleteCostSheetComp])
 	}
 
