@@ -128,7 +128,7 @@ class CostSheetViewController: UIViewController {
 				assertionFailure()
 				return
 			}
-			transferEntryTableViewController.setup(dataSource: self, deltaDelegate: self)
+			transferEntryTableViewController.setup(dataSource: self, documentHandler: documentHandler)
 		case CostSheetSettingsSegue:
 			guard let costSheetSettingsViewController = segue.destination as? CostSheetSettingsViewController else {
 				assertionFailure()
@@ -526,16 +526,6 @@ extension CostSheetViewController: TransferEntryTableViewControllerDataSource {
 				return ""
 		}
 		return entryToTransfer.id
-	}
-
-}
-
-// MARK: DeltaDelegate
-extension CostSheetViewController: DeltaDelegate {
-
-	func sendDeltaComponents(_ components: [DocumentContentOperation.Component]) {
-		documentHandler.sendDeltaComponents(components)
-		shouldUpdateViews = true
 	}
 
 }

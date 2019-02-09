@@ -11,7 +11,6 @@ import UIKit
 protocol TransferEntryTableViewControllerDataSource: class {
 	var fromCostSheetId: String { get }
 	var entryToTransferId: String { get }
-	var document: Document { get }
 }
 
 class TransferEntryTableViewController: UITableViewController {
@@ -20,11 +19,11 @@ class TransferEntryTableViewController: UITableViewController {
 	@IBOutlet weak var transferButton: UIBarButtonItem!
 
 	// MARK: Properties
-	private weak var dataSource: TransferEntryTableViewControllerDataSource!
-	private weak var deltaDelegate: DeltaDelegate!
-	func setup(dataSource: TransferEntryTableViewControllerDataSource, deltaDelegate: DeltaDelegate) {
-		self.dataSource = dataSource
-		self.deltaDelegate = deltaDelegate
+	private weak var transferEntryTableViewControllerDataSource: TransferEntryTableViewControllerDataSource!
+	private weak var documentHandler: DocumentHandler!
+	func setup(dataSource: TransferEntryTableViewControllerDataSource, documentHandler: DocumentHandler) {
+		self.transferEntryTableViewControllerDataSource = dataSource
+		self.documentHandler = documentHandler
 	}
 	private var filteredCostSheets = [CostSheet]()
 	private var selectedIndexPath: IndexPath?
@@ -34,8 +33,8 @@ class TransferEntryTableViewController: UITableViewController {
         super.viewDidLoad()
 
 		// Getting filteredCostSheets
-		let fromCostSheetId = dataSource.fromCostSheetId
-		let document = dataSource.document
+		let fromCostSheetId = transferEntryTableViewControllerDataSource.fromCostSheetId
+		let document = documentHandler.getDocument()
 		for costSheet in document.costSheets {
 			if costSheet.id != fromCostSheetId {
 				filteredCostSheets.append(costSheet)
@@ -82,12 +81,10 @@ private extension TransferEntryTableViewController {
 				assertionFailure()
 				return
 		}
-		let entryId = dataSource.entryToTransferId
-		let fromCostSheetId = dataSource.fromCostSheetId
+		let entryId = transferEntryTableViewControllerDataSource.entryToTransferId
+		let fromCostSheetId = transferEntryTableViewControllerDataSource.fromCostSheetId
 		let toCostSheetId = filteredCostSheets[selectedIndexPath.row].id
-		let document = dataSource.document
-		let transferEntryComps = DeltaUtil.getComponentsToTransferEntry(withId: entryId, fromCostSheetWithId: fromCostSheetId, toCostSheetWithId: toCostSheetId, document: document)
-		deltaDelegate.sendDeltaComponents(transferEntryComps)
+		documentHandler.transferEntry(withId: entryId, fromCostSheetWithId: fromCostSheetId, toCostSheetWithId: toCostSheetId)
 		dismiss(animated: true, completion: nil)
 	}
 

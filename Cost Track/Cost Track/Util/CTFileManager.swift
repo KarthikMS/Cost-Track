@@ -34,11 +34,13 @@ class CTFileManager {
 			// Setting NotSetGroupId
 			for group in loadedDoc.groups where group.name == "Not set" {
 				NotSetGroupId = group.id
+				break
 			}
 
 			// Setting TransferCategory
 			for category in loadedDoc.categories where category.name == "Transfer" {
 				TransferCategory = category
+				break
 			}
 
 			return (loadedDoc, false)

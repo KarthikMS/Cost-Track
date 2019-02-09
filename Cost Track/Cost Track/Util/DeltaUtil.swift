@@ -320,7 +320,7 @@ class DeltaUtil {
 		)
 	}
 
-	static func getComponentsToTransferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String, document: Document) -> [DocumentContentOperation.Component] {
+	static func getComponentsToTransferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String, in document: Document) -> [DocumentContentOperation.Component] {
 		guard let fromCostSheetIndex = document.indexOfCostSheetWithId(fromCostSheetId),
 		let toCostSheetIndex = document.indexOfCostSheetWithId(toCostSheetId) else {
 			assertionFailure("Could not get costSheetIndex")

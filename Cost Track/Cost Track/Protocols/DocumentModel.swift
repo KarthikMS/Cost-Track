@@ -22,6 +22,8 @@ protocol DocumentModelInput {
 	func deleteGroupAndMoveRelatedCostSheetsToDefaultGroup(index: Int)
 	func renameGroupAt(_ index: Int, to newName: String)
 	func reorderGroup(from fromIndex: Int, to toIndex: Int)
+
+	func transferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String)
 }
 
 protocol DocumentModel: DocumentModelSource, DocumentModelInput {
