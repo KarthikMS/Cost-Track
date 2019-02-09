@@ -122,6 +122,12 @@ extension DocumentHandler: DocumentModel {
 		sendDeltaComponents(deltaComps)
 	}
 
+
+	func deleteCostSheet(withId id: String) {
+		let deleteCostSheetComp = DeltaUtil.getComponentToDeleteCostSheet(withId: id, in: getDocument())
+		sendDeltaComponents([deleteCostSheetComp])
+	}
+
 }
 
 // MARK: DeltaDelegate

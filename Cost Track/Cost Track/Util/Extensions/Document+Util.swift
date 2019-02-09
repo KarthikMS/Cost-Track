@@ -57,6 +57,7 @@ extension Document {
 		for place in places where place.id == id {
 			return place
 		}
+		assertionFailure()
 		return nil
 	}
 

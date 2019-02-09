@@ -14,12 +14,7 @@ class GroupTableViewControllerTests: XCTestCase {
 	var documentHandler: DocumentHandler!
 
 	override func setUp() {
-		do {
-			let document = try Document(jsonString: documentJSON)
-			documentHandler = DocumentHandler(document: document)
-		} catch {
-			assertionFailure("Error converting json to document.")
-		}
+		documentHandler = DocumentHandler(document: testDocument)
 	}
 
 	func testCreateGroup() {

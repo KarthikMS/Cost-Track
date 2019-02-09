@@ -223,27 +223,25 @@ class MyCostSheetsViewController: UIViewController {
 
 	// TODO: Make this as a function in DocumentHandler
 	private func deleteCostSheet(withId id: String, at indexPath: IndexPath) {
-//		let deleteCostSheetComp = DeltaUtil.getComponentToDeleteCostSheet(withId: id, in: documentHandler.getDocument())
-//		sendDeltaComponents([deleteCostSheetComp])
-//
-//		refreshView()
-//
-//		if !documentHandler.getDocument().hasCostSheetsInOtherGroups {
-//			sectionsToHide.removeAll()
-//			tableView.reloadData()
-//		} else {
-//			tableView.beginUpdates()
-//			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
-//				tableView.deleteSections([indexPath.section], with: .bottom)
-//			} else {
-//				tableView.deleteRows(at: [indexPath], with: .left)
-//			}
-//			tableView.endUpdates()
-//		}
-//		if documentHandler.getDocument().costSheets.isEmpty {
-//			noCostSheetsTextView.isHidden = false
-//		}
-//		updateTopBar()
+		documentHandler.deleteCostSheet(withId: id)
+
+		if !documentHandler.getDocument().hasCostSheetsInOtherGroups {
+			sectionsToHide.removeAll()
+			tableView.reloadData()
+		} else {
+			tableView.beginUpdates()
+			if tableView.numberOfRows(inSection: indexPath.section) == 1 {
+				tableView.deleteSections([indexPath.section], with: .bottom)
+			} else {
+				tableView.deleteRows(at: [indexPath], with: .left)
+			}
+			tableView.endUpdates()
+		}
+		if documentHandler.getDocument().costSheets.isEmpty {
+			noCostSheetsTextView.isHidden = false
+		}
+		updateTopBar()
+		updateInfoLabel()
 	}
 }
 

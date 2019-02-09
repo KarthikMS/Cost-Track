@@ -124,24 +124,18 @@ class DeltaUtil {
 			let costSheet = document.costSheets[i]
 			for j in 0..<costSheet.entries.count {
 				let entry = costSheet.entries[j]
-				guard let entryPlace = document.getPlace(withId: entry.placeID) else {
-					assertionFailure("Could not get place by Id")
-					return []
-				}
-				if entryPlace.id == placeId {
-					var newEntry = entry
-					newEntry.clearPlaceID()
-
-					let fieldString = "1,arr:\(i),5,arr:\(j),5"
-
-					let comp = getComponent(
-						opType: .update,
-						fieldString: fieldString,
-						oldValue: entry.safeSerializedData,
-						newValue: newEntry.safeSerializedData
-					)
-					comps.append(comp)
-				}
+				guard entry.placeID != "",
+					entry.placeID == placeId else { continue }
+				var newEntry = entry
+				newEntry.clearPlaceID()
+				let fieldString = "1,arr:\(i),5,arr:\(j),5"
+				let comp = getComponent(
+					opType: .update,
+					fieldString: fieldString,
+					oldValue: entry.safeSerializedData,
+					newValue: newEntry.safeSerializedData
+				)
+				comps.append(comp)
 			}
 		}
 
