@@ -355,19 +355,7 @@ class CostSheetViewController: UIViewController {
 			return
 		}
 
-		// Delta
-		var deltaComps = [DocumentContentOperation.Component]()
-		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(deleteEntryId, inCostSheetWithId: costSheetId, document: documentHandler.getDocument())
-		deltaComps.append(deleteEntryComp!)
-
-		// Deleting transferEntry if any
-		let entryToDelete = documentHandler.getDocument().costSheetWithId(costSheetId)!.entryWithId(deleteEntryId)
-		if entryToDelete.category.name == "Transfer" {
-			let deleteTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(entryToDelete.transferEntryID, inCostSheetWithId: entryToDelete.transferCostSheetID, document: document)
-			deltaComps.append(deleteTransferEntryComp!)
-		}
-
-		documentHandler.sendDeltaComponents(deltaComps)
+		documentHandler.deleteEntry(withId: deleteEntryId, inCostSheetWithId: costSheetId)
 
 		if self.classificationMode != .date {
 			sortEntriesByDate()

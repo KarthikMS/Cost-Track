@@ -24,6 +24,7 @@ protocol DocumentModelInput {
 	func reorderGroup(from fromIndex: Int, to toIndex: Int)
 
 	func transferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String)
+	func deleteEntry(withId entryId: String, inCostSheetWithId costSheetId: String)
 }
 
 protocol DocumentModel: DocumentModelSource, DocumentModelInput {

@@ -608,8 +608,10 @@ extension CostSheetEntryViewController {
 						let updateTransferEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.transferEntryID, with: newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, document: document)
 						deltaComps.append(updateTransferEntryComp)
 					} else {
+						// TODO: Clear transferEntryId & transferCostSheetId properly
 						// Old entry has different transferCostSheetId
-						if let deleteOldTransferEntryComp = DeltaUtil.getComponentToDeleteEntryWithId(oldEntry.transferEntryID, inCostSheetWithId: oldEntry.transferCostSheetID, document: document) {
+						if oldEntry.transferEntryID != "" && oldEntry.transferCostSheetID != "" {
+							let deleteOldTransferEntryComp = DeltaUtil.getComponentToDeleteEntry(withId: oldEntry.transferEntryID, inCostSheetWithId: oldEntry.transferCostSheetID, document: document)
 							deltaComps.append(deleteOldTransferEntryComp)
 							newTransferEntry.id = oldEntry.transferEntryID
 						} else {

@@ -1,5 +1,5 @@
 //
-//  MiscellaneousTests.swift
+//  CostSheetViewControllerTests.swift
 //  Cost TrackTests
 //
 //  Created by Karthik M S on 09/02/19.
@@ -9,7 +9,7 @@
 @testable import Cost_Track
 import XCTest
 
-class MiscellaneousTests: XCTestCase {
+class CostSheetViewControllerTests: XCTestCase {
 
 	var documentHandler: DocumentHandler!
 
@@ -38,6 +38,33 @@ class MiscellaneousTests: XCTestCase {
 		XCTAssert(!fromCostSheetAfterTransfer.entries.map { $0.id }.contains(entryToTransfer.id), "Entry not deleted from fromCostSheet.")
 		XCTAssert(toCostSheetAfterTransfer.entries.count == toCostSheetBeforeTransfer.entries.count + 1, "Entry not added to toCostSheet.")
 		XCTAssert(toCostSheetAfterTransfer.entries.map { $0.id }.contains(entryToTransfer.id), "Entry not added to toCostSheet.")
+	}
+
+	func testDeleteEntry() {
+		let deleteCostSheetIndex = 3
+		let oldDocument = documentHandler.getDocument()
+		let costSheetBeforeDelete = oldDocument.costSheets[deleteCostSheetIndex]
+		let entryToDelete = costSheetBeforeDelete.entries[0]
+
+		var transferCostSheetBeforeDelete: CostSheet?
+		if entryToDelete.transferCostSheetID != "" && entryToDelete.transferEntryID != "" {
+			transferCostSheetBeforeDelete = oldDocument.costSheetWithId(entryToDelete.transferCostSheetID)
+		}
+
+		documentHandler.deleteEntry(withId: entryToDelete.id, inCostSheetWithId: costSheetBeforeDelete.id)
+
+		let newDocument = documentHandler.getDocument()
+		XCTAssert(newDocument.costSheets[deleteCostSheetIndex].entries.count == costSheetBeforeDelete.entries.count - 1, "Entry not deleted.")
+		XCTAssert(!newDocument.costSheets[deleteCostSheetIndex].entries.map { $0.id }.contains(entryToDelete.id), "Entry not deleted.")
+
+		if let transferCostSheetBeforeDelete = transferCostSheetBeforeDelete {
+			guard let transferCostSheetAfterDelete = newDocument.costSheetWithId(entryToDelete.transferCostSheetID) else {
+				assertionFailure()
+				return
+			}
+			XCTAssert(transferCostSheetAfterDelete.entries.count == transferCostSheetBeforeDelete.entries.count - 1, "Entry not delete in transferCostSheet.")
+			XCTAssert(!transferCostSheetAfterDelete.entries.map { $0.id }.contains(entryToDelete.transferEntryID), "Entry not delete in transferCostSheet.")
+		}
 	}
 
 }
