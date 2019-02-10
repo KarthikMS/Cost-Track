@@ -355,7 +355,7 @@ class CostSheetViewController: UIViewController {
 			return
 		}
 
-		documentHandler.deleteEntry(withId: deleteEntryId, inCostSheetWithId: costSheetId)
+		documentHandler.deleteCostSheetEntry(withId: deleteEntryId, inCostSheetWithId: costSheetId)
 
 		if self.classificationMode != .date {
 			sortEntriesByDate()

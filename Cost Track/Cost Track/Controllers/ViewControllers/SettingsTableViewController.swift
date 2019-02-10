@@ -17,7 +17,6 @@ class SettingsTableViewController: UITableViewController {
 
 	// MARK: Properties
 	private weak var documentHandler: DocumentHandler!
-	private weak var deltaDelegate: DeltaDelegate!
 	func setup(documentHandler: DocumentHandler) {
 		self.documentHandler = documentHandler
 	}

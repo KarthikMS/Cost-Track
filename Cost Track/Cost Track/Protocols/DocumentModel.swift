@@ -24,8 +24,11 @@ protocol DocumentModelInput {
 	func reorderGroup(from fromIndex: Int, to toIndex: Int)
 
 	// Entry
-	func transferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String)
-	func deleteEntry(withId entryId: String, inCostSheetWithId costSheetId: String)
+	/// waitForFurtherCommands delays sending of delta and gathers all delta components. Default value should be false. Make sure to call these functions with waitForFurtherCommands as false atleast once after you've called these functions with waitForFurtherCommands as true
+	func insertCostSheetEntry(_ newEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, waitForFurtherCommands: Bool)
+	func deleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String, waitForFurtherCommands: Bool)
+	func updateCostSheetEntry(_ updatedEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, waitForFurtherCommands: Bool)
+	func transferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String, waitForFurtherCommands: Bool)
 
 	// CostSheet
 	func addCostSheet(_ costSheet: CostSheet)

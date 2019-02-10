@@ -568,8 +568,6 @@ extension CostSheetEntryViewController {
 			descriptionText = ""
 		}
 
-		var deltaComps = [DocumentContentOperation.Component]()
-
 		if var oldEntry = oldEntry {
 			// Updating oldEntry
 			oldEntry.type = entryType
@@ -605,27 +603,22 @@ extension CostSheetEntryViewController {
 					if oldEntry.transferCostSheetID == transferCostSheet.id {
 						// Old entry has same transferCostSheetId
 						newTransferEntry.id = oldEntry.transferEntryID
-						let updateTransferEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.transferEntryID, with: newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, document: document)
-						deltaComps.append(updateTransferEntryComp)
+						documentHandler.updateCostSheetEntry(newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, waitForFurtherCommands: true)
 					} else {
 						// TODO: Clear transferEntryId & transferCostSheetId properly
 						// Old entry has different transferCostSheetId
 						if oldEntry.transferEntryID != "" && oldEntry.transferCostSheetID != "" {
-							let deleteOldTransferEntryComp = DeltaUtil.getComponentToDeleteEntry(withId: oldEntry.transferEntryID, inCostSheetWithId: oldEntry.transferCostSheetID, document: document)
-							deltaComps.append(deleteOldTransferEntryComp)
+							documentHandler.deleteCostSheetEntry(withId: oldEntry.transferEntryID, inCostSheetWithId: oldEntry.transferCostSheetID, waitForFurtherCommands: true)
 							newTransferEntry.id = oldEntry.transferEntryID
 						} else {
 							newTransferEntry.id = UUID().uuidString
 						}
-						let insertNewTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: document)
-						deltaComps.append(insertNewTransferEntryComp)
+						documentHandler.insertCostSheetEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, waitForFurtherCommands: true)
 					}
 				} else {
 					// Old entry does not have transferCostSheetId
 					newTransferEntry.id = UUID().uuidString
-
-					let insertNewTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: document)
-					deltaComps.append(insertNewTransferEntryComp)
+					documentHandler.insertCostSheetEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, waitForFurtherCommands: true)
 				}
 
 				oldEntry.category = TransferCategory
@@ -648,13 +641,11 @@ extension CostSheetEntryViewController {
 					newTransferEntry.date = dateData
 					newTransferEntry.description_p = descriptionText
 
-					let updateTransferEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.transferEntryID, with: newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, document: document)
-					deltaComps.append(updateTransferEntryComp)
+					documentHandler.updateCostSheetEntry(newTransferEntry, inCostSheetWithId: oldEntry.transferCostSheetID, waitForFurtherCommands: true)
 				}
 			}
 
-			let updateEntryComp = DeltaUtil.getComponentToUpdateEntryWithId(oldEntry.id, with: oldEntry, inCostSheetWithId: costSheetId, document: document)
-			deltaComps.append(updateEntryComp)
+			documentHandler.updateCostSheetEntry(oldEntry, inCostSheetWithId: costSheetId, waitForFurtherCommands: false)
 		} else {
 			// Creating new entry
 			var newEntry = CostSheetEntry()
@@ -691,17 +682,13 @@ extension CostSheetEntryViewController {
 				newEntry.transferCostSheetID = transferCostSheet.id
 				newEntry.transferEntryID = newTransferEntry.id
 
-				let insertTransferEntryComp = DeltaUtil.getComponentToInsertEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, document: document)
-				deltaComps.append(insertTransferEntryComp)
+				documentHandler.insertCostSheetEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, waitForFurtherCommands: true)
 			} else {
 				newEntry.category = category
 			}
 
-			let insertEntryComp = DeltaUtil.getComponentToInsertEntry(newEntry, inCostSheetWithId: costSheetId, document: document)
-			deltaComps.append(insertEntryComp)
+			documentHandler.insertCostSheetEntry(newEntry, inCostSheetWithId: costSheetId, waitForFurtherCommands: false)
 		}
-
-		documentHandler.sendDeltaComponents(deltaComps)
 
 		oldEntry = nil
 		navigationController?.popViewController(animated: true)

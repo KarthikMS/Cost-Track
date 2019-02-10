@@ -46,7 +46,7 @@ class CostSheetViewControllerTests: XCTestCase {
 			transferCostSheetBeforeDelete = oldDocument.costSheetWithId(entryToDelete.transferCostSheetID)
 		}
 
-		documentHandler.deleteEntry(withId: entryToDelete.id, inCostSheetWithId: costSheetBeforeDelete.id)
+		documentHandler.deleteCostSheetEntry(withId: entryToDelete.id, inCostSheetWithId: costSheetBeforeDelete.id)
 
 		let newDocument = documentHandler.getDocument()
 		XCTAssert(newDocument.costSheets[deleteCostSheetIndex].entries.count == costSheetBeforeDelete.entries.count - 1, "Entry not deleted.")

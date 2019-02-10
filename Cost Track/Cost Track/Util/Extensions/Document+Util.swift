@@ -152,29 +152,8 @@ extension Document {
 		return nil
 	}
 
-	mutating func updateCostSheet(at index: Int, with updatedCostSheet: CostSheet) {
-		costSheets[index] = updatedCostSheet
-		costSheets[index].lastModifiedDate = Date().data
-	}
-
-	mutating func updateCostSheet(withId id: String, with updatedCostSheet: CostSheet) {
-		if let index = indexOfCostSheetWithId(id) {
-			updateCostSheet(at: index, with: updatedCostSheet)
-		}
-	}
-
-	mutating func deleteCostSheet(withId id: String) {
-		if let index = indexOfCostSheetWithId(id) {
-			costSheets.remove(at: index)
-		}
-	}
-
-	mutating func deleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
-		if let costSheetIndex = indexOfCostSheetWithId(costSheetId),
-			let entryIndex = costSheets[costSheetIndex].indexOfEntryWithId(entryId) {
-			costSheets[costSheetIndex].entries.remove(at: entryIndex)
-			costSheets[costSheetIndex].lastModifiedDate = Date().data
-		}
+	func categoriesFilteredByEntryType(_ entryType: EntryType) -> [Category] {
+		return categories.filter { $0.entryTypes.contains(entryType) }
 	}
 
 }

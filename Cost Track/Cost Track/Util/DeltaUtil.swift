@@ -257,13 +257,13 @@ class DeltaUtil {
 		return comps
 	}
 
-	static func getComponentToUpdateEntryWithId(_ entryId: String, with updatedEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, document: Document) -> DocumentContentOperation.Component {
+	static func getComponentToUpdateEntry(_ updatedEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, document: Document) -> DocumentContentOperation.Component {
 		guard let costSheetIndex = document.indexOfCostSheetWithId(costSheetId) else {
 			assertionFailure("Could not get costSheetIndex")
 			return DocumentContentOperation.Component()
 		}
 		let costSheet = document.costSheets[costSheetIndex]
-		guard let entryIndex = costSheet.indexOfEntryWithId(entryId) else {
+		guard let entryIndex = costSheet.indexOfEntryWithId(updatedEntry.id) else {
 			assertionFailure("Could not get entryIndex")
 			return DocumentContentOperation.Component()
 		}

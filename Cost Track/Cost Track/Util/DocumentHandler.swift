@@ -12,6 +12,7 @@ class DocumentHandler {
 
 	private var document: Document
 	private let networkHandler = NetworkHandler()
+	private var queuedDeltaComps = [DocumentContentOperation.Component]()
 
 	init(document: Document) {
 		// Comment and use the next block of code to use json document
@@ -101,13 +102,17 @@ extension DocumentHandler: DocumentModel {
 		sendDeltaComponents(deltaComps)
 	}
 
+	// MARK: Entry
+	func insertCostSheetEntry(_ newEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, waitForFurtherCommands: Bool = false) {
+		let insertEntryComp = DeltaUtil.getComponentToInsertEntry(newEntry, inCostSheetWithId: costSheetId, document: document)
+		queuedDeltaComps.append(insertEntryComp)
+		guard !waitForFurtherCommands else { return }
 
-	func transferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String) {
-		let transferEntryComps = DeltaUtil.getComponentsToTransferEntry(withId: entryId, fromCostSheetWithId: fromCostSheetId, toCostSheetWithId: toCostSheetId, in: document)
-		sendDeltaComponents(transferEntryComps)
+		sendDeltaComponents(queuedDeltaComps)
+		queuedDeltaComps.removeAll()
 	}
 
-	func deleteEntry(withId entryId: String, inCostSheetWithId costSheetId: String) {
+	func deleteCostSheetEntry(withId entryId: String, inCostSheetWithId costSheetId: String, waitForFurtherCommands: Bool = false) {
 		let deleteEntryComp = DeltaUtil.getComponentToDeleteEntry(withId: entryId, inCostSheetWithId: costSheetId, document: document)
 		var deltaComps = [deleteEntryComp]
 
@@ -118,9 +123,32 @@ extension DocumentHandler: DocumentModel {
 			deltaComps.append(deleteTransferEntryComp)
 		}
 
-		sendDeltaComponents(deltaComps)
+		queuedDeltaComps.append(contentsOf: deltaComps)
+		guard !waitForFurtherCommands else { return }
+
+		sendDeltaComponents(queuedDeltaComps)
+		queuedDeltaComps.removeAll()
 	}
 
+	func updateCostSheetEntry(_ updatedEntry: CostSheetEntry, inCostSheetWithId costSheetId: String, waitForFurtherCommands: Bool = false) {
+		let updateEntryComp = DeltaUtil.getComponentToUpdateEntry(updatedEntry, inCostSheetWithId: costSheetId, document: document)
+		queuedDeltaComps.append(updateEntryComp)
+		guard !waitForFurtherCommands else { return }
+
+		sendDeltaComponents(queuedDeltaComps)
+		queuedDeltaComps.removeAll()
+	}
+
+	func transferEntry(withId entryId: String, fromCostSheetWithId fromCostSheetId: String, toCostSheetWithId toCostSheetId: String, waitForFurtherCommands: Bool = false) {
+		let transferEntryComps = DeltaUtil.getComponentsToTransferEntry(withId: entryId, fromCostSheetWithId: fromCostSheetId, toCostSheetWithId: toCostSheetId, in: document)
+		queuedDeltaComps.append(contentsOf: transferEntryComps)
+		guard !waitForFurtherCommands else { return }
+
+		sendDeltaComponents(queuedDeltaComps)
+		queuedDeltaComps.removeAll()
+	}
+
+	// MARK: CostSheet
 	func addCostSheet(_ costSheet: CostSheet) {
 		let insertCostSheetComp = DeltaUtil.getComponentToInsertCostSheet(costSheet, in: document)
 		sendDeltaComponents([insertCostSheetComp])
