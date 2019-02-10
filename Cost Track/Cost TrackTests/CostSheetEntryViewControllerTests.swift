@@ -23,7 +23,7 @@ class CostSheetEntryViewControllerTests: XCTestCase {
 		var newEntry = CostSheetEntry()
 		newEntry.type = .expense
 		newEntry.amount = 100
-		newEntry.category = oldDocument.categoriesFilteredByEntryType(.expense)[0]
+		newEntry.categoryID = oldDocument.categoriesFilteredByEntryType(.expense)[0].id
 		newEntry.placeID = oldDocument.places[0].id
 		newEntry.date = Date().data
 		newEntry.description_p = "Some description."
@@ -36,7 +36,7 @@ class CostSheetEntryViewControllerTests: XCTestCase {
 		XCTAssert(newCostSheet.entries.count == oldCostSheet.entries.count + 1, "Entry not added.")
 		XCTAssert(addedEntry.type == newEntry.type, "Entry type not correct.")
 		XCTAssert(addedEntry.amount == newEntry.amount, "Amount not correct.")
-		XCTAssert(addedEntry.category == newEntry.category, "Category not correct.")
+		XCTAssert(addedEntry.categoryID == newEntry.categoryID, "Category not correct.")
 		XCTAssert(addedEntry.placeID == newEntry.placeID, "PlaceId not correct.")
 		XCTAssert(addedEntry.date == newEntry.date, "Date not correct.")
 		XCTAssert(addedEntry.description_p == newEntry.description_p, "Description not correct.")
@@ -69,7 +69,7 @@ class CostSheetEntryViewControllerTests: XCTestCase {
 		var updatedEntry = entryBeforeUpdate
 		updatedEntry.type = updatedEntry.type == .income ? .expense : .income
 		updatedEntry.amount += 100
-		updatedEntry.category = oldDocument.categoriesFilteredByEntryType(.expense)[4]
+		updatedEntry.categoryID = oldDocument.categoriesFilteredByEntryType(.expense)[4].id
 		updatedEntry.placeID = oldDocument.places[1].id
 		updatedEntry.date = Date().data
 		updatedEntry.description_p += "modified"
@@ -82,7 +82,7 @@ class CostSheetEntryViewControllerTests: XCTestCase {
 			, "Entry count is not the same.")
 		XCTAssert(entryAfterUpdate.type == updatedEntry.type, "EntryType not updated.")
 		XCTAssert(entryAfterUpdate.amount == updatedEntry.amount, "Amount not updated.")
-		XCTAssert(entryAfterUpdate.category == updatedEntry.category, "Category not updated.")
+		XCTAssert(entryAfterUpdate.categoryID == updatedEntry.categoryID, "Category not updated.")
 		XCTAssert(entryAfterUpdate.placeID == updatedEntry.placeID, "PlaceId not updated.")
 		XCTAssert(entryAfterUpdate.date == updatedEntry.date, "Date not updated.")
 		XCTAssert(entryAfterUpdate.description_p == updatedEntry.description_p, "Description not updated.")

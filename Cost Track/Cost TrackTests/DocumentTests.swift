@@ -33,7 +33,7 @@ class DocumentTests: XCTestCase {
 		XCTAssert(newDocumentCreatedOnDate != oldDocumentCreatedOnDate, "New document has same createdOnDate.")
 		XCTAssert(newDocument.costSheets.isEmpty, "New document has cost sheets.")
 		XCTAssert(newDocument.groups.count == 1, "New document has groups.")
-		XCTAssert(newDocument.categories == Category.defaultCategories(), "New document does not have default categories.")
+		XCTAssert(newDocument.categories.map { $0.name } == Category.defaultCategories().map { $0.name }, "New document does not have default categories.")
 		XCTAssert(newDocument.places.isEmpty, "New document has places.")
 	}
 

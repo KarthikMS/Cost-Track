@@ -164,7 +164,7 @@ class CostSheetEntryViewController: UIViewController {
 		entryType = oldEntry.type
 		updateViewsBasedOnEntryType()
 		amountTextView.text = String(oldEntry.amount)
-		updateCategoryViews(category: oldEntry.category)
+		updateCategoryViews(categoryId: oldEntry.categoryID)
 		if oldEntry.hasImage {
 			image = UIImage(data: oldEntry.image)
 			updateImageEditorView(for: image)
@@ -187,7 +187,7 @@ class CostSheetEntryViewController: UIViewController {
 	private func updateViewsToDefaultValues() {
 		updateViewsBasedOnEntryType()
 		amountTextView.text = "0.00"
-		updateCategoryViews(category: nil)
+		updateCategoryViews(categoryId: nil)
 		updateDateViews(date: Date())
 		descriptionTextView.text = "Enter description..."
 		descriptionTextView.textColor = .lightGray
@@ -206,8 +206,9 @@ class CostSheetEntryViewController: UIViewController {
 		}
 	}
 
-	private func updateCategoryViews(category: Category?) {
-		if let category = category {
+	private func updateCategoryViews(categoryId: String?) {
+		if let categoryId = categoryId {
+			guard let category = documentHandler.getDocument().getCategory(withId: categoryId) else { return  }
 			entryCategoryPicker.selectCategory(category)
 		} else {
 			entryCategoryPicker.categoryPickerView.selectRow(0, inComponent: 0, animated: false)
@@ -413,7 +414,7 @@ extension CostSheetEntryViewController {
 	@IBAction func navigationBarTitleButtonPressed(_ sender: UIButton) {
 		var oldSelectedCategory: Category?
 		// Once an entry has transferCostSheetId, it's category cannot be changed
-		if (transferCostSheet == nil) && (oldEntry != nil && oldEntry!.category.name == "Transfer") {
+		if (transferCostSheet == nil) && (oldEntry != nil && oldEntry!.categoryID == TransferCategory.id) {
 			oldSelectedCategory = entryCategoryPicker.selectedCategory
 		}
 
@@ -425,7 +426,7 @@ extension CostSheetEntryViewController {
 		}
 		updateViewsBasedOnEntryType()
 
-		if (transferCostSheet == nil) && (oldEntry != nil && oldEntry!.category.name == "Transfer") {
+		if (transferCostSheet == nil) && (oldEntry != nil && oldEntry!.categoryID == TransferCategory.id) {
 			// If the oldSelectedCategory does not belong to both entry types, the first category is selected. If it does, the correct row is selected.
 			entryCategoryPicker.categoryPickerView.reloadComponent(0)
 			guard let oldSelectedCategory = oldSelectedCategory else {
@@ -433,9 +434,9 @@ extension CostSheetEntryViewController {
 				return
 			}
 			if categoriesFilteredByEntryType.contains(oldSelectedCategory) {
-				updateCategoryViews(category: oldSelectedCategory)
+				updateCategoryViews(categoryId: oldSelectedCategory.id)
 			} else {
-				updateCategoryViews(category: nil)
+				updateCategoryViews(categoryId: nil)
 			}
 		}
 
@@ -455,7 +456,7 @@ extension CostSheetEntryViewController {
 			return
 		}
 		if let oldEntry = oldEntry,
-			oldEntry.category.name == "Transfer" {
+			oldEntry.categoryID == TransferCategory.id {
 			segueToTransferAmountViewController()
 			return
 		}
@@ -587,7 +588,7 @@ extension CostSheetEntryViewController {
 				var newTransferEntry = CostSheetEntry()
 				newTransferEntry.type = entryType == .income ? .expense : .income
 				newTransferEntry.amount = amount
-				newTransferEntry.category = TransferCategory
+				newTransferEntry.categoryID = TransferCategory.id
 				if let imageData = imageData {
 					newTransferEntry.image = imageData
 				}
@@ -599,7 +600,7 @@ extension CostSheetEntryViewController {
 				newTransferEntry.transferCostSheetID = costSheetId
 				newTransferEntry.transferEntryID = oldEntry.id
 
-				if oldEntry.category.name == "Transfer" {
+				if oldEntry.categoryID == TransferCategory.id {
 					if oldEntry.transferCostSheetID == transferCostSheet.id {
 						// Old entry has same transferCostSheetId
 						newTransferEntry.id = oldEntry.transferEntryID
@@ -621,17 +622,19 @@ extension CostSheetEntryViewController {
 					documentHandler.insertCostSheetEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, waitForFurtherCommands: true)
 				}
 
-				oldEntry.category = TransferCategory
+				oldEntry.categoryID = TransferCategory.id
 				oldEntry.transferCostSheetID = transferCostSheet.id
 				oldEntry.transferEntryID = newTransferEntry.id
 			} else {
 				// Old entry had a transferCostSheetId and entry details were changed without going to TransferAmountViewController
-				oldEntry.category = category
-				if oldEntry.category.name == "Transfer" {
+
+				// Handle: Transfer from costsheet1 to costsheet2. Then go to entry and update transfer to costsheet3
+				oldEntry.categoryID = category.id
+				if oldEntry.categoryID == TransferCategory.id {
 					var newTransferEntry = document.costSheetWithId(oldEntry.transferCostSheetID)!.entryWithId(oldEntry.transferEntryID)
 					newTransferEntry.type = entryType == .income ? .expense : .income
 					newTransferEntry.amount = amount
-					newTransferEntry.category = TransferCategory
+					newTransferEntry.categoryID = TransferCategory.id
 					if let imageData = imageData {
 						newTransferEntry.image = imageData
 					}
@@ -666,7 +669,7 @@ extension CostSheetEntryViewController {
 				newTransferEntry.id = UUID().uuidString
 				newTransferEntry.type = entryType == .income ? .expense : .income
 				newTransferEntry.amount = amount
-				newTransferEntry.category = TransferCategory
+				newTransferEntry.categoryID = TransferCategory.id
 				if let imageData = imageData {
 					newTransferEntry.image = imageData
 				}
@@ -678,13 +681,13 @@ extension CostSheetEntryViewController {
 				newTransferEntry.transferCostSheetID = costSheetId
 				newTransferEntry.transferEntryID = newEntry.id
 
-				newEntry.category = TransferCategory
+				newEntry.categoryID = TransferCategory.id
 				newEntry.transferCostSheetID = transferCostSheet.id
 				newEntry.transferEntryID = newTransferEntry.id
 
 				documentHandler.insertCostSheetEntry(newTransferEntry, inCostSheetWithId: transferCostSheet.id, waitForFurtherCommands: true)
 			} else {
-				newEntry.category = category
+				newEntry.categoryID = category.id
 			}
 
 			documentHandler.insertCostSheetEntry(newEntry, inCostSheetWithId: costSheetId, waitForFurtherCommands: false)
@@ -709,8 +712,7 @@ extension CostSheetEntryViewController: EntryDatePickerDelegate {
 extension CostSheetEntryViewController: EntryCategoryPickerDataSource {
 
 	var categoriesFilteredByEntryType: [Category] {
-		let categories = documentHandler.getDocument().categories
-		return categories.filter { $0.entryTypes.contains(entryType) }
+		return documentHandler.getDocument().categoriesFilteredByEntryType(entryType)
 	}
 
 }
@@ -723,8 +725,7 @@ extension CostSheetEntryViewController: EntryCategoryPickerDelegate {
 			segueToTransferAmountViewController()
 			return
 		}
-
-		updateCategoryViews(category: category)
+		updateCategoryViews(categoryId: category.id)
 	}
 
 }
@@ -748,29 +749,6 @@ extension CostSheetEntryViewController: PlaceSelectionDelegate {
 	}
 
 }
-
-//// MARK: GMSPlacePickerViewControllerDelegate
-//extension CostSheetEntryViewController: GMSPlacePickerViewControllerDelegate {
-//
-//	func placePicker(_ viewController: GMSPlacePickerViewController, didPick place: GMSPlace) {
-//		entryPlace = Place()
-//		entryPlace?.id = place.placeID
-//		entryPlace?.name = place.name
-//		entryPlace?.latitude = place.coordinate.latitude
-//		entryPlace?.longitude = place.coordinate.longitude
-//		if let address = place.formattedAddress {
-//			entryPlace?.address = address
-//		}
-//		if let phoneNumber = place.phoneNumber {
-//			entryPlace?.phoneNumber = phoneNumber
-//		}
-//		updatePlaceViews(place: entryPlace)
-//		viewController.dismiss(animated: true) {
-//			self.showPlaceEditor()
-//		}
-//	}
-//
-//}
 
 // MARK: UITextViewDelegate
 extension CostSheetEntryViewController: UITextViewDelegate {
@@ -814,6 +792,7 @@ extension CostSheetEntryViewController: TransferAmountViewControllerDelegate {
 
 }
 
+// MARK: UIImagePickerControllerDelegate, UINavigationControllerDelegate
 extension CostSheetEntryViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {

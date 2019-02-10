@@ -152,6 +152,14 @@ extension Document {
 		return nil
 	}
 
+	func getCategory(withId id: String) -> Category? {
+		for category in categories where category.id == id {
+			return category
+		}
+		assertionFailure()
+		return nil
+	}
+
 	func categoriesFilteredByEntryType(_ entryType: EntryType) -> [Category] {
 		return categories.filter { $0.entryTypes.contains(entryType) }
 	}

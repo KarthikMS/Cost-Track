@@ -24,7 +24,7 @@ class CostSheetViewController: UIViewController {
 	@IBOutlet weak var accountingPeriodLabel: UILabel!
 	
 	// MARK: Properties
-	private weak var documentHandler: DocumentHandler!
+	weak var documentHandler: DocumentHandler!
 	private var costSheetId: String!
 	func setup(documentHandler: DocumentHandler, costSheetId: String) {
 		self.documentHandler = documentHandler
@@ -273,12 +273,14 @@ class CostSheetViewController: UIViewController {
 
 	private func sortEntriesByCategory() {
 		var entriesSortedByCategory = [String: [CostSheetEntry]]()
-		for category in documentHandler.getDocument().categories {
+		let document = documentHandler.getDocument()
+		for category in document.categories {
 			entriesSortedByCategory[category.name] = [CostSheetEntry]()
 		}
 
 		for entry in entriesSortedByDate {
-			entriesSortedByCategory[entry.category.name]?.append(entry)
+			guard let category = document.getCategory(withId: entry.categoryID) else { continue }
+			entriesSortedByCategory[category.name]?.append(entry)
 		}
 
 		var i = 0
@@ -425,13 +427,15 @@ extension CostSheetViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let transferEntryAction = UITableViewRowAction(style: .normal, title: "Transfer") { (action, indexPath) in
 			// Checking cost sheets count
-			guard self.documentHandler.getDocument().costSheets.count > 1 else {
+			let document = self.documentHandler.getDocument()
+			guard document.costSheets.count > 1 else {
 				self.showAlertSaying("No other cost sheets to move entry to. Create more cost sheets.")
 				return
 			}
 
 			guard let entryToTransfer = self.entry(at: indexPath),
-				entryToTransfer.category.name != "Transfer" else {
+				let entryToTransferCategory = document.getCategory(withId: entryToTransfer.categoryID),
+				entryToTransferCategory.name != "Transfer" else {
 					self.showAlertSaying("Cannot move transfer entries.")
 					return
 			}
@@ -490,11 +494,6 @@ extension CostSheetViewController: TableViewSectionHeaderViewDelegate {
 
 // MARK: TransferEntryTableViewControllerDataSource
 extension CostSheetViewController: TransferEntryTableViewControllerDataSource {
-
-	// TODO: Delete this as DocumentHandler will provide this now.
-	var document: Document {
-		return documentHandler.getDocument()
-	}
 
 	var fromCostSheetId: String {
 		return costSheetId

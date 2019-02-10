@@ -45,7 +45,8 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionsTableViewCell", for: indexPath) as! TransactionsTableViewCell
 		guard let dataSource = dataSource,
 			let costSheetEntry = dataSource.getSortedEntry(at: indexPath),
-			let entryDate = costSheetEntry.date.date else {
+			let entryDate = costSheetEntry.date.date,
+			let categoryName = dataSource.documentHandler.getDocument().getCategory(withId: costSheetEntry.categoryID)?.name else {
 				assertionFailure()
 				return cell
 		}
@@ -59,7 +60,7 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 
 		var placeName: String?
 		if costSheetEntry.hasPlaceID {
-			guard let place = dataSource.document.getPlace(withId: costSheetEntry.placeID) else {
+			guard let place = dataSource.documentHandler.getDocument().getPlace(withId: costSheetEntry.placeID) else {
 				assertionFailure()
 				return cell
 			}
@@ -70,7 +71,7 @@ extension TransactionsTableViewDataSource: UITableViewDataSource {
 					   entryType: costSheetEntry.type,
 					   date: entryDate.string(format: "dd/MM/yy"),
 					   time: entryDate.string(format: "hh:mm a"),
-					   category: costSheetEntry.category.name,
+					   category: categoryName,
 					   place: placeName,
 					   description: entryDescription,
 					   forMode: dataSource.classificationMode

@@ -44,6 +44,24 @@ struct Category {
 
   var entryTypes: [EntryType] = []
 
+  var id: String {
+    get {return _id ?? String()}
+    set {_id = newValue}
+  }
+  /// Returns true if `id` has been explicitly set.
+  var hasID: Bool {return self._id != nil}
+  /// Clears the value of `id`. Subsequent reads from it will return its default value.
+  mutating func clearID() {self._id = nil}
+
+  var canEdit: Bool {
+    get {return _canEdit ?? false}
+    set {_canEdit = newValue}
+  }
+  /// Returns true if `canEdit` has been explicitly set.
+  var hasCanEdit: Bool {return self._canEdit != nil}
+  /// Clears the value of `canEdit`. Subsequent reads from it will return its default value.
+  mutating func clearCanEdit() {self._canEdit = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   enum IconType: SwiftProtobuf.Enum {
@@ -115,6 +133,8 @@ struct Category {
 
   fileprivate var _name: String? = nil
   fileprivate var _iconType: Category.IconType? = nil
+  fileprivate var _id: String? = nil
+  fileprivate var _canEdit: Bool? = nil
 }
 
 #if swift(>=4.2)
@@ -133,11 +153,15 @@ extension Category: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     1: .same(proto: "name"),
     2: .same(proto: "iconType"),
     3: .same(proto: "entryTypes"),
+    4: .same(proto: "id"),
+    5: .same(proto: "canEdit"),
   ]
 
   public var isInitialized: Bool {
     if self._name == nil {return false}
     if self._iconType == nil {return false}
+    if self._id == nil {return false}
+    if self._canEdit == nil {return false}
     return true
   }
 
@@ -147,6 +171,8 @@ extension Category: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       case 1: try decoder.decodeSingularStringField(value: &self._name)
       case 2: try decoder.decodeSingularEnumField(value: &self._iconType)
       case 3: try decoder.decodeRepeatedEnumField(value: &self.entryTypes)
+      case 4: try decoder.decodeSingularStringField(value: &self._id)
+      case 5: try decoder.decodeSingularBoolField(value: &self._canEdit)
       default: break
       }
     }
@@ -162,6 +188,12 @@ extension Category: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if !self.entryTypes.isEmpty {
       try visitor.visitRepeatedEnumField(value: self.entryTypes, fieldNumber: 3)
     }
+    if let v = self._id {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 4)
+    }
+    if let v = self._canEdit {
+      try visitor.visitSingularBoolField(value: v, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -169,6 +201,8 @@ extension Category: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     if lhs._name != rhs._name {return false}
     if lhs._iconType != rhs._iconType {return false}
     if lhs.entryTypes != rhs.entryTypes {return false}
+    if lhs._id != rhs._id {return false}
+    if lhs._canEdit != rhs._canEdit {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

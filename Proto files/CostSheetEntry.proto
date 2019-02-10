@@ -2,14 +2,13 @@ syntax = "proto2";
 
 option swift_prefix = "";
 
-import "Category.proto";
 import "CTEnums.proto";
 
 message CostSheetEntry {
 
   required EntryType type = 1;
   required float amount = 2;
-  required Category category = 3;
+  required string categoryId = 3;
   optional bytes image = 4;
   optional string placeId = 5;
   required bytes date = 6;

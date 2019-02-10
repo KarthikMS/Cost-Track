@@ -27,5 +27,7 @@ message Category {
   required string name = 1;
   required IconType iconType = 2;
   repeated EntryType entryTypes = 3;
+  required string id = 4;
+  required bool canEdit = 5;
 
 }
