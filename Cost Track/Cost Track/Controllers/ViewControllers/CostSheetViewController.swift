@@ -41,7 +41,6 @@ class CostSheetViewController: UIViewController {
 	private var entriesSortedByDate = [CostSheetEntry]()
 	private var transferEntryIndexPath: IndexPath?
 	var sectionsToHide = Set<Int>()
-	private var shouldUpdateViews = true
 	private var isLoadingViewsForFirstTime = true
 
 	// MARK: UIViewController functions
@@ -54,35 +53,29 @@ class CostSheetViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		if shouldUpdateViews {
-			guard let costSheet = documentHandler.getDocument().costSheetWithId(costSheetId) else {
-				assertionFailure("Could not get costSheet")
-				return
-			}
-
-			updateNavigationBar(for: costSheet)
-
-			if classificationMode != .date {
-				sortedEntriesForTableView.removeAll()
-				sortEntriesByDate()
-			}
-
-			if costSheet.entriesInAccountingPeriod.isEmpty {
-				noEntriesTextView.isHidden = false
-			} else {
-				noEntriesTextView.isHidden = true
-				sortEntries()
-				if isLoadingViewsForFirstTime {
-					isLoadingViewsForFirstTime = false
-				} else {
-					transactionsTableView.reloadData()
-				}
-			}
-
-			updateAmountLabel()
-			shouldUpdateViews = false
+		guard let costSheet = documentHandler.getDocument().costSheetWithId(costSheetId) else {
+			assertionFailure("Could not get costSheet")
+			return
 		}
 
+		updateNavigationBar(for: costSheet)
+		updateAmountLabel()
+		if classificationMode != .date {
+			sortedEntriesForTableView.removeAll()
+			sortEntriesByDate()
+		}
+
+		if costSheet.entriesInAccountingPeriod.isEmpty {
+			noEntriesTextView.isHidden = false
+		} else {
+			noEntriesTextView.isHidden = true
+			sortEntries()
+			if isLoadingViewsForFirstTime {
+				isLoadingViewsForFirstTime = false
+			} else {
+				transactionsTableView.reloadData()
+			}
+		}
 		transferEntryIndexPath = nil
 	}
 
